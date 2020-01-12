@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
-import { FRUITS_LIST } from '../../../public/Constants';
-import List from './List';
+import { FRUITS_LIST } from "../../../public/Constants";
+import List from "./List";
 
 export default {
-  title: 'List',
+  title: "List",
 };
 
 export const SimpleUsage = () => {
@@ -24,5 +24,5 @@ export const CustomListItem = () => {
 };
 
 CustomListItem.story = {
-  name: 'Custom ListItem',
+  name: "Custom ListItem",
 };

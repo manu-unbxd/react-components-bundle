@@ -1,8 +1,8 @@
-import React from 'react';
-import NotificationComponent from './NotificationComponent';
+import React from "react";
+import NotificationComponent from "./NotificationComponent";
 
 export default {
-  title: 'NotificationComponent',
+  title: "NotificationComponent",
 };
 
 export const SimpleUsage = () => {

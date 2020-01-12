@@ -1,13 +1,13 @@
-import React from 'react';
-import DragDropFileUploader from './DragDropFileUploader';
+import React from "react";
+import DragDropFileUploader from "./DragDropFileUploader";
 
 export default {
-  title: 'DragDropFileUploader',
+  title: "DragDropFileUploader",
 };
 
 export const SimpleUsage = () => {
   const onFileChange = (files = []) => {
-    console.log('SELECTED FILES');
+    console.log("SELECTED FILES");
     for (let i = 0; i < files.length; i++) {
       console.log(files[i].name);
     }

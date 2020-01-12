@@ -1,20 +1,20 @@
-import React from 'react';
+import React from "react";
 
-import Form from './Form';
-import Input from './Input';
-import Textarea from './Textarea';
-import Checkbox from './Checkbox';
-import RadioList from './RadioList';
-import Dropdown from './Dropdown';
-import RangeSlider from './RangeSlider';
-import FileUploader from './FileUploader';
-import DragDropFileUploader from './DragDropFileUploader';
-import Toggle from './Toggle';
-import Button, { ButtonAppearance } from '../Button';
-import { FRUITS_LIST } from '../../../public/Constants';
+import Form from "./Form";
+import Input from "./Input";
+import Textarea from "./Textarea";
+import Checkbox from "./Checkbox";
+import RadioList from "./RadioList";
+import Dropdown from "./Dropdown";
+import RangeSlider from "./RangeSlider";
+import FileUploader from "./FileUploader";
+import DragDropFileUploader from "./DragDropFileUploader";
+import Toggle from "./Toggle";
+import Button, { ButtonAppearance } from "../Button";
+import { FRUITS_LIST } from "../../../public/Constants";
 
 export default {
-  title: 'Form',
+  title: "Form",
 
   parameters: {
     info: {
@@ -28,7 +28,7 @@ export const SimpleUsage = () => {
     const { data } = formData;
     const { userEmail, password } = data;
 
-    console.log('Submitted data: ', {
+    console.log("Submitted data: ", {
       userEmail,
       password,
     });
@@ -58,10 +58,10 @@ export const TextInput = () => {
     const { data, errors = {} } = formData;
 
     if (Object.keys(errors).length) {
-      console.log('ERRORS FOUND : ');
+      console.log("ERRORS FOUND : ");
       console.log(errors);
     } else {
-      console.log('Submitted data: ', data);
+      console.log("Submitted data: ", data);
     }
   };
 
@@ -75,8 +75,8 @@ export const TextInput = () => {
         appearance="block"
         validations={[
           {
-            type: 'EMAIL',
-            message: 'Please enter a valid email address',
+            type: "EMAIL",
+            message: "Please enter a valid email address",
           },
         ]}
       />
@@ -99,7 +99,7 @@ export const _Textarea = () => {
   const onSubmit = formData => {
     const { data } = formData;
 
-    console.log('Submitted data: ', data);
+    console.log("Submitted data: ", data);
   };
 
   return (
@@ -129,7 +129,7 @@ export const _Checkbox = () => {
   const onSubmit = formData => {
     const { data } = formData;
 
-    console.log('Submitted data: ', data);
+    console.log("Submitted data: ", data);
   };
 
   return (
@@ -157,7 +157,7 @@ export const _RadioList = () => {
   const onSubmit = formData => {
     const { data } = formData;
 
-    console.log('Submitted data: ', data);
+    console.log("Submitted data: ", data);
   };
 
   return (
@@ -166,8 +166,8 @@ export const _RadioList = () => {
         name="yesNoOption"
         label="Are you sure?"
         options={[
-          { id: 'YES', name: 'Yes' },
-          { id: 'NO', name: 'No' },
+          { id: "YES", name: "Yes" },
+          { id: "NO", name: "No" },
         ]}
         appearance="block"
       />
@@ -179,7 +179,7 @@ export const _RadioList = () => {
 };
 
 _RadioList.story = {
-  name: 'RadioList',
+  name: "RadioList",
 
   parameters: {
     info: {
@@ -193,7 +193,7 @@ export const _Dropdown = () => {
     const { data } = formData;
     const { fruit } = data;
 
-    console.log('Selected Fruit: ', fruit);
+    console.log("Selected Fruit: ", fruit);
   };
 
   return (
@@ -207,7 +207,7 @@ export const _Dropdown = () => {
 };
 
 _Dropdown.story = {
-  name: 'Dropdown ',
+  name: "Dropdown ",
 
   parameters: {
     info: {
@@ -221,7 +221,7 @@ export const _RangeSlider = () => {
     const { data } = formData;
     const { price } = data;
 
-    console.log('Selected price: ', price);
+    console.log("Selected price: ", price);
   };
 
   return (
@@ -242,7 +242,7 @@ export const _RangeSlider = () => {
 };
 
 _RangeSlider.story = {
-  name: 'Range Slider ',
+  name: "Range Slider ",
 
   parameters: {
     info: {
@@ -256,7 +256,7 @@ export const _FileUploader = () => {
     const { data } = formData;
     const { file } = data;
 
-    console.log('Selected file: ', file[0].name);
+    console.log("Selected file: ", file[0].name);
   };
 
   return (
@@ -272,7 +272,7 @@ export const _FileUploader = () => {
 };
 
 _FileUploader.story = {
-  name: 'File Uploader ',
+  name: "File Uploader ",
 
   parameters: {
     info: {
@@ -286,7 +286,7 @@ export const _DragDropFileUploader = () => {
     const { data } = formData;
     const { filesList } = data;
 
-    console.log('Selected file: ', filesList[0].name);
+    console.log("Selected file: ", filesList[0].name);
   };
 
   return (
@@ -302,7 +302,7 @@ export const _DragDropFileUploader = () => {
 };
 
 _DragDropFileUploader.story = {
-  name: 'DragDrop File Uploader ',
+  name: "DragDrop File Uploader ",
 
   parameters: {
     info: {
@@ -316,7 +316,7 @@ export const _Toggle = () => {
     const { data } = formData;
     const { isActive } = data;
 
-    console.log('isActive: ', isActive);
+    console.log("isActive: ", isActive);
   };
 
   return (
@@ -330,7 +330,7 @@ export const _Toggle = () => {
 };
 
 _Toggle.story = {
-  name: 'Toggle ',
+  name: "Toggle ",
 
   parameters: {
     info: {

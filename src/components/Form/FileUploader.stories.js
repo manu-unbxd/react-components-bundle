@@ -1,13 +1,13 @@
-import React from 'react';
-import FileUploader from './FileUploader';
+import React from "react";
+import FileUploader from "./FileUploader";
 
 export default {
-  title: 'FileUploader',
+  title: "FileUploader",
 };
 
 export const SimpleUsage = () => {
   const onFileChange = (files = []) => {
-    console.log('SELECTED FILES');
+    console.log("SELECTED FILES");
     for (let i = 0; i < files.length; i++) {
       console.log(files[i].name);
     }

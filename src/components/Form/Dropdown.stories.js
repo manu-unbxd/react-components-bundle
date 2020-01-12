@@ -1,14 +1,14 @@
-import React from 'react';
-import { FRUITS_LIST } from '../../../public/Constants';
-import Dropdown from './Dropdown';
+import React from "react";
+import { FRUITS_LIST } from "../../../public/Constants";
+import Dropdown from "./Dropdown";
 
 export default {
-  title: 'Dropdown',
+  title: "Dropdown",
 };
 
 export const SimpleUsage = () => {
   const onChange = selectedFruit => {
-    console.log('Selected Fruit: ', selectedFruit);
+    console.log("Selected Fruit: ", selectedFruit);
   };
 
   return (
@@ -25,7 +25,7 @@ export const SimpleUsage = () => {
 };
 
 SimpleUsage.story = {
-  name: 'Simple Usage ',
+  name: "Simple Usage ",
 
   parameters: {
     info: {

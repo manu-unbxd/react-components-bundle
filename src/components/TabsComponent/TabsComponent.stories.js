@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import TabsComponent from './TabsComponent';
+import TabsComponent from "./TabsComponent";
 
 const SetupTab = () => {
   return <div>This is Setup Tab</div>;
@@ -16,24 +16,24 @@ const InfoTab = () => {
 
 let items = [
   {
-    id: 'SETUP',
-    label: 'Setup',
+    id: "SETUP",
+    label: "Setup",
     tabComponent: <SetupTab />,
   },
   {
-    id: 'CONFIG',
-    label: 'Configuration',
+    id: "CONFIG",
+    label: "Configuration",
     tabComponent: <ConfigTab />,
   },
   {
-    id: 'INFO',
-    label: 'Info',
+    id: "INFO",
+    label: "Info",
     tabComponent: <InfoTab />,
   },
 ];
 
 export default {
-  title: 'TabsComponent',
+  title: "TabsComponent",
 };
 
 export const SimpleUsage = () => {

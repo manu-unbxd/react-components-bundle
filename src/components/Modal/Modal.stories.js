@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import Modal from './Modal';
+import React, { useRef } from "react";
+import Modal from "./Modal";
 
 const ModalExample = () => {
   return (
@@ -28,7 +28,7 @@ const ModalClickExample = () => {
 };
 
 export default {
-  title: 'Modal',
+  title: "Modal",
 
   parameters: {
     info: {
@@ -43,7 +43,7 @@ export const ActivateOnClick = () => {
 };
 
 ActivateOnClick.story = {
-  name: 'Activate on click',
+  name: "Activate on click",
 };
 
 export const OpenByDefault = () => {
@@ -51,5 +51,5 @@ export const OpenByDefault = () => {
 };
 
 OpenByDefault.story = {
-  name: 'Open by default',
+  name: "Open by default",
 };

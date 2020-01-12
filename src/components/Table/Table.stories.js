@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import Table from './Table';
-import PaginatedTable from './PaginatedTable';
-import DataLoader from '../DataLoader';
-import dataLoader from '../../core/dataLoader';
-import { TODOS, FRUITS_LIST } from '../../../public/Constants';
+import Table from "./Table";
+import PaginatedTable from "./PaginatedTable";
+import DataLoader from "../DataLoader";
+import dataLoader from "../../core/dataLoader";
+import { TODOS, FRUITS_LIST } from "../../../public/Constants";
 
 const getFruitsColumnConfigs = () => {
   let columnConfigs = [
     {
-      label: 'Id',
-      key: 'id',
+      label: "Id",
+      key: "id",
     },
     {
-      label: 'Task Name',
-      key: 'name',
+      label: "Task Name",
+      key: "name",
     },
   ];
 
@@ -24,18 +24,18 @@ const getFruitsColumnConfigs = () => {
 const getTodosColumnConfigs = () => {
   let columnConfigs = [
     {
-      label: 'Id',
-      key: 'id',
+      label: "Id",
+      key: "id",
     },
     {
-      label: 'Task Name',
-      key: 'title',
+      label: "Task Name",
+      key: "title",
     },
     {
-      label: 'Status',
-      key: 'completed',
+      label: "Status",
+      key: "completed",
       valueFormatter: function({ value }) {
-        return value ? 'Completed' : 'Not Started';
+        return value ? "Completed" : "Not Started";
       },
     },
   ];
@@ -46,8 +46,8 @@ const getTodosColumnConfigs = () => {
 const getUsersColumnConfigs = () => {
   let columnConfigs = [
     {
-      label: 'Avatar',
-      key: 'avatar',
+      label: "Avatar",
+      key: "avatar",
       /* eslint-disable react/prop-types */
       valueFormatter: function renderUserImage({ value }) {
         return <img src={value} />;
@@ -55,8 +55,8 @@ const getUsersColumnConfigs = () => {
       /* eslint-enable react/prop-types */
     },
     {
-      label: 'First Name',
-      key: 'name',
+      label: "First Name",
+      key: "name",
       valueFormatter: function({ record }) {
         const { first_name, last_name } = record;
 
@@ -75,8 +75,8 @@ const TODODetail = props => {
   const [todoData, setTodoData] = useState({});
   const { title, completed } = todoData;
 
-  dataLoader.addRequestConfig('getTodoById', {
-    method: 'GET',
+  dataLoader.addRequestConfig("getTodoById", {
+    method: "GET",
     url: function(params) {
       return `https://jsonplaceholder.typicode.com/todos/${params.id}`;
     },
@@ -88,7 +88,7 @@ const TODODetail = props => {
 
   const requests = [
     {
-      requestId: 'getTodoById',
+      requestId: "getTodoById",
       params: {
         id,
       },
@@ -98,10 +98,10 @@ const TODODetail = props => {
   return (
     <DataLoader requests={requests} onDataLoaded={onDataLoaded}>
       <div>
-        <b>Title:</b> {title}{' '}
+        <b>Title:</b> {title}{" "}
       </div>
       <div>
-        <b>Status:</b> {completed ? 'Completed' : 'Not Completed'}{' '}
+        <b>Status:</b> {completed ? "Completed" : "Not Completed"}{" "}
       </div>
     </DataLoader>
   );
@@ -112,9 +112,9 @@ const ServerPaginatedExample = () => {
   const [usersData, setUsersData] = useState({});
   const { data, total } = usersData;
 
-  dataLoader.addRequestConfig('getUsers', {
-    method: 'GET',
-    url: 'https://reqres.in/api/users',
+  dataLoader.addRequestConfig("getUsers", {
+    method: "GET",
+    url: "https://reqres.in/api/users",
   });
 
   const onDataLoaded = ([usersData]) => {
@@ -135,7 +135,7 @@ const ServerPaginatedExample = () => {
 };
 
 export default {
-  title: 'Table',
+  title: "Table",
 
   parameters: {
     info: {

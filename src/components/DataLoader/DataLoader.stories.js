@@ -1,15 +1,15 @@
-import React from 'react';
-import DataLoader from './DataLoader';
-import dataLoader from '../../core/dataLoader';
+import React from "react";
+import DataLoader from "./DataLoader";
+import dataLoader from "../../core/dataLoader";
 
 export default {
-  title: 'DataLoader',
+  title: "DataLoader",
 };
 
 export const SimpleUsage = () => {
-  dataLoader.addRequestConfig('getTodos', {
-    method: 'GET',
-    url: 'https://jsonplaceholder.typicode.com/todos',
+  dataLoader.addRequestConfig("getTodos", {
+    method: "GET",
+    url: "https://jsonplaceholder.typicode.com/todos",
   });
 
   const onDataLoaded = ([todos]) => {
@@ -17,12 +17,12 @@ export const SimpleUsage = () => {
   };
 
   const onDataFailed = e => {
-    console.log('Error ', e);
+    console.log("Error ", e);
   };
 
   const requests = [
     {
-      requestId: 'getTodos',
+      requestId: "getTodos",
     },
   ];
 
@@ -34,8 +34,8 @@ export const SimpleUsage = () => {
 };
 
 export const FunctionUrl = () => {
-  dataLoader.addRequestConfig('getTodoById', {
-    method: 'GET',
+  dataLoader.addRequestConfig("getTodoById", {
+    method: "GET",
     url: function(params) {
       return `https://jsonplaceholder.typicode.com/todos/${params.id}`;
     },
@@ -46,12 +46,12 @@ export const FunctionUrl = () => {
   };
 
   const onDataFailed = e => {
-    console.log('Error ', e);
+    console.log("Error ", e);
   };
 
   const requests = [
     {
-      requestId: 'getTodoById',
+      requestId: "getTodoById",
       params: {
         id: 1,
       },
@@ -66,5 +66,5 @@ export const FunctionUrl = () => {
 };
 
 FunctionUrl.story = {
-  name: 'Function URL',
+  name: "Function URL",
 };

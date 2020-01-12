@@ -1,12 +1,12 @@
-import React from 'react';
-import { linkTo } from '@storybook/addon-links';
+import React from "react";
+import { linkTo } from "@storybook/addon-links";
 
-import { FRUITS_LIST } from '../../../public/Constants';
-import InlineModal, { InlineModalActivator, InlineModalBody } from './InlineModal';
-import { List } from '../';
+import { FRUITS_LIST } from "../../../public/Constants";
+import InlineModal, { InlineModalActivator, InlineModalBody } from "./InlineModal";
+import { List } from "../";
 
 export default {
-  title: 'InlineModal',
+  title: "InlineModal",
 
   parameters: {
     info: {
@@ -23,7 +23,7 @@ export const SimpleUsage = () => {
         <div>Select</div>
       </InlineModalActivator>
       <InlineModalBody>
-        <List items={FRUITS_LIST} showApp={linkTo('List')} />
+        <List items={FRUITS_LIST} showApp={linkTo("List")} />
       </InlineModalBody>
     </InlineModal>
   );
@@ -32,7 +32,7 @@ export const SimpleUsage = () => {
 SimpleUsage.story = {
   parameters: {
     info: {
-      text: 'Displaying a dropdown list of items',
+      text: "Displaying a dropdown list of items",
     },
   },
 };
