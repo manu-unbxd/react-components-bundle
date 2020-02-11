@@ -24,7 +24,7 @@ const Checkbox = (props) => {
         label,
         name,
         id: name,
-        defaultValue,
+        defaultChecked: defaultValue,
         className: "RCB-form-el",
         onChange: onInputChange
     };
@@ -49,7 +49,7 @@ Checkbox.propTypes = {
     name: PropTypes.string.isRequired,
     /** Will be used only with onChange function, or else ignored */
     value: PropTypes.any,
-    defaultValue: PropTypes.any,
+    defaultValue: PropTypes.bool,
     /** Define the appearance of the form element. Accepted values are either "inline" or "block" */
     appearance: PropTypes.oneOf(["inline", "block"]),
     /** Becomes a controlled component if onChange function is given */

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import PropTypes from "prop-types";
 import Promise from "bluebird";
 import dequal from "dequal";
@@ -19,7 +19,7 @@ const loadData = (requests) => {
 const DataLoader = (props) => {
     const [ isLoading, setIsLoading ] = useState(true);
     const dataRef = React.useRef();
-    const { className, children, Loader, requests, onDataLoaded, onDataFailed } = props;
+    const { children, Loader, requests, onDataLoaded, onDataFailed } = props;
 
     const renderLoader = () => {
         const LoaderComponent = Loader;
@@ -55,16 +55,14 @@ const DataLoader = (props) => {
         }
     });
 
-    return (<div className={className}>
+    return (<Fragment>
         {isLoading ? 
             renderLoader()
             : renderChildren()}
-    </div>);
+    </Fragment>);
 };
 
 DataLoader.propTypes = {
-    /** Pass any additional classNames to DataLoader component */
-    className: PropTypes.string,
     /** Requests array */
     requests: PropTypes.array.isRequired,
     /** Callback function which is called when data is loaded */
@@ -79,7 +77,6 @@ DataLoader.propTypes = {
 };
 
 DataLoader.defaultProps = {
-    className: "",
     onDataLoaded: () => {},
     onDataFailed: () => {},
     Loader: DefaultLoader
