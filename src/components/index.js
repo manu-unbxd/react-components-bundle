@@ -8,6 +8,7 @@ import Table , { PaginatedTable } from "./Table";
 import TabsComponent from "./TabsComponent";
 import NotificationComponent from "./NotificationComponent";
 import ProgressBar from "./ProgressBar";
+import Tooltip from "./Tooltip";
 
 export {
     Button,
@@ -29,5 +30,6 @@ export {
     PaginatedTable,
     TabsComponent,
     NotificationComponent,
-    ProgressBar
+    ProgressBar,
+    Tooltip
 };

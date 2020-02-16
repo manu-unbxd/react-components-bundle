@@ -1,0 +1,17 @@
+.RCB {
+    &-tooltip {
+        display: inline-block;
+        position: relative;
+
+        &:hover {
+            .RCB-tooltip-body {
+                display: inline-block;
+            }
+        }
+    }
+
+    &-tooltip-body {
+        display: none;
+        position: absolute;
+    }
+}

@@ -1,0 +1,21 @@
+.RCB {
+    &-tooltip-btn {
+        display: inline-block;
+        font-style: italic;
+        color: #9199AA;
+        background-color: #F8FAFB;
+        border: 1px solid #D0DDE2;
+        padding: 0px 6px;
+        border-radius: 50%;
+        text-align: center;
+    }
+
+    &-tooltip-body {
+        background: #FFF;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0px 1px 7px 0px #ccc;
+        margin-left: 15px;
+        width: 100px;
+    }
+}

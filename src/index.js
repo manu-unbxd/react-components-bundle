@@ -18,7 +18,8 @@ import {
     PaginatedTable,
     TabsComponent,
     NotificationComponent,
-    ProgressBar
+    ProgressBar,
+    Tooltip
 } from "./components";
 
 import { 
@@ -56,6 +57,7 @@ export {
     TabsComponent,
     NotificationComponent,
     ProgressBar,
+    Tooltip,
     dataLoader,
     utils,
     customHooks
