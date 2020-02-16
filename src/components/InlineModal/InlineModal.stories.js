@@ -5,17 +5,6 @@ import { FRUITS_LIST } from "../../../public/Constants";
 import InlineModal, { InlineModalActivator, InlineModalBody } from "./InlineModal";
 import { List } from "../";
 
-export default {
-  title: "InlineModal",
-
-  parameters: {
-    info: {
-      propTables: [InlineModal, InlineModalActivator, InlineModalBody],
-      propTablesExclude: [List],
-    },
-  },
-};
-
 export const SimpleUsage = () => {
   return (
     <InlineModal>
@@ -30,9 +19,19 @@ export const SimpleUsage = () => {
 };
 
 SimpleUsage.story = {
-  parameters: {
-    info: {
-      text: "Displaying a dropdown list of items",
-    },
-  },
+    parameters: {
+        info: {
+            text: "Displaying a dropdown list of items",
+        }
+    }
+};
+
+export default {
+    title: "Modals|Inline modal",
+    parameters: {
+        info: {
+            propTables: [InlineModal, InlineModalActivator, InlineModalBody],
+            propTablesExclude: [List],
+        }
+    }
 };

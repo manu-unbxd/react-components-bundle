@@ -1,11 +1,6 @@
 import React from "react";
 import { action } from "@storybook/addon-actions";
-
 import Button, { ButtonAppearance, ButtonSize } from "./Button";
-
-export default {
-  title: "Button",
-};
 
 export const SimpleUsage = () => {
   return (
@@ -101,4 +96,8 @@ SecondaryButton.story = {
       storyDescription: "Depicts a secondary button",
     },
   },
+};
+
+export default {
+    title: "Button",
 };

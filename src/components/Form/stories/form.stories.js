@@ -1,192 +1,11 @@
 import React from "react";
-
 import Form from "../Form";
-import Input from "../Input";
-import Textarea from "../Textarea";
-import Checkbox from "../Checkbox";
-import RadioList from "../RadioList";
 import Dropdown from "../Dropdown";
-import RangeSlider from "../RangeSlider";
 import FileUploader from "../FileUploader";
 import DragDropFileUploader from "../DragDropFileUploader";
 import Toggle from "../Toggle";
 import Button, { ButtonAppearance } from "../../Button";
 import { FRUITS_LIST } from "../../../../public/Constants";
-
-export default {
-  title: "Form|Default Form",
-
-  parameters: {
-    info: {
-      propTables: [Form],
-    },
-  },
-};
-
-export const SimpleUsage = () => {
-  const onSubmit = formData => {
-    const { data } = formData;
-    const { userEmail, password } = data;
-
-    console.log("Submitted data: ", {
-      userEmail,
-      password,
-    });
-  };
-
-  return (
-    <Form onSubmit={onSubmit}>
-      <Input type="text" name="userEmail" label="Enter Email" appearance="block" />
-      <Input type="password" name="password" label="Enter Password" appearance="block" />
-      <Button appearance={ButtonAppearance.PRIMARY} className="full-width-btn">
-        Log In
-      </Button>
-    </Form>
-  );
-};
-
-SimpleUsage.story = {
-  parameters: {
-    info: {
-      propTables: [Input],
-    },
-  },
-};
-
-export const TextInput = () => {
-  const onSubmit = formData => {
-    const { data, errors = {} } = formData;
-
-    if (Object.keys(errors).length) {
-      console.log("ERRORS FOUND : ");
-      console.log(errors);
-    } else {
-      console.log("Submitted data: ", data);
-    }
-  };
-
-  return (
-    <Form onSubmit={onSubmit}>
-      <Input
-        type="text"
-        name="email"
-        label="Name"
-        placeholder="Enter your email"
-        appearance="block"
-        validations={[
-          {
-            type: "EMAIL",
-            message: "Please enter a valid email address",
-          },
-        ]}
-      />
-      <Button appearance={ButtonAppearance.PRIMARY} className="full-width-btn">
-        Submit
-      </Button>
-    </Form>
-  );
-};
-
-TextInput.story = {
-  parameters: {
-    info: {
-      propTables: [Input],
-    },
-  },
-};
-
-export const _Textarea = () => {
-  const onSubmit = formData => {
-    const { data } = formData;
-
-    console.log("Submitted data: ", data);
-  };
-
-  return (
-    <Form onSubmit={onSubmit}>
-      <Textarea
-        name="description"
-        label="Description"
-        placeholder="Enter your description"
-        appearance="block"
-      />
-      <Button appearance={ButtonAppearance.PRIMARY} className="full-width-btn">
-        Submit
-      </Button>
-    </Form>
-  );
-};
-
-_Textarea.story = {
-  parameters: {
-    info: {
-      propTables: [Textarea],
-    },
-  },
-};
-
-export const _Checkbox = () => {
-  const onSubmit = formData => {
-    const { data } = formData;
-
-    console.log("Submitted data: ", data);
-  };
-
-  return (
-    <Form onSubmit={onSubmit}>
-      <Checkbox name="orange" label="Orange" />
-      <Checkbox name="pineapple" label="Pineapple" value={true} onChange={()=>{}} />
-      <Checkbox name="grapes" label="Grapes" />
-      <br />
-      <Button appearance={ButtonAppearance.PRIMARY} className="full-width-btn">
-        Submit
-      </Button>
-    </Form>
-  );
-};
-
-_Checkbox.story = {
-  parameters: {
-    info: {
-      propTables: [Checkbox],
-    },
-  },
-};
-
-export const _RadioList = () => {
-  const onSubmit = formData => {
-    const { data } = formData;
-
-    console.log("Submitted data: ", data);
-  };
-
-  return (
-    <Form onSubmit={onSubmit}>
-      <RadioList
-        name="yesNoOption"
-        label="Are you sure?"
-        options={[
-          { id: "YES", name: "Yes" },
-          { id: "NO", name: "No" },
-        ]}
-        appearance="block"
-      />
-      <Button appearance={ButtonAppearance.PRIMARY} className="full-width-btn">
-        Submit
-      </Button>
-    </Form>
-  );
-};
-
-_RadioList.story = {
-  name: "RadioList",
-
-  parameters: {
-    info: {
-      propTables: [RadioList],
-    },
-  },
-};
 
 export const _Dropdown = () => {
   const onSubmit = formData => {
@@ -212,41 +31,6 @@ _Dropdown.story = {
   parameters: {
     info: {
       propTables: [Dropdown],
-    },
-  },
-};
-
-export const _RangeSlider = () => {
-  const onSubmit = formData => {
-    const { data } = formData;
-    const { price } = data;
-
-    console.log("Selected price: ", price);
-  };
-
-  return (
-    <Form onSubmit={onSubmit}>
-      <RangeSlider
-        name="price"
-        label="Select price range"
-        min="10"
-        max="100"
-        appearance="block"
-        defaultValue="10"
-      />
-      <Button appearance={ButtonAppearance.PRIMARY} className="full-width-btn">
-        Submit
-      </Button>
-    </Form>
-  );
-};
-
-_RangeSlider.story = {
-  name: "Range Slider ",
-
-  parameters: {
-    info: {
-      propTables: [RangeSlider],
     },
   },
 };
@@ -337,4 +121,13 @@ _Toggle.story = {
       propTables: [Toggle],
     },
   },
+};
+
+export default {
+    title: "Form|Miscellanious",
+    parameters: {
+        info: {
+            propTables: [Form],
+        },
+    },
 };

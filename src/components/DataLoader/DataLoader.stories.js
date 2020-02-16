@@ -1,36 +1,34 @@
-import React from "react";
+import React, { Fragment } from "react";
 import DataLoader from "./DataLoader";
 import dataLoader from "../../core/dataLoader";
 
-export default {
-  title: "DataLoader",
-};
-
 export const SimpleUsage = () => {
-  dataLoader.addRequestConfig("getTodos", {
-    method: "GET",
-    url: "https://jsonplaceholder.typicode.com/todos",
-  });
+    dataLoader.addRequestConfig("getTodos", {
+        method: "GET",
+        url: "https://jsonplaceholder.typicode.com/todos",
+    });
 
-  const onDataLoaded = ([todos]) => {
-    console.log(todos);
-  };
+    const onDataLoaded = ([todos]) => {
+        console.log(todos);
+    };
 
-  const onDataFailed = e => {
-    console.log("Error ", e);
-  };
+    const onDataFailed = e => {
+        console.log("Error ", e);
+    };
 
-  const requests = [
-    {
-      requestId: "getTodos",
-    },
-  ];
+    const requests = [
+        {
+        requestId: "getTodos",
+        },
+    ];
 
-  return (
-    <DataLoader requests={requests} onDataLoaded={onDataLoaded} onDataFailed={onDataFailed}>
-      <div>Received the data</div>
-    </DataLoader>
-  );
+    return (<Fragment>
+        <p>Use the <code>DataLoader</code> component to make implicit API calls by wrapping the JSX content where you want the API data with this component.
+        This would mostly be used for GET calls.</p>
+        <DataLoader requests={requests} onDataLoaded={onDataLoaded} onDataFailed={onDataFailed}>
+            <div>Received the data</div>
+        </DataLoader>
+    </Fragment>);
 };
 
 export const FunctionUrl = () => {
@@ -67,4 +65,8 @@ export const FunctionUrl = () => {
 
 FunctionUrl.story = {
   name: "Function URL",
+};
+
+export default {
+    title: "Data fetching|DataLoader (Component)"
 };

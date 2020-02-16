@@ -27,17 +27,6 @@ const ModalClickExample = () => {
   );
 };
 
-export default {
-  title: "Modal",
-
-  parameters: {
-    info: {
-      propTables: [Modal],
-      propTablesExclude: [ModalExample, ModalClickExample],
-    },
-  },
-};
-
 export const ActivateOnClick = () => {
   return <ModalClickExample />;
 };
@@ -52,4 +41,14 @@ export const OpenByDefault = () => {
 
 OpenByDefault.story = {
   name: "Open by default",
+};
+
+export default {
+    title: "Modals|Page modal",
+    parameters: {
+      info: {
+        propTables: [Modal],
+        propTablesExclude: [ModalExample, ModalClickExample],
+      }
+    }
 };
