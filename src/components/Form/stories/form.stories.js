@@ -1,20 +1,20 @@
 import React from "react";
 
-import Form from "./Form";
-import Input from "./Input";
-import Textarea from "./Textarea";
-import Checkbox from "./Checkbox";
-import RadioList from "./RadioList";
-import Dropdown from "./Dropdown";
-import RangeSlider from "./RangeSlider";
-import FileUploader from "./FileUploader";
-import DragDropFileUploader from "./DragDropFileUploader";
-import Toggle from "./Toggle";
-import Button, { ButtonAppearance } from "../Button";
-import { FRUITS_LIST } from "../../../public/Constants";
+import Form from "../Form";
+import Input from "../Input";
+import Textarea from "../Textarea";
+import Checkbox from "../Checkbox";
+import RadioList from "../RadioList";
+import Dropdown from "../Dropdown";
+import RangeSlider from "../RangeSlider";
+import FileUploader from "../FileUploader";
+import DragDropFileUploader from "../DragDropFileUploader";
+import Toggle from "../Toggle";
+import Button, { ButtonAppearance } from "../../Button";
+import { FRUITS_LIST } from "../../../../public/Constants";
 
 export default {
-  title: "Form",
+  title: "Form|Default Form",
 
   parameters: {
     info: {
@@ -135,7 +135,7 @@ export const _Checkbox = () => {
   return (
     <Form onSubmit={onSubmit}>
       <Checkbox name="orange" label="Orange" />
-      <Checkbox name="pineapple" label="Pineapple" />
+      <Checkbox name="pineapple" label="Pineapple" value={true} onChange={()=>{}} />
       <Checkbox name="grapes" label="Grapes" />
       <br />
       <Button appearance={ButtonAppearance.PRIMARY} className="full-width-btn">

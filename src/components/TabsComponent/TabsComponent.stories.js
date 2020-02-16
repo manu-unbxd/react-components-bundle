@@ -18,6 +18,7 @@ let items = [
   {
     id: "SETUP",
     label: "Setup",
+    disabled: true,
     tabComponent: <SetupTab />,
   },
   {

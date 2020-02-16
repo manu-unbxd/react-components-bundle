@@ -12,6 +12,14 @@ const PaginationComponent = (props) => {
 
     const { perPageCount, pageNo, total } = pageConfig;
 
+    const SelectionSummary = () => {
+        const pagIndex = utils.getPagIndex(pageConfig);
+        const { start, end } = pagIndex;
+        const summaryString = `${start + 1}-${end}`;
+    
+        return (<div>{summaryString}<span className="RCB-select-arrow"></span></div>);
+    }
+
     const onPerPageChanged = (perPageObj) => {
         const perPage = +(perPageObj.id);
         onPageConfigChanged({
@@ -20,14 +28,6 @@ const PaginationComponent = (props) => {
             perPageCount: perPage,
         });
     };
-
-    const renderSelectionSummary = () => {
-        const pagIndex = utils.getPagIndex(pageConfig);
-        const { start, end } = pagIndex;
-        const summaryString = `${start + 1}-${end}`;
-    
-        return (<div>{summaryString}<span className="RCB-select-arrow"></span></div>);
-    }
 
     const changePage = (moveUnit) => {
         onPageConfigChanged({
@@ -44,7 +44,7 @@ const PaginationComponent = (props) => {
             showLabel={false} className="RCB-per-page-count" 
             options={pageSizeList} 
             onChange={onPerPageChanged} 
-            renderSelectionSummary={renderSelectionSummary} />{`of ${total}`}
+            SelectionSummary={SelectionSummary} />{`of ${total}`}
         <div className="RCB-paginate-nav">
             <a href="javacsript:void(0)" className={`RCB-page-nav ${isLeftNavDisbaled ? "disabled" : ""}`}
                 onClick={() => changePage(-1)}>

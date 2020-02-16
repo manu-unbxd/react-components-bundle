@@ -26,7 +26,9 @@ module.exports = {
         "babel"
     ],
     "rules": {
-        "react/prop-types": [2, { ignore: ["children"] }]
+        "react/prop-types": [2, { ignore: ["children"] }],
+        "no-unsafe-finally": 0,
+        "no-func-assign": 0
     },
     "settings": {
         "react": {

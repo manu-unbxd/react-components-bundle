@@ -4,9 +4,9 @@ import List from "../List";
 
 const TabTitleItem = (props) => {
     const { itemData, selected, changeTab } = props;
-    const { id, label } = itemData;
+    const { id, label, disabled } = itemData;
     const isSelected = id === selected;
-    const className = `RCB-tab-title ${isSelected ? "selected" : ""}`;
+    const className = `RCB-tab-title ${isSelected ? "selected" : ""} ${disabled ? "RCB-tab-disabled" : ""}`;
 
     const triggerTabChange = () => {
         changeTab(id);
@@ -20,7 +20,8 @@ const TabTitleItem = (props) => {
 TabTitleItem.propTypes = {
     itemData: PropTypes.shape({
         id: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired
+        label: PropTypes.string.isRequired,
+        disabled: PropTypes.bool
     }).isRequired,
     selected: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     changeTab: PropTypes.func.isRequired
@@ -53,11 +54,12 @@ const TabsComponent = (props) => {
 TabsComponent.propTypes = {
     /** Pass any additional classNames to Tabs component */
     className: PropTypes.string,
-    /** Array of tab items. Each object in array should contain {id, label, tabComponent: <Component />} */
+    /** Array of tab items. Each object in array should contain {id, label, tabComponent: <Component />, disabled} */
     items: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
-        tabComponent: PropTypes.instanceOf(Object)
+        tabComponent: PropTypes.instanceOf(Object),
+        disabled: PropTypes.bool
     })).isRequired,
     /** ID of the tab item to be selected */
     selectedTab: PropTypes.string,

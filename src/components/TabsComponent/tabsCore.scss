@@ -50,4 +50,10 @@
             display: block;
         }
     }
+
+    &-tab-disabled {
+        pointer-events: none;
+        cursor: not-allowed;
+        color: #ccc;
+    }
 }

@@ -77,6 +77,11 @@ To help boostrap a new story file, use the following steps
 
 **Note:** The template will expect the Component name as a parameter
 
+## FAQs
+1) I am getting error "No PostCSS Config found"
+
+Create a file called postcss.config.js in `/lib/components/` folder
+
 ## TODO
 
 - Minify JS / CSS

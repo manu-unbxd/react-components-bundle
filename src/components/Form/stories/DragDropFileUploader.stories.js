@@ -1,5 +1,5 @@
 import React from "react";
-import DragDropFileUploader from "./DragDropFileUploader";
+import DragDropFileUploader from "../DragDropFileUploader";
 
 export default {
   title: "DragDropFileUploader",

@@ -31,7 +31,7 @@ const Checkbox = (props) => {
 
     if (typeof(onChange) === "function") {
         /* make it a controlled component if onChange function is given */
-        inputProps.value = value;
+        inputProps.checked = value;
     }
 
     return (<FormElementWrapper className={className} appearance={appearance}>

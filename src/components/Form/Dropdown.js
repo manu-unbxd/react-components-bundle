@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef, Fragment } from "react";
 import PropTypes from "prop-types";
 import InlineModal, { InlineModalActivator, InlineModalBody } from "../InlineModal";
 import List from "../List";
@@ -16,7 +16,7 @@ const DefaultSelectionSummary = ({selectedItems = [], multiSelect, noSelectionLa
         summaryString = selectedCount ? selectedItems[0]["name"] : noSelectionLabel;
     }
 
-    return (<div>{summaryString}<span className="RCB-select-arrow"></span></div>);
+    return (<Fragment><span>{summaryString}</span><span className="RCB-select-arrow"></span></Fragment>);
 };
 
 /* eslint-enable react/prop-types */

@@ -1,6 +1,6 @@
 import React from "react";
-import { FRUITS_LIST } from "../../../public/Constants";
-import Dropdown from "./Dropdown";
+import { FRUITS_LIST } from "../../../../public/Constants";
+import Dropdown from "../Dropdown";
 
 export default {
   title: "Dropdown",
@@ -19,7 +19,7 @@ export const SimpleUsage = () => {
       halign="right"
       appearance="block"
       onChange={onChange}
-      noSelectionLabel="Select a fruit"
+      noSelectionLabel="Select"
     />
   );
 };
