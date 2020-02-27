@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, forwardRef } from "react";
 import PropTypes from "prop-types";
 import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
 import VALIDATORS from "./Validators";
 
-const Input = (props) => {
+let Input = (props, ref) => {
     const [ error, setError ] = useState();
     const { 
         label, 
@@ -57,7 +57,8 @@ const Input = (props) => {
         defaultValue,
         placeholder,
         className: "RCB-form-el",
-        onChange: onInputChange
+        onChange: onInputChange,
+        ref
     };
 
     if (typeof(onChange) === "function") {
@@ -71,6 +72,8 @@ const Input = (props) => {
         {error && <div className="RCB-form-error">{error}</div>}
     </FormElementWrapper>);
 };
+
+Input = forwardRef(Input);
 
 Input.propTypes = {
     /** Pass any additional classNames to Input component */

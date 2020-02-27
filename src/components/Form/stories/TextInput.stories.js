@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment, useRef } from "react";
 import Form from "../Form";
 import Input from "../Input";
 import Button, { ButtonAppearance } from "../../Button";
@@ -43,6 +43,28 @@ TextInput.story = {
             propTables: [Input]
         }
     },
+};
+
+export const RefUsage = () => {
+    const inputRef = useRef();
+
+    const focusInput = () => {
+        inputRef.current.focus();
+    };
+
+    return (
+        <Fragment>
+            <Button appearance={ButtonAppearance.SECONDARY} className="full-width-btn" onClick={focusInput}>Focus input</Button>
+            <Input
+                ref={inputRef}
+                type="text"
+                name="email"
+                label="Name"
+                placeholder="Enter your email"
+                appearance="block"
+            />
+        </Fragment>
+    );
 };
 
 export default {

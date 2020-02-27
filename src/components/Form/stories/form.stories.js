@@ -1,6 +1,7 @@
-import React from "react";
+import React, { Fragment, useRef } from "react";
 import Form from "../Form";
 import Dropdown from "../Dropdown";
+import Input from "../Input";
 import FileUploader from "../FileUploader";
 import DragDropFileUploader from "../DragDropFileUploader";
 import Toggle from "../Toggle";
@@ -121,6 +122,25 @@ _Toggle.story = {
       propTables: [Toggle],
     },
   },
+};
+
+export const GetFormData = () => {
+    const formRef = useRef();
+    const submitFormData = () => {
+        const formData = formRef.current.getFormData();
+        const { data } = formData;
+
+        console.log("Got data", data);
+    };
+
+    return (<Fragment>
+        <Form ref={formRef}>
+            <Input name="name" label="Enter name" />
+            <Input name="email" label="Enter Email ID" />
+            <Dropdown name="fruit" label="Select fruit" options={FRUITS_LIST} appearance="block" />
+        </Form>
+        <Button appearance={ButtonAppearance.PRIMARY} className="full-width-btn" onClick={submitFormData}>Click to submit</Button>
+    </Fragment>);
 };
 
 export default {

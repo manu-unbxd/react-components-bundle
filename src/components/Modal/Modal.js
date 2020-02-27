@@ -7,6 +7,7 @@ const ModalContent = (props) => {
         className,
         children,
         title,
+        titleComponent,
         showClose,
         hideModal
     } = props;
@@ -14,7 +15,9 @@ const ModalContent = (props) => {
     return (<div className={`RCB-modal ${className}`}>
         <div className="RCB-modal-body">
             <div className="RCB-modal-header">
-                <span className="RCB-modal-title">{title}</span>
+                {titleComponent ? titleComponent : (
+                    <span className="RCB-modal-title">{title}</span>
+                )}
                 {showClose && <span className="RCB-modal-close" onClick={hideModal}>X</span>}
             </div>
             <div className="RCB-modal-content">{children}</div>
@@ -26,6 +29,7 @@ ModalContent.propTypes = {
     /** Pass any additional classNames to Modal component */
     className: PropTypes.string,
     title: PropTypes.string,
+    titleComponent: PropTypes.element,
     showClose: PropTypes.bool,
     hideModal: PropTypes.func
 };
@@ -67,6 +71,8 @@ Modal.propTypes = {
     className: PropTypes.string,
     /** Header or title for the modal */
     title: PropTypes.string,
+    /** Component to render as modal title. This will be given preference over "title" prop */
+    titleComponent: PropTypes.element,
     /** indicates if the modal should be opened by default */
     isOpen: PropTypes.bool,
     /** indicates whether to show or hide the close button */
