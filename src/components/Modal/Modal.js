@@ -15,10 +15,8 @@ const ModalContent = (props) => {
     return (<div className={`RCB-modal ${className}`}>
         <div className="RCB-modal-body">
             <div className="RCB-modal-header">
-                {titleComponent ? titleComponent : (
-                    <span className="RCB-modal-title">{title}</span>
-                )}
-                {showClose && <span className="RCB-modal-close" onClick={hideModal}>X</span>}
+                <span className="RCB-modal-title">{titleComponent ? titleComponent : title}</span>
+                {showClose && <span className="RCB-modal-close" onClick={hideModal}></span>}
             </div>
             <div className="RCB-modal-content">{children}</div>
         </div>
