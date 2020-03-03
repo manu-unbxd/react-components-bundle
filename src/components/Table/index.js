@@ -1,8 +1,10 @@
 import Table from "./Table";
 import PaginatedTable from "./PaginatedTable";
+import PaginationComponent from "./PaginationComponent";
 
 export {
-    PaginatedTable
+    PaginatedTable,
+    PaginationComponent
 };
 
 export default Table;

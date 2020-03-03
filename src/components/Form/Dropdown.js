@@ -6,14 +6,14 @@ import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
 
 /* eslint-disable react/prop-types */
-const DefaultSelectionSummary = ({selectedItems = [], multiSelect, noSelectionLabel}) => {
+const DefaultSelectionSummary = ({selectedItems = [], multiSelect, noSelectionLabel, nameAttribute}) => {
     let summaryString = "";
     const selectedCount = selectedItems.length;
 
     if (multiSelect) {
         summaryString = selectedCount ? `${selectedCount} selected` : noSelectionLabel; 
     } else {
-        summaryString = selectedCount ? selectedItems[0]["name"] : noSelectionLabel;
+        summaryString = selectedCount ? selectedItems[0][nameAttribute] : noSelectionLabel;
     }
 
     return (<Fragment><span>{summaryString}</span><span className="RCB-select-arrow"></span></Fragment>);
@@ -22,9 +22,9 @@ const DefaultSelectionSummary = ({selectedItems = [], multiSelect, noSelectionLa
 /* eslint-enable react/prop-types */
 
 export const DefaultDropdownItem = (props) => {
-    const { itemData, selectItem, selected = [], idAttribute } = props;
-    const { name } = itemData;
+    const { itemData, selectItem, selected = [], idAttribute, nameAttribute } = props;
     const idValue = itemData[idAttribute];
+    const name = itemData[nameAttribute];
 
     const isSelected = selected.find(obj => obj[idAttribute] === idValue) ? true : false;
     const className = "RCB-list-item " + (isSelected ? "selected" : "");
@@ -41,7 +41,8 @@ DefaultDropdownItem.propTypes = {
     }).isRequired,
     selectItem: PropTypes.func.isRequired,
     selected: PropTypes.array,
-    idAttribute: PropTypes.string
+    idAttribute: PropTypes.string,
+    nameAttribute: PropTypes.string
 };
 
 const Dropdown = (props) => {
@@ -56,6 +57,7 @@ const Dropdown = (props) => {
         onChange, 
         options, 
         idAttribute,
+        nameAttribute,
         noSelectionLabel,
         appearance,
         multiSelect,
@@ -102,10 +104,10 @@ const Dropdown = (props) => {
                 <SelectionSummary 
                     selectedItems={selected}
                     noSelectionLabel={noSelectionLabel}
-                    multiSelect={multiSelect} />
+                    multiSelect={multiSelect} nameAttribute={nameAttribute} />
             </InlineModalActivator>
             <InlineModalBody>
-                <List items={options} ListItem={DropdownItem} selected={selected} selectItem={selectItem} idAttribute={idAttribute} />
+                <List items={options} ListItem={DropdownItem} selected={selected} selectItem={selectItem} idAttribute={idAttribute} nameAttribute={nameAttribute} />
             </InlineModalBody>
         </InlineModal>
     </FormElementWrapper>);
@@ -141,6 +143,8 @@ Dropdown.propTypes = {
     multiSelect: PropTypes.bool,
     /** ID attribute key to use when rendering the dropdown items, if the ID attribute is other than "id" */
     idAttribute: PropTypes.string,
+    /** name attribute key to use when rendering the dropdown items, if the name attribute is other than "name" */
+    nameAttribute: PropTypes.string,
     /** Provide a custom element for rendering dropdown item */
     DropdownItem: PropTypes.oneOfType([
         PropTypes.instanceOf(Element),
@@ -161,6 +165,7 @@ Dropdown.defaultProps = {
     showLabel: true,
     multiSelect: false,
     idAttribute: "id",
+    nameAttribute: "name",
     noSelectionLabel: "Select",
     appearance: "inline",
     DropdownItem: DefaultDropdownItem,
