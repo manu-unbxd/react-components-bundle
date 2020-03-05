@@ -34,7 +34,7 @@ ModalContent.propTypes = {
 
 /** Displays a full screen modal */
 let Modal = (props, ref) => {
-    const { isOpen, ...restProps } = props;
+    const { isOpen, onClose, ...restProps } = props;
     const [ isModalOpen, setIsModalOpen ] = useState(isOpen);
     const bodyElement = document.getElementsByTagName("body")[0];
 
@@ -44,6 +44,9 @@ let Modal = (props, ref) => {
 
     const hideModal = () => {
         setIsModalOpen(false);
+        if (typeof(onClose) === "function") {
+            onClose();
+        }
     };
 
     useEffect(() => {
@@ -74,7 +77,9 @@ Modal.propTypes = {
     /** indicates if the modal should be opened by default */
     isOpen: PropTypes.bool,
     /** indicates whether to show or hide the close button */
-    showClose: PropTypes.bool
+    showClose: PropTypes.bool,
+    /** callback function that gets called when the modal closes */
+    onClose: PropTypes.func
 };
 
 Modal.defaultProps = {

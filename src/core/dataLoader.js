@@ -74,7 +74,15 @@ class DataLoader {
 
         return new Promise((resolve, reject) => {
             return fetchPolyfill(requestUrl, requestMetadata)
-                .then(response => response.json())
+                .then(response => {
+                    const stringStatus = response.status.toString();
+                    if (stringStatus.indexOf("2") === 0) {
+                        /* Success : 2** response code */
+                        return response.json();
+                    } else {
+                        reject(response.statusText);
+                    }
+                })
                 .then(json => {
                     const parsedResponse = this.parseResponseData(requestId, json);
                     resolve(parsedResponse);

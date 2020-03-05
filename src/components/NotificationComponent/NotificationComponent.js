@@ -40,7 +40,7 @@ NotificationComponent.propTypes = {
     /** Pass any additional classNames to Notification component */
     className: PropTypes.string,
     /* Unique ID to represent this particular message */
-    messageId: PropTypes.number.isRequired,
+    messageId: PropTypes.number,
     /* Appearance of the notification message */
     appearance: PropTypes.oneOf(["error", "warning", "success", "info"]),
     /* Should the message fadeout after (fadeOutTime)ms or not. Default true for success messages only. */
