@@ -110,8 +110,16 @@ const Dropdown = (props) => {
     useEffect(() => {
         /* set the initial form element value in the form context */
         let postValue = typeof(onChange) === "function" ? value : defaultValue;
-        postValue = multiSelect ? convertToArray(postValue) : postValue
-        postFormValueChange(postValue);
+
+        if (typeof(postValue) !== "undefined") {
+            let arrayPostValue = convertToArray(postValue);
+
+            postValue = multiSelect ? arrayPostValue : postValue;
+
+            setSelectedItems(arrayPostValue);
+            postFormValueChange(postValue);
+        }
+        
     }, [value, defaultValue]);
 
     // TODO : add search feature
