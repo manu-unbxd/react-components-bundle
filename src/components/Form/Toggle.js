@@ -1,16 +1,21 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useDidUpdateEffect } from "../../core/customHooks";
 import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
 import PropTypes from "prop-types";
   
 const Toggle = (props) => {
-    const { name, label, value, className, appearance, toggleElWidth, toggleKnobSize, onChange } = props;
-    const [ isActive, setIsActive ] = useState(value);
+    const { name, label, value, defaultValue, className, appearance, toggleElWidth, toggleKnobSize, onChange } = props;
+    const initialValue = typeof(onChange) === "function" ? value : defaultValue;
+    const [ isActive, setIsActive ] = useState(initialValue);
     const { onValueChange } = useContext(FormContext);
 
     const toggleActive = () => {
         setIsActive(!isActive);       
+    };
+
+    const postFormValueChange = (value) => {
+        typeof(onValueChange) === "function" && onValueChange(name, value);
     };
 
     useDidUpdateEffect(() => {
@@ -20,8 +25,14 @@ const Toggle = (props) => {
             onChange(value);
         }
 
-        typeof(onValueChange) === "function" && onValueChange(name, value);
+        postFormValueChange(value);
     }, [isActive]);
+
+    useEffect(() => {
+        /* set the initial form element value in the form context */
+        const postValue = typeof(onChange) === "function" ? value : defaultValue;
+        postFormValueChange(postValue);
+    }, [value, defaultValue]);
 
     let toggleElCSS = {
         width: `${toggleElWidth}px`
@@ -53,7 +64,8 @@ Toggle.propTypes = {
     /** Unique ID for the input element */
     name: PropTypes.string.isRequired,
     /** Will be used only with onChange function, or else ignored */
-    value: PropTypes.any,
+    value: PropTypes.bool,
+    defaultValue: PropTypes.bool,
     /** Define the appearance of the form element. Accepted values are either "inline" or "block" */
     appearance: PropTypes.oneOf(["inline", "block"]),
     /** Becomes a controlled component if onChange function is given */
@@ -67,7 +79,6 @@ Toggle.propTypes = {
 Toggle.defaultProps = {
     className: "",
     appearance: "inline",
-    value: false,
     toggleElWidth: 40,
     toggleKnobSize: 13
 };

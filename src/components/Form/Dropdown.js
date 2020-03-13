@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, Fragment } from "react";
+import React, { useState, useContext, useRef, Fragment, useEffect } from "react";
 import PropTypes from "prop-types";
 import InlineModal, { InlineModalActivator, InlineModalBody } from "../InlineModal";
 import List from "../List";
@@ -22,11 +22,11 @@ const DefaultSelectionSummary = ({selectedItems = [], multiSelect, noSelectionLa
 /* eslint-enable react/prop-types */
 
 export const DefaultDropdownItem = (props) => {
-    const { itemData, selectItem, selected = [], idAttribute, nameAttribute } = props;
+    const { itemData, selectItem, selectedItems = [], idAttribute, nameAttribute } = props;
     const idValue = itemData[idAttribute];
     const name = itemData[nameAttribute];
 
-    const isSelected = selected.find(obj => obj[idAttribute] === idValue) ? true : false;
+    const isSelected = selectedItems.find(obj => obj[idAttribute] === idValue) ? true : false;
     const className = "RCB-list-item " + (isSelected ? "selected" : "");
 
     return (<li onClick={() => selectItem(itemData)} className={className}>
@@ -40,9 +40,13 @@ DefaultDropdownItem.propTypes = {
         name: PropTypes.string.isRequired
     }).isRequired,
     selectItem: PropTypes.func.isRequired,
-    selected: PropTypes.array,
+    selectedItems: PropTypes.array,
     idAttribute: PropTypes.string,
     nameAttribute: PropTypes.string
+};
+
+const convertToArray = (value) => {
+    return Array.isArray(value) ? value : [value];
 };
 
 const Dropdown = (props) => {
@@ -54,6 +58,7 @@ const Dropdown = (props) => {
         SelectionSummary, 
         className, 
         value, 
+        defaultValue,
         onChange, 
         options, 
         idAttribute,
@@ -65,35 +70,49 @@ const Dropdown = (props) => {
     } = props;
 
     let initialSelected = [];
-    if (value) {
-        initialSelected = Array.isArray(value) ? value : [value]
+    const initialValue = typeof(onChange) === "function" ? value : defaultValue
+    
+    if (typeof(initialValue) !== "undefined") {
+        initialSelected = convertToArray(initialValue);
     }
+    
     /* array of selected item objects */
-    let [ selected, setSelected ] = useState(initialSelected);
+    let [ selectedItems, setSelectedItems ] = useState(initialSelected);
 
     const { onValueChange } = useContext(FormContext);
     const inlineModalRef = useRef();
+
+    const postFormValueChange = (value) => {
+        typeof(onValueChange) === "function" && onValueChange(name, value);
+    };
 
     const selectItem = (item) => {
         const id = item[idAttribute];
 
         if (multiSelect) {
-            const isPresent = selected.find(obj => obj[idAttribute] === id);
+            const isPresent = selectedItems.find(obj => obj[idAttribute] === id);
             if (!isPresent) {
-                selected.push(item);
-                typeof(onValueChange) === "function" && onValueChange(name, selected);
-                typeof(onChange) === "function" && onChange(selected);
+                selectedItems.push(item);
+                postFormValueChange(selectedItems);
+                typeof(onChange) === "function" && onChange(selectedItems);
             }
         } else {
-            selected = [item];
-            typeof(onValueChange) === "function" && onValueChange(name, item);
+            selectedItems = [item];
+            postFormValueChange(item);
             typeof(onChange) === "function" && onChange(item);
             /* close the dropdown */
             inlineModalRef.current.hideModal();
         }
 
-        setSelected(selected);
+        setSelectedItems(selectedItems);
     }
+
+    useEffect(() => {
+        /* set the initial form element value in the form context */
+        let postValue = typeof(onChange) === "function" ? value : defaultValue;
+        postValue = multiSelect ? convertToArray(postValue) : postValue
+        postFormValueChange(postValue);
+    }, [value, defaultValue]);
 
     // TODO : add search feature
 
@@ -102,12 +121,12 @@ const Dropdown = (props) => {
         <InlineModal className="RCB-form-el" ref={inlineModalRef} halign={halign}>
             <InlineModalActivator>
                 <SelectionSummary 
-                    selectedItems={selected}
+                    selectedItems={selectedItems}
                     noSelectionLabel={noSelectionLabel}
                     multiSelect={multiSelect} nameAttribute={nameAttribute} />
             </InlineModalActivator>
             <InlineModalBody>
-                <List items={options} ListItem={DropdownItem} selected={selected} selectItem={selectItem} idAttribute={idAttribute} nameAttribute={nameAttribute} />
+                <List items={options} ListItem={DropdownItem} selectedItems={selectedItems} selectItem={selectItem} idAttribute={idAttribute} nameAttribute={nameAttribute} />
             </InlineModalBody>
         </InlineModal>
     </FormElementWrapper>);
@@ -136,8 +155,10 @@ Dropdown.propTypes = {
         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         name: PropTypes.string
     })),
-    /** array of selected item objects */
+    /** array of selected item objects, only considered if onChange event is given */
     value: PropTypes.oneOf([VALUE_SHAPE, PropTypes.arrayOf(VALUE_SHAPE), ""]),
+    /** array of default selected item objects */
+    defaultValue: PropTypes.oneOf([VALUE_SHAPE, PropTypes.arrayOf(VALUE_SHAPE), ""]),
     onChange: PropTypes.func,
     /** Is dropdown multi select or single select */
     multiSelect: PropTypes.bool,
@@ -160,7 +181,6 @@ Dropdown.propTypes = {
 
 Dropdown.defaultProps = {
     className: "",
-    value: "",
     label: "",
     showLabel: true,
     multiSelect: false,

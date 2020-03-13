@@ -2,11 +2,68 @@ import React, { Fragment, useRef } from "react";
 import Form from "../Form";
 import Dropdown from "../Dropdown";
 import Input from "../Input";
+import Textarea from "../Textarea";
+import RadioList from "../RadioList";
+import Checkbox from "../Checkbox";
 import FileUploader from "../FileUploader";
 import DragDropFileUploader from "../DragDropFileUploader";
 import Toggle from "../Toggle";
+import RangeSlider from "../RangeSlider";
 import Button, { ButtonAppearance } from "../../Button";
 import { FRUITS_LIST } from "../../../../public/Constants";
+
+export const FormExample = () => {
+    const onSubmit = formData => {
+        const { data } = formData;
+        const { fruit } = data;
+    
+        console.log("Selected Fruit: ", fruit);
+    };
+
+    return (<Form onSubmit={onSubmit}>
+        <Input
+            type="text"
+            name="email"
+            label="Name"
+            placeholder="Enter your email"
+            appearance="block"
+        />
+        <Textarea
+          name="description"
+          label="Description"
+          placeholder="Enter your description"
+          appearance="block"
+        />
+        <RadioList
+          name="yesNoOption"
+          label="Are you sure?"
+          options={[
+            { id: "YES", name: "Yes" },
+            { id: "NO", name: "No" },
+          ]}
+          appearance="block"
+        />
+        <Checkbox name="orange" label="Orange" />
+        <Checkbox name="pineapple" label="Pineapple" value={true} onChange={()=>{}} />
+        <Checkbox name="grapes" label="Grapes" />
+        <br />
+        <Dropdown name="fruit" label="Select fruit" options={FRUITS_LIST} appearance="block" />
+        <Toggle label="Is Active?" name="isActive" appearance="block" />
+        <RangeSlider
+          name="price"
+          label="Select price range"
+          min="10"
+          max="100"
+          appearance="block"
+          defaultValue="10"
+        />
+        <Button appearance={ButtonAppearance.PRIMARY} className="full-width-btn">Submit</Button>
+    </Form>);
+};
+
+FormExample.story = {
+    name: "Form"
+}
 
 export const _Dropdown = () => {
   const onSubmit = formData => {

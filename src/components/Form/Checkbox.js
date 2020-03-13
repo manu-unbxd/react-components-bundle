@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
@@ -7,17 +7,25 @@ const Checkbox = (props) => {
     const { label, name, className, value, defaultValue, appearance, onChange } = props;
     const { onValueChange } = useContext(FormContext);
 
+    const postFormValueChange = (value) => {
+        typeof(onValueChange) === "function" && onValueChange(name, value);
+    };
+
     const onInputChange = (event) => {
         const value = event.target.checked;
-
-        // TODO : do validations
 
         if (typeof(onChange) === "function") {
             onChange(value);
         }
 
-        typeof(onValueChange) === "function" && onValueChange(name, value);
+        postFormValueChange(value);
     }
+
+    useEffect(() => {
+        /* set the initial form element value in the form context */
+        const postValue = typeof(onChange) === "function" ? value : defaultValue;
+        postFormValueChange(postValue);
+    }, [value, defaultValue]);
 
     let inputProps = {
         type: "checkbox",
@@ -48,7 +56,7 @@ Checkbox.propTypes = {
     /** Unique ID for the input element */
     name: PropTypes.string.isRequired,
     /** Will be used only with onChange function, or else ignored */
-    value: PropTypes.any,
+    value: PropTypes.bool,
     defaultValue: PropTypes.bool,
     /** Define the appearance of the form element. Accepted values are either "inline" or "block" */
     appearance: PropTypes.oneOf(["inline", "block"]),

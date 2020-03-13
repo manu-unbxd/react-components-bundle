@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
@@ -6,6 +6,10 @@ import FormElementWrapper from "./FormElementWrapper";
 const Textarea = (props) => {
     const { label, name, className, value, defaultValue, placeholder, appearance, onChange } = props;
     const { onValueChange } = useContext(FormContext);
+
+    const postFormValueChange = (value) => {
+        typeof(onValueChange) === "function" && onValueChange(name, value);
+    };
 
     const onInputChange = (event) => {
         const value = event.target.value;
@@ -16,8 +20,14 @@ const Textarea = (props) => {
             onChange(value);
         }
 
-        typeof(onValueChange) === "function" && onValueChange(name, value);
+        postFormValueChange(value);
     }
+
+    useEffect(() => {
+        /* set the initial form element value in the form context */
+        const postValue = typeof(onChange) === "function" ? value : defaultValue;
+        postFormValueChange(postValue);
+    }, [value, defaultValue]);
 
     let inputProps = {
         label,

@@ -1,4 +1,4 @@
-import React, { useContext, useState, forwardRef } from "react";
+import React, { useContext, useState, forwardRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
@@ -19,6 +19,10 @@ let Input = (props, ref) => {
         validations
     } = props;
     const { onValueChange } = useContext(FormContext);
+
+    const postFormValueChange = (value) => {
+        typeof(onValueChange) === "function" && onValueChange(name, value);
+    };
 
     const onInputChange = (event) => {
         const value = event.target.value;
@@ -46,8 +50,14 @@ let Input = (props, ref) => {
             onChange(value, errorMessage);
         }
 
-        typeof(onValueChange) === "function" && onValueChange(name, value, errorMessage);
+        postFormValueChange(value);
     }
+
+    useEffect(() => {
+        /* set the initial form element value in the form context */
+        const postValue = typeof(onChange) === "function" ? value : defaultValue;
+        postFormValueChange(postValue);
+    }, [value, defaultValue]);
 
     let inputProps = {
         type,
