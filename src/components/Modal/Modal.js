@@ -9,15 +9,16 @@ const ModalContent = (props) => {
         title,
         titleComponent,
         showClose,
+        showHeader,
         hideModal
     } = props;
 
     return (<div className={`RCB-modal ${className}`}>
         <div className="RCB-modal-body">
-            <div className="RCB-modal-header">
+            {showHeader && <div className="RCB-modal-header">
                 <span className="RCB-modal-title">{titleComponent ? titleComponent : title}</span>
                 {showClose && <span className="RCB-modal-close" onClick={hideModal}></span>}
-            </div>
+            </div>}
             <div className="RCB-modal-content">{children}</div>
         </div>
     </div>);
@@ -29,6 +30,7 @@ ModalContent.propTypes = {
     title: PropTypes.string,
     titleComponent: PropTypes.element,
     showClose: PropTypes.bool,
+    showHeader: PropTypes.bool,
     hideModal: PropTypes.func
 };
 
@@ -78,6 +80,8 @@ Modal.propTypes = {
     isOpen: PropTypes.bool,
     /** indicates whether to show or hide the close button */
     showClose: PropTypes.bool,
+    /** indicates whether to show or hide the modal header */
+    showHeader: PropTypes.bool,
     /** callback function that gets called when the modal closes */
     onClose: PropTypes.func
 };
@@ -86,7 +90,8 @@ Modal.defaultProps = {
     className: "",
     title: "",
     isOpen: false,
-    showClose: true
+    showClose: true,
+    showHeader: true
 };
 
 Modal.displayName = "Modal";
