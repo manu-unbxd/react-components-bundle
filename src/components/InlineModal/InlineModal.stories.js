@@ -6,16 +6,20 @@ import InlineModal, { InlineModalActivator, InlineModalBody } from "./InlineModa
 import { List } from "../";
 
 export const SimpleUsage = () => {
-  return (
-    <InlineModal>
-      <InlineModalActivator>
-        <div>Select</div>
-      </InlineModalActivator>
-      <InlineModalBody>
-        <List items={FRUITS_LIST} showApp={linkTo("List")} />
-      </InlineModalBody>
-    </InlineModal>
-  );
+    const onModalStateChange = (isModalOpen) => {
+        console.log({isModalOpen});
+    };
+
+    return (
+        <InlineModal onModalStateChange={onModalStateChange}>
+        <InlineModalActivator>
+            <div>Select</div>
+        </InlineModalActivator>
+        <InlineModalBody>
+            <List items={FRUITS_LIST} showApp={linkTo("List")} />
+        </InlineModalBody>
+        </InlineModal>
+    );
 };
 
 SimpleUsage.story = {

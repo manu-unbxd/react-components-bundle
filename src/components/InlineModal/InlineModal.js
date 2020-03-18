@@ -10,15 +10,20 @@ export const InlineModalBody = (props) => {
 }
 
 let InlineModal = (props, ref) => {
-    const { children, activatorAction, className, isModalOpen:propIsOpen, halign } = props;
+    const { children, activatorAction, className, isModalOpen:propIsOpen, halign, onModalStateChange } = props;
     let [ isModalOpen, setIsModalOpen ] = useState(propIsOpen);
     let activatorProps = {};
     let inlineModalClassName = `RCB-inline-modal ${className}`;
     let showModalBody = isModalOpen;
     const inlineModalRef = useRef();
 
+    const changeModalState = (newState) => {
+        onModalStateChange(newState);
+        setIsModalOpen(newState);
+    }
+
     const onActivatorClick = () => {
-        setIsModalOpen(!isModalOpen);
+        changeModalState(!isModalOpen);
     }
 
     const onBodyClick = (e) => {
@@ -28,7 +33,7 @@ let InlineModal = (props, ref) => {
         }
 
         /* outside click -> close modal */
-        setIsModalOpen(false);
+        changeModalState(false);
     }
     
     useEffect(() => {
@@ -53,7 +58,7 @@ let InlineModal = (props, ref) => {
     /* add methods that can be accessed via this component's ref */
     useImperativeHandle(ref, () => ({
         hideModal: () => {
-            setIsModalOpen(false);
+            changeModalState(false);
         }
     }));
 
@@ -88,7 +93,10 @@ InlineModal.propTypes = {
             );
         }
     },
-    isModalOpen: PropTypes.bool
+    /** Boolean prop to have the modal open or close */
+    isModalOpen: PropTypes.bool,
+    /** callback function that gets called when the modal state changes (either opens or closes) */
+    onModalStateChange: PropTypes.func
 };
 
 InlineModal.defaultProps = {
