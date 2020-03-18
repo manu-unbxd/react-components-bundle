@@ -18,7 +18,7 @@ let InlineModal = (props, ref) => {
     const inlineModalRef = useRef();
 
     const changeModalState = (newState) => {
-        onModalStateChange(newState);
+        typeof(onModalStateChange) === "function" && onModalStateChange(newState);
         setIsModalOpen(newState);
     }
 
