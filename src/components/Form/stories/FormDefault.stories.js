@@ -24,10 +24,16 @@ export const FormExample = () => {
     const onSubmit = formData => {
         const { data } = formData;
     
-        console.log("Selected Data: ", data);
+        console.log("On submit ----> ", data);
     };
 
-    return (<Form onSubmit={onSubmit}>
+    const onChange = formData => {
+        const { data } = formData;
+    
+        console.log("On change ----> ", data);
+    };
+
+    return (<Form onSubmit={onSubmit} onChange={onChange}>
         <Input defaultValue={formValues["email"]}
             type="text"
             name="email"

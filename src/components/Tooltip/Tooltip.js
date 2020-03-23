@@ -7,13 +7,13 @@ const DefaultTooltipActivator = () => {
   
 const Tooltip = (props) => {
     const {
-        TooltipActivator,
+        tooltipActivator,
         children
     } = props;
 
     return (<div className="RCB-tooltip">
         <div className="RCB-tooltip-btn">
-            <TooltipActivator />
+            {tooltipActivator}
         </div>
         <div className="RCB-tooltip-body">
             {children}
@@ -22,11 +22,11 @@ const Tooltip = (props) => {
 };
 
 Tooltip.propTypes = {
-    TooltipActivator: PropType.element
+    tooltipActivator: PropType.element
 };
 
 Tooltip.defaultProps = {
-    TooltipActivator: DefaultTooltipActivator
+    tooltipActivator: <DefaultTooltipActivator />
 };
 
 export default Tooltip;

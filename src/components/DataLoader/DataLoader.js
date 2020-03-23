@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Promise from "bluebird";
 import dequal from "dequal";
 import dataLoader from "../../core/dataLoader";
+import cloneDeep from "lodash.clonedeep";
 
 const DefaultLoader = () => {
     return (<div>Loading...</div>);
@@ -50,7 +51,7 @@ const DataLoader = (props) => {
         do a manual deep comparision to decide whether to load data
         */
         if (!dequal(requests, dataRef.current)) {
-            dataRef.current = requests;
+            dataRef.current = cloneDeep(requests);
             fetchData();
         }
     });
