@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { linkTo } from "@storybook/addon-links";
 
 import { FRUITS_LIST } from "../../../public/Constants";
@@ -7,19 +7,20 @@ import { List } from "../";
 
 export const SimpleUsage = () => {
     const onModalStateChange = (isModalOpen) => {
+        console.log("Modal state change 1");
         console.log({isModalOpen});
     };
 
-    return (
+    return (<Fragment>
         <InlineModal onModalStateChange={onModalStateChange}>
-        <InlineModalActivator>
-            <div>Select</div>
-        </InlineModalActivator>
-        <InlineModalBody>
-            <List items={FRUITS_LIST} showApp={linkTo("List")} />
-        </InlineModalBody>
+            <InlineModalActivator>
+                <div>Select</div>
+            </InlineModalActivator>
+            <InlineModalBody>
+                <List items={FRUITS_LIST} showApp={linkTo("List")} />
+            </InlineModalBody>
         </InlineModal>
-    );
+    </Fragment>);
 };
 
 SimpleUsage.story = {

@@ -16,9 +16,9 @@ let InlineModal = (props, ref) => {
     let inlineModalClassName = `RCB-inline-modal ${className}`;
     let showModalBody = isModalOpen;
     const inlineModalRef = useRef();
+    const isFirstRun = useRef(true);
 
     const changeModalState = (newState) => {
-        typeof(onModalStateChange) === "function" && onModalStateChange(newState);
         setIsModalOpen(newState);
     }
 
@@ -45,6 +45,15 @@ let InlineModal = (props, ref) => {
           document.removeEventListener("click", onBodyClick);
         };
     }, []);
+
+    useEffect(() => {
+        if (isFirstRun.current) {
+            /* skip first run */
+            isFirstRun.current = false;
+            return;
+        }
+        typeof(onModalStateChange) === "function" && onModalStateChange(isModalOpen);
+    }, [isModalOpen]);
 
     if (activatorAction === "click") {
         activatorProps = {
