@@ -1,28 +1,30 @@
 .RCB {
     &-notif {
         padding: 10px;
+        border-radius: 3px;
+
         &-success {
             color: #129274;
-            border: 1px solid #2cb292;
-            background-color: #b7d2cb;
+            border: solid 1px #2cb191;
+            background-color: #edfffb;
         }
 
         &-error {
             color: #d25b5b;
-            border: solid 1px #e75190;
-            background-color: #fff9fc;
+            border: solid 1px #e75178;
+            background-color: #fff3f6;
         }
 
         &-warning {
             color: #445870;
-            border: solid 1px #f09c0a;
+            border: solid 1px #efbf6a;
             background-color: #fffaf2;
         }
 
         &-info {
             color: #509DB9;
-            border: solid 1px #509DB9;
-            background-color: #DFF6FF;
+            border: solid 1px #45b5c1;
+            background-color: #f4fcff;
         }
     }
 }

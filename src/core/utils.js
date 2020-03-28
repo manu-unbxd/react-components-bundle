@@ -1,6 +1,16 @@
 let uniqueCounter = 1;
 
 const utils = {
+    configs: {},
+    setDefaultConfigs: function(configs) {
+        this.configs = {...this.configs, ...configs};
+    },
+    getDefaultConfigs: function() {
+        return this.configs;
+    },
+    getDefaultConfig: function(key) {
+        return this.configs ? this.configs[key] : "";
+    },
     getQueryParams: function(params = {}) {
         let queryParams = [];
         

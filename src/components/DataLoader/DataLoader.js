@@ -4,6 +4,7 @@ import Promise from "bluebird";
 import dequal from "dequal";
 import dataLoader from "../../core/dataLoader";
 import cloneDeep from "lodash.clonedeep";
+import utils from "../../core/utils";
 
 const DefaultLoader = () => {
     return (<div>Loading...</div>);
@@ -23,7 +24,7 @@ const DataLoader = (props) => {
     const { children, Loader, requests, onDataLoaded, onDataFailed } = props;
 
     const renderLoader = () => {
-        const LoaderComponent = Loader;
+        const LoaderComponent = Loader || utils.getDefaultConfig("DefaultLoader") || DefaultLoader;
         return <LoaderComponent />;
     };
 
@@ -79,8 +80,7 @@ DataLoader.propTypes = {
 
 DataLoader.defaultProps = {
     onDataLoaded: () => {},
-    onDataFailed: () => {},
-    Loader: DefaultLoader
+    onDataFailed: () => {}
 }
 
 export default DataLoader;
