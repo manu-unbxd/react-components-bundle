@@ -4,6 +4,22 @@ import InlineModal, { InlineModalActivator, InlineModalBody } from "../InlineMod
 import List from "../List";
 import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
+import ServerPaginatedDDList from "./ServerPaginatedDDList";
+
+const convertToArray = (value) => {
+    if (!value) {
+        return [];
+    }
+
+    return Array.isArray(value) ? value : [value];
+};
+
+const getFilteredOptions = (options = [], searchQuery = "", nameAttribute) => {
+    return options.filter(obj => {
+        const nameValue = obj[nameAttribute].toLowerCase();
+        return nameValue.indexOf(searchQuery.toLowerCase()) !== -1;
+    });
+};
 
 /* eslint-disable react/prop-types */
 const DefaultSelectionSummary = ({selectedItems = [], multiSelect, noSelectionLabel, nameAttribute}) => {
@@ -18,8 +34,6 @@ const DefaultSelectionSummary = ({selectedItems = [], multiSelect, noSelectionLa
 
     return (<Fragment><span>{summaryString}</span><span className="RCB-select-arrow"></span></Fragment>);
 };
-
-/* eslint-enable react/prop-types */
 
 export const DefaultDropdownItem = (props) => {
     const { itemData, selectItem, selectedItems = [], idAttribute, nameAttribute } = props;
@@ -45,13 +59,17 @@ DefaultDropdownItem.propTypes = {
     nameAttribute: PropTypes.string
 };
 
-const convertToArray = (value) => {
-    if (!value) {
-        return [];
-    }
-
-    return Array.isArray(value) ? value : [value];
+const NormalList = ({ items, selectedItems, selectItem, idAttribute, nameAttribute, DropdownItem }) => {
+    return <List items={items} 
+        ListItem={DropdownItem} selectedItems={selectedItems} selectItem={selectItem} 
+        idAttribute={idAttribute} nameAttribute={nameAttribute} />;
 };
+
+NormalList.defaultProps = {
+    DropdownItem: DefaultDropdownItem
+};
+
+/* eslint-enable react/prop-types */
 
 const Dropdown = (props) => {
     const { 
@@ -65,13 +83,24 @@ const Dropdown = (props) => {
         defaultValue,
         onChange, 
         options, 
+        showSearch,
         idAttribute,
         nameAttribute,
         noSelectionLabel,
         appearance,
         multiSelect,
-        DropdownItem 
+        DropdownItem ,
+        paginationType,
+        requestId,
+        requestParams,
+        pageNoAttribute,
+        pageSizeAttribute,
+        pageSize,
+        searchAttribute,
+        maxHeight,
+        responseFormatter
     } = props;
+    const [ searchQuery, setSearchQuery ] = useState("");
 
     let initialSelected = [];
     const initialValue = typeof(onChange) === "function" ? value : defaultValue
@@ -126,7 +155,26 @@ const Dropdown = (props) => {
         
     }, [value, defaultValue]);
 
-    // TODO : add search feature
+    const onSearchChange = (event) => {
+        // TODO : add a debounce
+        setSearchQuery(event.target.value);
+    };
+
+    const commonAttributes = {
+        selectedItems, selectItem, idAttribute, nameAttribute, DropdownItem
+    };
+
+    const serverListAttrs = {
+        requestId,
+        requestParams,
+        pageNoAttribute,
+        pageSizeAttribute,
+        pageSize,
+        maxHeight,
+        searchQuery,
+        searchAttribute,
+        responseFormatter
+    };
 
     return (<FormElementWrapper className={`RCB-dropdown ${className}`} appearance={appearance}>
         {showLabel && <label className="RCB-form-el-label" htmlFor={name}>{label}</label>}
@@ -138,7 +186,11 @@ const Dropdown = (props) => {
                     multiSelect={multiSelect} nameAttribute={nameAttribute} />
             </InlineModalActivator>
             <InlineModalBody>
-                <List items={options} ListItem={DropdownItem} selectedItems={selectedItems} selectItem={selectItem} idAttribute={idAttribute} nameAttribute={nameAttribute} />
+                {showSearch && <input type="text" onChange={onSearchChange} />}
+                {paginationType === "SERVER" ? 
+                    <ServerPaginatedDDList {...commonAttributes} {...serverListAttrs} /> : 
+                    <NormalList {...commonAttributes} 
+                        items={getFilteredOptions(options, searchQuery, nameAttribute)} />}
             </InlineModalBody>
         </InlineModal>
     </FormElementWrapper>);
@@ -172,6 +224,8 @@ Dropdown.propTypes = {
     /** array of default selected item objects */
     defaultValue: PropTypes.oneOf([VALUE_SHAPE, PropTypes.arrayOf(VALUE_SHAPE), ""]),
     onChange: PropTypes.func,
+    /* set to true if you want search ability for dropdown items */
+    showSearch: PropTypes.bool,
     /** Is dropdown multi select or single select */
     multiSelect: PropTypes.bool,
     /** ID attribute key to use when rendering the dropdown items, if the ID attribute is other than "id" */
@@ -188,19 +242,53 @@ Dropdown.propTypes = {
      */
     SelectionSummary: PropTypes.func,
     /** Define the appearance of the form element. Accepted values are either "inline" or "block" */
-    appearance: PropTypes.oneOf(["inline", "block"])
+    appearance: PropTypes.oneOf(["inline", "block"]),
+    /** Type of pagination for the dropdown list items. Send "SERVER" for server side pagination */
+    paginationType: PropTypes.oneOf(["NONE", "SERVER"]),
+    /** If paginationType is "SERVER", pass the requestId for the server request */
+    requestId: function(props, propName) {
+        if (props["paginationType"] == "SERVER" && (!props[propName] && typeof(props[propName]) === "undefined")) {
+            return new Error("Please provide a requestId for paginationType 'SERVER'!");
+        }
+    },
+    /** If paginationType is "SERVER", pass any additional params to be sent to the server request */
+    requestParams: PropTypes.object,
+    /** If paginationType is "SERVER", pass the pageNo. attribute to be sent to the server request */
+    pageNoAttribute: PropTypes.string,
+    /** If paginationType is "SERVER", pass the pageSize attribute to be sent to the server request */
+    pageSizeAttribute: PropTypes.string,
+    /** If paginationType is "SERVER", max height of the dropdown container */
+    maxHeight: PropTypes.number,
+    /** If paginationType is "SERVER", max number of items to show for one page in the dropdown container */
+    pageSize: PropTypes.number,
+    /** If paginationType is "SERVER" & showSearch is true, pass the search attribute to be sent to the server request */
+    searchAttribute: PropTypes.string,
+    /** If paginationType is "SERVER", 
+     * component expects the response to be of the form
+     * { [pageNoAttribute]: <pageNo>, [pageSizeAttribute]: <pageSize>, total: <totalCount>, entries: [{}] }
+     * If your data is not in this format, use the responseFormatter to format the data to this structure.
+     * Input to this function is the response received from your API
+     *   */
+    responseFormatter: PropTypes.func
 };
 
 Dropdown.defaultProps = {
     className: "",
     label: "",
     showLabel: true,
+    showSearch: true,
+    searchAttribute: "search",
     multiSelect: false,
     idAttribute: "id",
     nameAttribute: "name",
     noSelectionLabel: "Select",
     appearance: "inline",
-    DropdownItem: DefaultDropdownItem,
+    halign: "left",
+    paginationType: "NONE",
+    pageNoAttribute: "page",
+    pageSizeAttribute: "count",
+    maxHeight: 200,
+    pageSize: 10,
     SelectionSummary: DefaultSelectionSummary
 };
 
