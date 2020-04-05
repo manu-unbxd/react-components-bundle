@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-
+import React, { useState, Fragment } from "react";
 import Table from "./Table";
-import PaginatedTable from "./PaginatedTable";
 import DataLoader from "../DataLoader";
 import dataLoader from "../../core/dataLoader";
+import { Input } from "../Form";
 import { TODOS, FRUITS_LIST } from "../../../public/Constants";
 
 const getFruitsColumnConfigs = () => {
@@ -108,42 +107,6 @@ const TODODetail = props => {
 };
 /* eslint-enable react/prop-types */
 
-const ServerPaginatedExample = () => {
-  const [usersData, setUsersData] = useState({});
-  const { data, total } = usersData;
-
-  dataLoader.addRequestConfig("getUsers", {
-    method: "GET",
-    url: "https://reqres.in/api/users",
-  });
-
-  const onDataLoaded = ([usersData]) => {
-    setUsersData(usersData);
-  };
-
-  return (
-    <PaginatedTable
-      records={data}
-      totalRecords={total}
-      perPageKey="per_page"
-      columnConfigs={getUsersColumnConfigs()}
-      paginationType="SERVER"
-      requestId="getUsers"
-      onDataLoaded={onDataLoaded}
-    />
-  );
-};
-
-export default {
-  title: "Table",
-
-  parameters: {
-    info: {
-      propTablesExclude: [ServerPaginatedExample],
-    },
-  },
-};
-
 export const SimpleUsage = () => {
   return <Table records={FRUITS_LIST} columnConfigs={getFruitsColumnConfigs()} />;
 };
@@ -159,14 +122,61 @@ export const ExpandedTable = () => {
   );
 };
 
-export const ClientSidePaginatedTable = () => {
-  return (
-    <PaginatedTable
-      records={TODOS}
-      columnConfigs={getTodosColumnConfigs()}
-      paginationType="CLIENT"
-    />
-  );
+export const TableWithSearch = () => {
+    const [ searchBy, setSearchBy ] = useState("");
+    
+    const onSearchChange = (value) => {
+        setSearchBy(value);
+    };
+
+    return (<Fragment>
+        <Input name="searchBy" onChange={onSearchChange} />
+        <Table
+            records={TODOS} searchBy={searchBy} searchByKey="title"
+            columnConfigs={getTodosColumnConfigs()}
+        />
+    </Fragment>);
 };
 
-export const ServerSidePaginatedTable = () => <ServerPaginatedExample />;
+
+export const ServerSideTable = () => {
+    const [ searchBy, setSearchBy ] = useState("");
+
+    dataLoader.addRequestConfig("getUsers", {
+        method: "GET",
+        url: "https://reqres.in/api/users",
+    });
+
+    const onSearchChange = (value) => {
+        setSearchBy(value);
+    };
+
+    const responseFormatter = (response) => {
+        return {
+            ...response,
+            entries: response.data
+        };
+    };
+    
+    return (<Fragment>
+        <Input name="searchBy" onChange={onSearchChange} />
+        <Table
+            searchBy={searchBy} searchByKey="search"
+            paginationType="SERVER"
+            requestId="getUsers"
+            perPageKey="per_page"
+            responseFormatter={responseFormatter}
+            columnConfigs={getUsersColumnConfigs()}
+        />
+     </Fragment>);
+};
+
+export default {
+  title: "Table",
+
+  parameters: {
+    info: {
+      propTablesExclude: [ServerSideTable],
+    },
+  },
+};

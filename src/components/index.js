@@ -4,7 +4,7 @@ import Modal from "./Modal";
 import InlineModal from "./InlineModal";
 import DataLoader from "./DataLoader";
 import Form, { Input, Textarea, Checkbox, RadioList, Dropdown, RangeSlider, FileUploader, DragDropFileUploader, Toggle } from "./Form";
-import Table , { PaginatedTable, PaginationComponent } from "./Table";
+import Table , { PaginationComponent } from "./Table";
 import TabsComponent from "./TabsComponent";
 import NotificationComponent from "./NotificationComponent";
 import ProgressBar from "./ProgressBar";
@@ -27,7 +27,6 @@ export {
     DragDropFileUploader,
     Toggle,
     Table,
-    PaginatedTable,
     PaginationComponent,
     TabsComponent,
     NotificationComponent,

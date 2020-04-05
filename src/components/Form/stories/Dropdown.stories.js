@@ -50,7 +50,7 @@ export const PaginatedDropdown = () => {
             ...response,
             entries: response.data
         };
-    }
+    };
   
     return (
       <Dropdown

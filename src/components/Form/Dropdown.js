@@ -93,8 +93,8 @@ const Dropdown = (props) => {
         paginationType,
         requestId,
         requestParams,
-        pageNoAttribute,
-        pageSizeAttribute,
+        pageNoKey,
+        perPageKey,
         pageSize,
         searchAttribute,
         maxHeight,
@@ -167,8 +167,8 @@ const Dropdown = (props) => {
     const serverListAttrs = {
         requestId,
         requestParams,
-        pageNoAttribute,
-        pageSizeAttribute,
+        pageNoKey,
+        perPageKey,
         pageSize,
         maxHeight,
         searchQuery,
@@ -247,16 +247,16 @@ Dropdown.propTypes = {
     paginationType: PropTypes.oneOf(["NONE", "SERVER"]),
     /** If paginationType is "SERVER", pass the requestId for the server request */
     requestId: function(props, propName) {
-        if (props["paginationType"] == "SERVER" && (!props[propName] && typeof(props[propName]) === "undefined")) {
+        if (props["paginationType"] == "SERVER" && (!props[propName] || typeof(props[propName]) === "undefined")) {
             return new Error("Please provide a requestId for paginationType 'SERVER'!");
         }
     },
     /** If paginationType is "SERVER", pass any additional params to be sent to the server request */
     requestParams: PropTypes.object,
     /** If paginationType is "SERVER", pass the pageNo. attribute to be sent to the server request */
-    pageNoAttribute: PropTypes.string,
+    pageNoKey: PropTypes.string,
     /** If paginationType is "SERVER", pass the pageSize attribute to be sent to the server request */
-    pageSizeAttribute: PropTypes.string,
+    perPageKey: PropTypes.string,
     /** If paginationType is "SERVER", max height of the dropdown container */
     maxHeight: PropTypes.number,
     /** If paginationType is "SERVER", max number of items to show for one page in the dropdown container */
@@ -265,7 +265,7 @@ Dropdown.propTypes = {
     searchAttribute: PropTypes.string,
     /** If paginationType is "SERVER", 
      * component expects the response to be of the form
-     * { [pageNoAttribute]: <pageNo>, [pageSizeAttribute]: <pageSize>, total: <totalCount>, entries: [{}] }
+     * { [pageNoKey]: <pageNo>, [perPageKey]: <pageSize>, total: <totalCount>, entries: [{}] }
      * If your data is not in this format, use the responseFormatter to format the data to this structure.
      * Input to this function is the response received from your API
      *   */
@@ -285,8 +285,8 @@ Dropdown.defaultProps = {
     appearance: "inline",
     halign: "left",
     paginationType: "NONE",
-    pageNoAttribute: "page",
-    pageSizeAttribute: "count",
+    pageNoKey: "page",
+    perPageKey: "count",
     maxHeight: 200,
     pageSize: 10,
     SelectionSummary: DefaultSelectionSummary

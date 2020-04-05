@@ -45,8 +45,8 @@ const ServerPaginatedDDList = (props) => {
         requestId,
         requestParams,
         responseFormatter,
-        pageNoAttribute,
-        pageSizeAttribute,
+        pageNoKey,
+        perPageKey,
         pageSize,
         maxHeight,
         searchAttribute,
@@ -62,8 +62,8 @@ const ServerPaginatedDDList = (props) => {
     const requests = [{
         requestId,
         params: {
-            [pageNoAttribute]: pageNo,
-            [pageSizeAttribute]: pageSize,
+            [pageNoKey]: pageNo,
+            [perPageKey]: pageSize,
             [searchAttribute]: searchBy,
             ...requestParams
         }

@@ -1,87 +1,29 @@
-import React, { Fragment, useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import BaseTable from "./BaseTable";
+import DataLoader from "../DataLoader";
+import PaginationComponent from "./PaginationComponent";
 import utils from "../../core/utils";
 
-const DefaultNoDataComponent = () => {
-    return (<div className="RCB-no-data">No data found</div>)
+const getPageRecords = (records = [], pageConfig = {}) => {
+    const pagIndex = utils.getPagIndex(pageConfig);
+    const { start, end } = pagIndex;
+    
+    return records.slice(start, end);
 };
 
-/* eslint-disable react/prop-types */
+const getFilteredRecords = ({records = [], searchBy, searchByKey}) => {
+    if (searchBy) {
+        searchBy = searchBy.toLowerCase();
 
-const getTDValue = ({ columnValue, rowData = {}, columnConfig = {}, tdProps = {}}) => {
-    const { key, valueFormatter, ColumnComponent, componentProps = {} } = columnConfig;
-    let tdValue = columnValue;
-
-    if (typeof(valueFormatter) === "function") {
-        tdValue = valueFormatter({value: columnValue, record: rowData});
-    } else if (ColumnComponent) {
-        tdValue = <ColumnComponent record={rowData} {...componentProps} />
+        return records.filter(obj => {
+            const val = (obj[searchByKey] ? obj[searchByKey] : "").toLowerCase();
+            return (val.indexOf(searchBy) !== -1)
+        });
+    } else {
+        return records;
     }
-
-    return <td key={key} {...tdProps}>{tdValue}</td>
-}
-
-const ExpandableTR = (props) => {
-    const { isEven, rowData, columnConfigs, ExpandedRowComponent } = props;
-    const [ isExpanded, setIsExpanded ] = useState(false);
-
-    const toggleExpanded = () => {
-        setIsExpanded(!isExpanded);
-    };
-
-    const className = "RCB-tr RCB-parent-row " + (isEven ? "RCB-even-tr" : "RCB-odd-tr");
-
-    return (<Fragment>
-        <tr className={className}>
-            {/* add column for expand toggle icon */}
-            {getTDValue({
-                columnValue: "",
-                columnConfig: {
-                    key: "expandIcon"
-                },
-                tdProps: {
-                    onClick: toggleExpanded,
-                    className: isExpanded ? "expand-open" : "expand-close"
-                }
-            })}
-            {columnConfigs.map(configObj => {
-                const { key } = configObj;
-                return getTDValue({
-                    columnValue: rowData[key],
-                    rowData,
-                    columnConfig: configObj,
-                    tdProps: {
-                        onClick: toggleExpanded
-                    }
-                });
-            })}
-        </tr>
-        {isExpanded && <tr className="RCB-expanded-row">
-            {/* +1 is to accomodate the expand toggle icon column */}
-            <td colSpan={columnConfigs.length + 1}>
-                <ExpandedRowComponent parentRecord={rowData} />
-            </td>
-        </tr>}
-    </Fragment>);
 };
-
-ExpandableTR.propTypes = {
-    ExpandedRowComponent: PropTypes.any.isRequired // TODO : check for a React Component
-};
-
-const TR = (props) => {
-    const { rowData, columnConfigs, isEven } = props;
-    const className = "RCB-tr " + (isEven ? "RCB-even-tr" : "RCB-odd-tr");
-
-    return (<tr className={className}>
-        {columnConfigs.map(configObj => {
-            const { key } = configObj;
-            return getTDValue({columnValue: rowData[key], rowData, columnConfig: configObj});
-        })}
-    </tr>);
-};
-
-/* eslint-enable react/prop-types */
 
 const Table = (props) => {
     const {
@@ -89,69 +31,137 @@ const Table = (props) => {
         records,
         columnConfigs,
         idAttribute,
+        searchBy,
+        searchByKey,
+        paginationPosition,
+        paginationType,
+        requestId,
+        pageNoKey,
+        perPageKey,
+        pageSizeList,
         isExpandableTable,
         ExpandedRowComponent,
-        NoDataComponent
+        responseFormatter,
+        NoDataComponent,
+        ...restProps
     } = props;
+    const [ serverRecords, setServerRecords ] = useState([]);
+    const [ serverTotal, setServerTotal ] = useState(0);
+    const [ searchQuery, setSearchQuery ] = useState(searchBy);
+    const [ pageConfig, setPageConfig ] = useState({
+        perPageCount: pageSizeList[0].id,
+        pageNo: 1
+    });
+    const { perPageCount, pageNo } = pageConfig;
 
-    const RowComponent = isExpandableTable ? ExpandableTR : TR;
+    let extraParams = utils.omit(restProps, [pageNoKey, perPageKey]);
+    let requestParams = {
+        [pageNoKey]: pageNo,
+        [perPageKey]: perPageCount,
+        [searchByKey]: searchQuery,
+        ...extraParams
+    };
+
+    const requests = [{
+        requestId: requestId,
+        params: requestParams
+    }];
+
+    const onDataLoaded = ([response]) => {
+        let apiResponse = response;
+
+        if (typeof(responseFormatter) === "function") {
+            apiResponse = responseFormatter(response);
+        }
+
+        let { entries, total }  = apiResponse; 
+
+        setServerRecords(entries);
+        setServerTotal(total);
+    };
+
+    useEffect(() => {
+        /* Search value changed: reset pageNo. */
+        setPageConfig({
+            ...pageConfig,
+            pageNo: 1
+        });
+        setSearchQuery(searchBy);
+    }, [searchBy]);
+
+    const filteredRecords = getFilteredRecords({records, searchBy, searchByKey});
+    const totalRecords = paginationType === "SERVER" ? serverTotal : filteredRecords.length;
+    const paginationComponent = <PaginationComponent pageSizeList={pageSizeList} 
+                            onPageConfigChanged={setPageConfig} 
+                            pageConfig={{...pageConfig, total: totalRecords}} />
+
+    let finalRecords = paginationType === "SERVER" ? serverRecords :
+                        getPageRecords(filteredRecords, pageConfig);
+
+    let wrappedComponent =  (<BaseTable records={finalRecords} columnConfigs={columnConfigs} idAttribute={idAttribute} NoDataComponent={NoDataComponent}
+                                    isExpandableTable={isExpandableTable} ExpandedRowComponent={ExpandedRowComponent} />);
     
-    if (records.length === 0) {
-        return (<NoDataComponent />);
-    } else {
-        return (<table className={`RCB-table ${className}`}>
-            <thead>
-                <tr>
-                    {/* add empty column for expand icon */}
-                    {isExpandableTable && <th key="expandIcon" className="RCB-th RCB-expand-column"></th>}
-                    {columnConfigs.map(columnObj => {
-                        const { key, label } = columnObj;
-                        return (<th className="RCB-th" key={key}>{label}</th>);
-                    })}
-                </tr>
-            </thead>
-            <tbody>
-                {records.map((rowData, index)=> {
-                    return <RowComponent key={rowData[idAttribute]} 
-                                        isEven={utils.isEven(index)}
-                                        rowData={rowData} 
-                                        columnConfigs={columnConfigs} 
-                                        ExpandedRowComponent={ExpandedRowComponent} />
-                })}
-            </tbody>
-        </table>)
+    if (paginationType === "SERVER") {
+        wrappedComponent = (<DataLoader requests={requests} onDataLoaded={onDataLoaded}>
+            {wrappedComponent}
+        </DataLoader>)
     }
+
+    return (<div className={className}>
+        {paginationPosition === "TOP" && totalRecords > 0 && paginationComponent}
+        {wrappedComponent}
+        {paginationPosition === "BOTTOM" && totalRecords > 0 && paginationComponent}
+    </div>);
 };
 
 Table.propTypes = {
-    /** Pass any additional classNames to Table component */
-    className: PropTypes.string,
-    /** Array containing table row data */
-    records: PropTypes.array.isRequired,
-    /** Array containing the table columns config */
-    columnConfigs: PropTypes.array.isRequired,
-    /** ID attribute key to use when rendering the dropdown items */
-    idAttribute: PropTypes.string,
-    /** set to "true" if table rows are expandable */
-    isExpandableTable: PropTypes.bool,
-    /** Component to be rendered on expanding a row */
-    ExpandedRowComponent: PropTypes.oneOfType([
-        PropTypes.instanceOf(Element),
-        PropTypes.func
-    ]),
-    /** Component to be rendered if the table has no data */
-    NoDataComponent: PropTypes.oneOfType([
-        PropTypes.instanceOf(Element),
-        PropTypes.func
-    ]),
+    /** Extends Table properties */
+    ...BaseTable.propTypes,
+    /** search value to search data in the table */
+    searchBy: PropTypes.string,
+    /** The field by which to search the data in the table */
+    searchByKey: PropTypes.string,
+    /** list of supported page sizes  */
+    pageSizeList: PropTypes.array,
+    /** location where the pagination component must be displayed */
+    paginationPosition: PropTypes.oneOf(["TOP", "BOTTOM"]),
+    /** CLIENT side pagination or SERVER side pagination */
+    paginationType: PropTypes.oneOf(["CLIENT", "SERVER"]),
+    /** [SERVER side pagination] the ID of the request to call */
+    requestId: PropTypes.string,
+    /** [SERVER side pagination] key to send the page number value in, to the API */
+    pageNoKey: PropTypes.string,
+    /** [SERVER side pagination] key to send the page count value in, to the API */
+    perPageKey: PropTypes.string,
+     /** If paginationType is "SERVER", 
+     * component expects the response to be of the form
+     * { [pageNoKey]: <pageNo>, [perPageKey]: <pageSize>, total: <totalCount>, entries: [{}] }
+     * If your data is not in this format, use the responseFormatter to format the data to this structure.
+     * Input to this function is the response received from your API
+     *   */
+    responseFormatter: PropTypes.func
 }
 
 Table.defaultProps = {
-    className: "",
-    records: [],
-    idAttribute: "id",
-    isExpandableTable: false,
-    NoDataComponent: DefaultNoDataComponent
+    ...BaseTable.defaultProps,
+    searchByKey: "name",
+    pageSizeList: [{
+        id: "10",
+        name: "10"
+    }, {
+        id: "20",
+        name: "20"
+    }, {
+        id: "50",
+        name: "50"
+    }, {
+        id: "100",
+        name: "100"
+    }],
+    paginationPosition: "TOP",
+    paginationType: "CLIENT",
+    pageNoKey: "page",
+    perPageKey: "count"
 };
 
 export default Table;
