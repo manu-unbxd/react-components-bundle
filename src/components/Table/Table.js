@@ -12,17 +12,45 @@ const getPageRecords = (records = [], pageConfig = {}) => {
     return records.slice(start, end);
 };
 
-const getFilteredRecords = ({records = [], searchBy, searchByKey}) => {
+const sortNumbersASC = (a, b) => a - b;
+const sortNumbersDSC = (a, b) => b - a;
+const sortAlphaASC = (a, b) => a < b ? -1 : 1;
+const sortAlphaDSC = (a, b) => b < a ? -1 : 1;
+
+const getFilteredRecords = ({records = [], searchBy, searchByKey, sortByConfig}) => {
+    let filteredRecords = records;
+
     if (searchBy) {
         searchBy = searchBy.toLowerCase();
 
-        return records.filter(obj => {
+        filteredRecords = records.filter(obj => {
             const val = (obj[searchByKey] ? obj[searchByKey] : "").toLowerCase();
             return (val.indexOf(searchBy) !== -1)
         });
-    } else {
-        return records;
     }
+
+    if (typeof(sortByConfig) === "object" && !utils.isObjectEmpty(sortByConfig)) {
+        const { sortBy, sortOrder, columnConfig } = sortByConfig;
+        const { valueFormatter } = columnConfig;
+        
+        filteredRecords = records.slice().sort((obj1, obj2) =>{
+            let rowValue1 = obj1[sortBy];
+            let rowValue2 = obj2[sortBy];
+
+            const sortValue1 = typeof(valueFormatter) === "function" ? 
+                                    valueFormatter({value: rowValue1, record: obj1}) : rowValue1;
+            const sortValue2 = typeof(valueFormatter) === "function" ? 
+                                    valueFormatter({value: rowValue2, record: obj2}) : rowValue2;
+
+            if (typeof(sortValue) === "number") {
+                return sortOrder === "ASC" ? sortNumbersASC(sortValue1, sortValue2) : sortNumbersDSC(sortValue1, sortValue2);
+            } else {
+                return sortOrder === "ASC" ? sortAlphaASC(sortValue1, sortValue2) : sortAlphaDSC(sortValue1, sortValue2); 
+            }
+        });
+    }
+
+    return filteredRecords;
 };
 
 const Table = (props) => {
@@ -33,6 +61,8 @@ const Table = (props) => {
         idAttribute,
         searchBy,
         searchByKey,
+        sortByKey,
+        sortOrderKey,
         paginationPosition,
         paginationType,
         requestId,
@@ -45,9 +75,16 @@ const Table = (props) => {
         NoDataComponent,
         ...restProps
     } = props;
+    /* variables for server data */
     const [ serverRecords, setServerRecords ] = useState([]);
     const [ serverTotal, setServerTotal ] = useState(0);
+
+    /* variables for search, sort data */
     const [ searchQuery, setSearchQuery ] = useState(searchBy);
+    const [ sortByConfig, setSortByConfig ] = useState({});
+    const { sortBy, sortOrder } = sortByConfig;
+
+    /* variables for pagination data */
     const [ pageConfig, setPageConfig ] = useState({
         perPageCount: pageSizeList[0].id,
         pageNo: 1
@@ -58,7 +95,9 @@ const Table = (props) => {
     let requestParams = {
         [pageNoKey]: pageNo,
         [perPageKey]: perPageCount,
-        [searchByKey]: searchQuery,
+        ...(searchQuery && {[searchByKey]: searchQuery}),
+        ...(sortBy && {[sortByKey]: sortBy}),
+        ...(sortOrder && {[sortOrderKey]: sortOrder}),
         ...extraParams
     };
 
@@ -89,7 +128,23 @@ const Table = (props) => {
         setSearchQuery(searchBy);
     }, [searchBy]);
 
-    const filteredRecords = getFilteredRecords({records, searchBy, searchByKey});
+    const onSort = (columnConfig) => {
+        const newSortBy = columnConfig.key;
+        let newSortOrder = "ASC";
+
+        if (sortBy === newSortBy) {
+            /* clicked sort on the same column */
+            newSortOrder = sortOrder === "ASC" ? "DSC" : "ASC";
+        }
+
+        setSortByConfig({
+            sortBy: newSortBy,
+            sortOrder: newSortOrder,
+            columnConfig
+        });
+    };
+
+    const filteredRecords = getFilteredRecords({records, searchBy, searchByKey, sortByConfig});
     const totalRecords = paginationType === "SERVER" ? serverTotal : filteredRecords.length;
     const paginationComponent = <PaginationComponent pageSizeList={pageSizeList} 
                             onPageConfigChanged={setPageConfig} 
@@ -98,7 +153,9 @@ const Table = (props) => {
     let finalRecords = paginationType === "SERVER" ? serverRecords :
                         getPageRecords(filteredRecords, pageConfig);
 
-    let wrappedComponent =  (<BaseTable records={finalRecords} columnConfigs={columnConfigs} idAttribute={idAttribute} NoDataComponent={NoDataComponent}
+    let wrappedComponent =  (<BaseTable records={finalRecords} columnConfigs={columnConfigs} 
+                                    idAttribute={idAttribute} NoDataComponent={NoDataComponent}
+                                    sortByConfig={sortByConfig} onSort={onSort}
                                     isExpandableTable={isExpandableTable} ExpandedRowComponent={ExpandedRowComponent} />);
     
     if (paginationType === "SERVER") {
@@ -121,6 +178,10 @@ Table.propTypes = {
     searchBy: PropTypes.string,
     /** The field by which to search the data in the table */
     searchByKey: PropTypes.string,
+    /** The field to send the sort by parameter to the API in case of server side paginated table */
+    sortByKey: PropTypes.string,
+    /** The field to send the sort order parameter to the API in case of server side paginated table */
+    sortOrderKey: PropTypes.string,
     /** list of supported page sizes  */
     pageSizeList: PropTypes.array,
     /** location where the pagination component must be displayed */
@@ -145,6 +206,8 @@ Table.propTypes = {
 Table.defaultProps = {
     ...BaseTable.defaultProps,
     searchByKey: "name",
+    sortByKey: "sortBy",
+    sortOrderKey: "sortOrder",
     pageSizeList: [{
         id: "10",
         name: "10"

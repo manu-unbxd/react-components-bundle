@@ -6,18 +6,20 @@ import { Input } from "../Form";
 import { TODOS, FRUITS_LIST } from "../../../public/Constants";
 
 const getFruitsColumnConfigs = () => {
-  let columnConfigs = [
-    {
-      label: "Id",
-      key: "id",
-    },
-    {
-      label: "Task Name",
-      key: "name",
-    },
-  ];
+    let columnConfigs = [
+        {
+            label: "Id",
+            key: "id",
+            sortable: true
+        },
+        {
+            label: "Task Name",
+            key: "name",
+            sortable: true
+        }
+    ];
 
-  return columnConfigs;
+    return columnConfigs;
 };
 
 const getTodosColumnConfigs = () => {
@@ -54,8 +56,9 @@ const getUsersColumnConfigs = () => {
       /* eslint-enable react/prop-types */
     },
     {
-      label: "First Name",
+      label: "first_name",
       key: "name",
+      sortable: true,
       valueFormatter: function({ record }) {
         const { first_name, last_name } = record;
 
@@ -108,7 +111,8 @@ const TODODetail = props => {
 /* eslint-enable react/prop-types */
 
 export const SimpleUsage = () => {
-  return <Table records={FRUITS_LIST} columnConfigs={getFruitsColumnConfigs()} />;
+  return <Table records={FRUITS_LIST} 
+            columnConfigs={getFruitsColumnConfigs()} />;
 };
 
 export const ExpandedTable = () => {
@@ -138,7 +142,6 @@ export const TableWithSearch = () => {
     </Fragment>);
 };
 
-
 export const ServerSideTable = () => {
     const [ searchBy, setSearchBy ] = useState("");
 
@@ -157,7 +160,7 @@ export const ServerSideTable = () => {
             entries: response.data
         };
     };
-    
+
     return (<Fragment>
         <Input name="searchBy" onChange={onSearchChange} />
         <Table

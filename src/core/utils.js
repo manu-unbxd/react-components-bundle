@@ -46,6 +46,9 @@ const utils = {
     },
     getUniqueId: function() {
         return uniqueCounter++;
+    },
+    isObjectEmpty: function(obj) {
+        return Object.keys(obj).length ? false : true;
     }
 }
 

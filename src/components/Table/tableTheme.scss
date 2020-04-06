@@ -6,13 +6,14 @@
     }
 
     &-th {
-        background-color: #125c7f;
+        background-color: #2287b4;
         color: #FFF;
         font-weight: normal;
+        padding: 10px;
     }
 
     &-even-tr {
-        background-color: #82bed9;
+        background-color: #FFF;
     }
 
     &-odd-tr {
@@ -24,9 +25,10 @@
     }
 
     &-paginate-wrapper {
-        background-color: rgba(148, 170, 202, 0.14);
+        background-color: #a3c9db;
         text-align: right;
         font-size: 14px;
         padding: 5px;
+        border-radius: 5px 5px 0 0;
     }
 }

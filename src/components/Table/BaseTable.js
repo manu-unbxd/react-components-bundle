@@ -81,8 +81,6 @@ const TR = (props) => {
     </tr>);
 };
 
-/* eslint-enable react/prop-types */
-
 const BaseTable = (props) => {
     const {
         className,
@@ -91,8 +89,10 @@ const BaseTable = (props) => {
         idAttribute,
         isExpandableTable,
         ExpandedRowComponent,
-        NoDataComponent
+        NoDataComponent,
+        sortByConfig
     } = props;
+    const { sortBy, sortOrder } = sortByConfig;
 
     const RowComponent = isExpandableTable ? ExpandableTR : TR;
     
@@ -105,8 +105,27 @@ const BaseTable = (props) => {
                     {/* add empty column for expand icon */}
                     {isExpandableTable && <th key="expandIcon" className="RCB-th RCB-expand-column"></th>}
                     {columnConfigs.map(columnObj => {
-                        const { key, label } = columnObj;
-                        return (<th className="RCB-th" key={key}>{label}</th>);
+                        const { key, label, sortable } = columnObj;
+                        let className = "RCB-th";
+                        let thAttrs = {};
+
+                        if (sortable) {
+                            className += " RCB-th-sortable";
+                            
+                            if (sortBy === key) {
+                                className += ` RCB-th-${sortOrder.toLowerCase()}`;
+                            } else {
+                                className += " RCB-th-sort";
+                            }
+
+                            thAttrs = {
+                                onClick: () => {
+                                    props.onSort(columnObj);
+                                }
+                            }
+                        }
+
+                        return (<th className={className} key={key} {...thAttrs}>{label}</th>);
                     })}
                 </tr>
             </thead>
@@ -122,6 +141,8 @@ const BaseTable = (props) => {
         </table>)
     }
 };
+
+/* eslint-enable react/prop-types */
 
 BaseTable.propTypes = {
     /** Pass any additional classNames to Table component */

@@ -10,6 +10,28 @@
         }
     }
 
+    &-th-sortable {
+        cursor: pointer;
+    }
+
+    &-th-sort {
+        &:after {
+            content: "\2B0D"
+        }
+    }
+
+    &-th-asc {
+        &:after {
+            content: "\25B2";
+        }
+    }
+
+    &-th-dsc {
+        &:after {
+            content: "\25BC";
+        }
+    }
+
     &-tr {
     
         .expand-open {
