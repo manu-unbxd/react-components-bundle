@@ -20,7 +20,7 @@ const TabTitleItem = (props) => {
 TabTitleItem.propTypes = {
     itemData: PropTypes.shape({
         id: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired,
+        label: PropTypes.any.isRequired,
         disabled: PropTypes.bool
     }).isRequired,
     selected: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -57,7 +57,7 @@ TabsComponent.propTypes = {
     /** Array of tab items. Each object in array should contain {id, label, tabComponent: <Component />, disabled} */
     items: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired,
+        label: PropTypes.any.isRequired,
         tabComponent: PropTypes.instanceOf(Object),
         disabled: PropTypes.bool
     })).isRequired,

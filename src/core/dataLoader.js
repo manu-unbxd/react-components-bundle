@@ -46,12 +46,12 @@ class DataLoader {
         const responseParser = this.getResponseMiddleware(requestId);
         return responseParser(requestId, response);
     }
-    getRequestDef ({ requestId, params = {}, headers = {} }) {
+    getRequestDef ({ requestId, urlParams = {}, params = {}, headers = {} }) {
         const requestConfig = this._requestsMap[requestId];
         const { url, method = "GET" } = requestConfig;
         const finalRequestParams = this.getRequestParams(requestId, params);
         
-        let requestUrl = (typeof(url) === "function") ? url(finalRequestParams) : url;
+        let requestUrl = (typeof(url) === "function") ? url(urlParams) : url;
         let reqMethod = method.toLowerCase();
 
         let requestMetadata = {

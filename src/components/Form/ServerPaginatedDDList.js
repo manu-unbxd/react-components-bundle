@@ -50,7 +50,8 @@ const ServerPaginatedDDList = (props) => {
         pageSize,
         maxHeight,
         searchAttribute,
-        searchQuery
+        searchQuery,
+        getUrlParams
     } = props;
     const [ items, setItems ] = useState([]);
     const [ pageNo, setPageNo ] = useState(1);
@@ -66,7 +67,8 @@ const ServerPaginatedDDList = (props) => {
             [perPageKey]: pageSize,
             [searchAttribute]: searchBy,
             ...requestParams
-        }
+        },
+        urlParams: getUrlParams()
     }];
 
     useEffect(() => {
@@ -98,7 +100,7 @@ const ServerPaginatedDDList = (props) => {
     };
 
     /* Callback to be invoked when more rows must be loaded. It should return a Promise that is resolved once all data has finished loading. */
-    const loadNextPage = (startIndex, stopIndex) => {
+    const loadNextPage = () => {
         console.log("LOADING NEXT PAGE");
         setIsNextPageLoading(true);
         setPageNo(pageNo + 1);

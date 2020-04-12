@@ -49,10 +49,7 @@ export const DefaultDropdownItem = (props) => {
 };
 
 DefaultDropdownItem.propTypes = {
-    itemData: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired
-    }).isRequired,
+    itemData: PropTypes.object.isRequired,
     selectItem: PropTypes.func.isRequired,
     selectedItems: PropTypes.array,
     idAttribute: PropTypes.string,
@@ -98,7 +95,8 @@ const Dropdown = (props) => {
         pageSize,
         searchAttribute,
         maxHeight,
-        responseFormatter
+        responseFormatter,
+        getUrlParams
     } = props;
     const [ searchQuery, setSearchQuery ] = useState("");
 
@@ -173,7 +171,8 @@ const Dropdown = (props) => {
         maxHeight,
         searchQuery,
         searchAttribute,
-        responseFormatter
+        responseFormatter,
+        getUrlParams
     };
 
     return (<FormElementWrapper className={`RCB-dropdown ${className}`} appearance={appearance}>
@@ -186,7 +185,10 @@ const Dropdown = (props) => {
                     multiSelect={multiSelect} nameAttribute={nameAttribute} />
             </InlineModalActivator>
             <InlineModalBody>
-                {showSearch && <input type="text" onChange={onSearchChange} />}
+                {showSearch && <div className="RCB-dd-search">
+                    <span className="RCB-dd-search-icon"></span>
+                    <input type="text" className="RCB-dd-search-ip" placeholder="Search" onChange={onSearchChange} />
+                </div>}
                 {paginationType === "SERVER" ? 
                     <ServerPaginatedDDList {...commonAttributes} {...serverListAttrs} /> : 
                     <NormalList {...commonAttributes} 
@@ -196,10 +198,10 @@ const Dropdown = (props) => {
     </FormElementWrapper>);
 };
 
-const VALUE_SHAPE = PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    name: PropTypes.string
-});
+// const VALUE_SHAPE = PropTypes.shape({
+//     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+//     name: PropTypes.string
+// });
 
 Dropdown.propTypes = {
     /** Pass any additional classNames to Dropdown component */
@@ -220,9 +222,9 @@ Dropdown.propTypes = {
         name: PropTypes.string
     })),
     /** array of selected item objects, only considered if onChange event is given */
-    value: PropTypes.oneOf([VALUE_SHAPE, PropTypes.arrayOf(VALUE_SHAPE), ""]),
+    value: PropTypes.any,
     /** array of default selected item objects */
-    defaultValue: PropTypes.oneOf([VALUE_SHAPE, PropTypes.arrayOf(VALUE_SHAPE), ""]),
+    defaultValue: PropTypes.any,
     onChange: PropTypes.func,
     /* set to true if you want search ability for dropdown items */
     showSearch: PropTypes.bool,
@@ -269,7 +271,9 @@ Dropdown.propTypes = {
      * If your data is not in this format, use the responseFormatter to format the data to this structure.
      * Input to this function is the response received from your API
      *   */
-    responseFormatter: PropTypes.func
+    responseFormatter: PropTypes.func,
+    /** If paginationType is "SERVER", function that is expected to return the URL Params object */
+    getUrlParams: PropTypes.func
 };
 
 Dropdown.defaultProps = {
@@ -289,6 +293,7 @@ Dropdown.defaultProps = {
     perPageKey: "count",
     maxHeight: 200,
     pageSize: 10,
+    getUrlParams: () => ({}),
     SelectionSummary: DefaultSelectionSummary
 };
 

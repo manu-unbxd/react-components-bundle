@@ -50,7 +50,7 @@ export const FunctionUrl = () => {
   const requests = [
     {
       requestId: "getTodoById",
-      params: {
+      urlParams: {
         id: 1,
       },
     },

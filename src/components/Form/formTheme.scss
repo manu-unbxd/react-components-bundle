@@ -3,4 +3,25 @@
         font-size: 12px;
         color: #d25b5b;
     }
+
+    &-dd-search {
+        position: relative;
+    }
+
+    &-dd-search-icon {
+        position: absolute;
+        top: 5px;
+        left: 10px;
+
+        &:before {
+            content: "\1F50D";
+        }
+    }
+
+    &-dd-search-ip {
+        width: 100%;
+        padding: 10px 30px;
+        border: none;
+        border-bottom: 1px solid #CCC;
+    }
 }

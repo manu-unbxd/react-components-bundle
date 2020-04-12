@@ -73,6 +73,8 @@ const Table = (props) => {
         ExpandedRowComponent,
         responseFormatter,
         NoDataComponent,
+        omitProps,
+        getUrlParams,
         ...restProps
     } = props;
     /* variables for server data */
@@ -90,8 +92,9 @@ const Table = (props) => {
         pageNo: 1
     });
     const { perPageCount, pageNo } = pageConfig;
+    const omitParams = [pageNoKey, perPageKey, ...omitProps.split(",")]
 
-    let extraParams = utils.omit(restProps, [pageNoKey, perPageKey]);
+    let extraParams = utils.omit(restProps, omitParams);
     let requestParams = {
         [pageNoKey]: pageNo,
         [perPageKey]: perPageCount,
@@ -103,7 +106,8 @@ const Table = (props) => {
 
     const requests = [{
         requestId: requestId,
-        params: requestParams
+        params: requestParams,
+        urlParams: getUrlParams()
     }];
 
     const onDataLoaded = ([response]) => {
@@ -200,7 +204,12 @@ Table.propTypes = {
      * If your data is not in this format, use the responseFormatter to format the data to this structure.
      * Input to this function is the response received from your API
      *   */
-    responseFormatter: PropTypes.func
+    responseFormatter: PropTypes.func,
+     /** If paginationType is "SERVER", 
+     * a comma separated list of the props to be omitted from being added to the API request */
+    omitProps: PropTypes.string,
+    /** If paginationType is "SERVER", function that is expected to return the URL Params object */
+    getUrlParams: PropTypes.func
 }
 
 Table.defaultProps = {
@@ -224,7 +233,9 @@ Table.defaultProps = {
     paginationPosition: "TOP",
     paginationType: "CLIENT",
     pageNoKey: "page",
-    perPageKey: "count"
+    perPageKey: "count",
+    omitProps: "",
+    getUrlParams: () => ({})
 };
 
 export default Table;

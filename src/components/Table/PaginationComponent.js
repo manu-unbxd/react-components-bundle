@@ -40,7 +40,7 @@ const PaginationComponent = (props) => {
     let isRightNavDisbaled = (pageNo >= Math.ceil(total / +perPageCount));
 
     return (<div className="RCB-paginate-wrapper">
-        <Dropdown name="perPageCount" 
+        <Dropdown name="perPageCount" showSearch={false}
             showLabel={false} className="RCB-per-page-count" 
             options={pageSizeList} 
             onChange={onPerPageChanged} 

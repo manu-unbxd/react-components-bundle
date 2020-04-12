@@ -91,8 +91,8 @@ const TODODetail = props => {
   const requests = [
     {
       requestId: "getTodoById",
-      params: {
-        id,
+      urlParams: {
+        id
       },
     },
   ];

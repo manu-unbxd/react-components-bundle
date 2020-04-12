@@ -77,7 +77,7 @@ let Input = (props, ref) => {
     }
 
     return (<FormElementWrapper className={className} appearance={appearance}>
-        <label className="RCB-form-el-label" htmlFor={name}>{label}</label>
+        {label && <label className="RCB-form-el-label" htmlFor={name}>{label}</label>}
         <input {...inputProps} />
         {error && <div className="RCB-form-error">{error}</div>}
     </FormElementWrapper>);

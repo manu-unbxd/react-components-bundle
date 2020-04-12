@@ -62,6 +62,9 @@ export const RequestMiddleware = () => {
             requestId: "getTodo",
             params: {
                 id: 1
+            },
+            urlParams: {
+                todoId: 1
             }
         });
     
@@ -95,7 +98,7 @@ export const ResponseMiddleware = () => {
 
         const def = dataLoader.getRequestDef({
             requestId: "getPost",
-            params: {
+            urlParams: {
                 id: 1
             }
         });
