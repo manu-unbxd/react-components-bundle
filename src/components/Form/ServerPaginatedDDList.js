@@ -20,7 +20,7 @@ export const DefaultDropdownItem = (props) => {
         nameAttribute 
     } = data;
 
-    const itemData = items[index];
+    const itemData = items[index] || {};
     const idValue = itemData[idAttribute];
     const name = itemData[nameAttribute];
 
@@ -87,6 +87,11 @@ const ServerPaginatedDDList = (props) => {
         }
 
         let { entries, total }  = apiResponse;
+        
+        // if (items.length === 0) {
+        //     items = Array(total);
+        // }
+
         const totalEntries = [...items, ...entries];
 
         if (totalEntries.length < total) {
@@ -137,7 +142,6 @@ const ServerPaginatedDDList = (props) => {
             minimumBatchSize={pageSize}
             // Threshold at which to pre-fetch data; defaults to 15. A threshold of 15 means that data will start loading when a user scrolls within 15 rows.
             threshold={pageSize}>
-
             {({ onItemsRendered, ref }) => (
                 <FixedSizeList
                     itemCount={itemCount} itemSize={30}

@@ -14,7 +14,7 @@ ProgressBar.propTypes = {
     className: PropTypes.string,
     /** Progress value, must be a value between 1 to 100 */
     progress: function(props, propName, componentName) {
-        if (!props[propName]) {
+        if (typeof(props[propName]) === "undefined") {
             return new Error(
                 "Prop `" + propName + "` is required"
             );
@@ -26,10 +26,10 @@ ProgressBar.propTypes = {
             );
         }
 
-        if (props[propName] < 1 || props[propName] > 100) {
+        if (props[propName] < 0 || props[propName] > 100) {
             return new Error(
                 "Invalid prop `" + propName + "` supplied to" +
-                " `" + componentName + "`. Value must be between 1 to 100."
+                " `" + componentName + "`. Value must be between 0 to 100."
             );
         }
     },

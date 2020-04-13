@@ -53,6 +53,14 @@ const getFilteredRecords = ({records = [], searchBy, searchByKey, sortByConfig})
     return filteredRecords;
 };
 
+export const REQUEST_KEYS = {
+    searchBy: "search",
+    sortBy: "sortBy",
+    sortOrder: "sortOrder",
+    sortASC: "ASC",
+    sortDSC: "DSC"
+};
+
 const Table = (props) => {
     const {
         className,
@@ -60,9 +68,7 @@ const Table = (props) => {
         columnConfigs,
         idAttribute,
         searchBy,
-        searchByKey,
-        sortByKey,
-        sortOrderKey,
+        getRequestKeys,
         paginationPosition,
         paginationType,
         requestId,
@@ -94,14 +100,22 @@ const Table = (props) => {
     const { perPageCount, pageNo } = pageConfig;
     const omitParams = [pageNoKey, perPageKey, ...omitProps.split(",")]
 
+    let {  
+        searchBy:searchByKey,
+        sortBy:sortByKey,
+        sortOrder:sortOrderKey,
+        sortASC:ASCEnum,
+        sortDSC:DSCEnum
+    } = {...REQUEST_KEYS, ...getRequestKeys()};
+
     let extraParams = utils.omit(restProps, omitParams);
     let requestParams = {
+        ...extraParams,
         [pageNoKey]: pageNo,
         [perPageKey]: perPageCount,
         ...(searchQuery && {[searchByKey]: searchQuery}),
         ...(sortBy && {[sortByKey]: sortBy}),
-        ...(sortOrder && {[sortOrderKey]: sortOrder}),
-        ...extraParams
+        ...(sortOrder && {[sortOrderKey]: sortOrder === "DSC" ? DSCEnum : ASCEnum})
     };
 
     const requests = [{
@@ -148,6 +162,12 @@ const Table = (props) => {
         });
     };
 
+    // const onPageConfigChanged = (pageConfig) => {
+    //     props.onPageConfigChanged(() => {
+    //         setPageConfig(pageConfig);
+    //     });
+    // };
+
     const filteredRecords = getFilteredRecords({records, searchBy, searchByKey, sortByConfig});
     const totalRecords = paginationType === "SERVER" ? serverTotal : filteredRecords.length;
     const paginationComponent = <PaginationComponent pageSizeList={pageSizeList} 
@@ -180,12 +200,6 @@ Table.propTypes = {
     ...BaseTable.propTypes,
     /** search value to search data in the table */
     searchBy: PropTypes.string,
-    /** The field by which to search the data in the table */
-    searchByKey: PropTypes.string,
-    /** The field to send the sort by parameter to the API in case of server side paginated table */
-    sortByKey: PropTypes.string,
-    /** The field to send the sort order parameter to the API in case of server side paginated table */
-    sortOrderKey: PropTypes.string,
     /** list of supported page sizes  */
     pageSizeList: PropTypes.array,
     /** location where the pagination component must be displayed */
@@ -208,15 +222,16 @@ Table.propTypes = {
      /** If paginationType is "SERVER", 
      * a comma separated list of the props to be omitted from being added to the API request */
     omitProps: PropTypes.string,
+    /** If paginationType is "SERVER", function that is expected to return the key configs for the various request settings
+     * in the format { searchBy, sortBy, sortOrder }
+     */
+    getRequestKeys: PropTypes.func,
     /** If paginationType is "SERVER", function that is expected to return the URL Params object */
     getUrlParams: PropTypes.func
 }
 
 Table.defaultProps = {
     ...BaseTable.defaultProps,
-    searchByKey: "name",
-    sortByKey: "sortBy",
-    sortOrderKey: "sortOrder",
     pageSizeList: [{
         id: "10",
         name: "10"
@@ -235,6 +250,7 @@ Table.defaultProps = {
     pageNoKey: "page",
     perPageKey: "count",
     omitProps: "",
+    getRequestKeys: () => ({}),
     getUrlParams: () => ({})
 };
 

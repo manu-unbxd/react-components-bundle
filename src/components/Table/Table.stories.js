@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useCallback } from "react";
 import Table from "./Table";
 import DataLoader from "../DataLoader";
 import dataLoader from "../../core/dataLoader";
@@ -133,10 +133,12 @@ export const TableWithSearch = () => {
         setSearchBy(value);
     };
 
+    const getRequestKeys = useCallback(() => ({searchBy: "title"}));
+
     return (<Fragment>
         <Input name="searchBy" onChange={onSearchChange} />
         <Table
-            records={TODOS} searchBy={searchBy} searchByKey="title"
+            records={TODOS} searchBy={searchBy} getRequestKeys={getRequestKeys}
             columnConfigs={getTodosColumnConfigs()}
         />
     </Fragment>);
@@ -164,7 +166,7 @@ export const ServerSideTable = () => {
     return (<Fragment>
         <Input name="searchBy" onChange={onSearchChange} />
         <Table
-            searchBy={searchBy} searchByKey="search"
+            searchBy={searchBy}
             paginationType="SERVER"
             requestId="getUsers"
             perPageKey="per_page"
