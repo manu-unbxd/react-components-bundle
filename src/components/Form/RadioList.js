@@ -4,7 +4,7 @@ import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
   
 const RadioList = (props) => {
-    const { options, label, name, className, value, defaultValue, appearance, onChange } = props;
+    const { options, label, name, className, value, defaultValue, appearance, onChange, ...restProps } = props;
     const { onValueChange } = useContext(FormContext);
 
     const postFormValueChange = (value) => {
@@ -32,7 +32,8 @@ const RadioList = (props) => {
         label,
         name,
         className: "RCB-form-el",
-        onChange: onInputChange
+        onChange: onInputChange,
+        ...restProps
     };
 
     return (<FormElementWrapper className={className} appearance={appearance}>

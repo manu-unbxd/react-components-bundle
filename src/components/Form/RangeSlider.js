@@ -4,7 +4,7 @@ import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
 
 const RangeSlider = (props) => {
-    const { label, name, min, max, className, value, defaultValue, appearance, onChange } = props;
+    const { label, name, min, max, className, value, defaultValue, appearance, onChange, ...restProps } = props;
     const { onValueChange } = useContext(FormContext);
 
     const postFormValueChange = (value) => {
@@ -38,7 +38,8 @@ const RangeSlider = (props) => {
         id: name,
         defaultValue,
         className: "RCB-form-el",
-        onChange: onInputChange
+        onChange: onInputChange,
+        ...restProps
     };
 
     if (typeof(onChange) === "function") {

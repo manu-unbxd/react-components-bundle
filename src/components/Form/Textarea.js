@@ -4,7 +4,7 @@ import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
 
 const Textarea = (props) => {
-    const { label, name, className, value, defaultValue, placeholder, appearance, onChange } = props;
+    const { label, name, className, value, defaultValue, placeholder, appearance, onChange, ...restProps } = props;
     const { onValueChange } = useContext(FormContext);
 
     const postFormValueChange = (value) => {
@@ -36,7 +36,8 @@ const Textarea = (props) => {
         defaultValue,
         placeholder,
         className: "RCB-form-el",
-        onChange: onInputChange
+        onChange: onInputChange,
+        ...restProps
     };
 
     if (typeof(onChange) === "function") {

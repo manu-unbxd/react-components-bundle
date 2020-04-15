@@ -162,12 +162,6 @@ const Table = (props) => {
         });
     };
 
-    // const onPageConfigChanged = (pageConfig) => {
-    //     props.onPageConfigChanged(() => {
-    //         setPageConfig(pageConfig);
-    //     });
-    // };
-
     const filteredRecords = getFilteredRecords({records, searchBy, searchByKey, sortByConfig});
     const totalRecords = paginationType === "SERVER" ? serverTotal : filteredRecords.length;
     const paginationComponent = <PaginationComponent pageSizeList={pageSizeList} 

@@ -16,7 +16,8 @@ let Input = (props, ref) => {
         placeholder, 
         appearance, 
         onChange,
-        validations
+        validations,
+        ...restProps
     } = props;
     const { onValueChange } = useContext(FormContext);
 
@@ -68,7 +69,8 @@ let Input = (props, ref) => {
         placeholder,
         className: "RCB-form-el",
         onChange: onInputChange,
-        ref
+        ref,
+        ...restProps
     };
 
     if (typeof(onChange) === "function") {

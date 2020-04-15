@@ -4,7 +4,7 @@ import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
   
 const Checkbox = (props) => {
-    const { label, name, className, value, defaultValue, appearance, onChange } = props;
+    const { label, name, className, value, defaultValue, appearance, onChange, ...restProps } = props;
     const { onValueChange } = useContext(FormContext);
 
     const postFormValueChange = (value) => {
@@ -34,7 +34,8 @@ const Checkbox = (props) => {
         id: name,
         defaultChecked: defaultValue,
         className: "RCB-form-el",
-        onChange: onInputChange
+        onChange: onInputChange,
+        ...restProps
     };
 
     if (typeof(onChange) === "function") {

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import DataLoader from "../DataLoader";
+import React, { useState, useEffect, useRef } from "react";
 import { FixedSizeList } from "react-window";
 import InfiniteLoader from "react-window-infinite-loader";
+import dataLoader from "../../core/dataLoader";
 
 /* eslint-disable react/prop-types */
 
@@ -54,30 +54,13 @@ const ServerPaginatedDDList = (props) => {
         getUrlParams
     } = props;
     const [ items, setItems ] = useState([]);
-    const [ pageNo, setPageNo ] = useState(1);
-    const [ searchBy, setSearchBy ] = useState(searchQuery);
     const [ total, setTotal ] = useState(0);
     const [ hasNextPage, setHasNextPage ] = useState(false);
     const [ isNextPageLoading, setIsNextPageLoading ] = useState(true);
-
-    const requests = [{
-        requestId,
-        params: {
-            [pageNoKey]: pageNo,
-            [perPageKey]: pageSize,
-            [searchAttribute]: searchBy,
-            ...requestParams
-        },
-        urlParams: getUrlParams()
-    }];
-
-    useEffect(() => {
-        /* searh query changed -> reset page no. to 1 */
-        setPageNo(1);
-        setSearchBy(searchQuery);
-    }, [searchQuery]);
+    const pageNoRef = useRef(1);
+    const searchRef = useRef("");
         
-    const onDataLoaded = ([response]) => {
+    const onDataLoaded = (response) => {
         let apiResponse = response;
 
         setIsNextPageLoading(false);
@@ -88,10 +71,6 @@ const ServerPaginatedDDList = (props) => {
 
         let { entries, total }  = apiResponse;
         
-        // if (items.length === 0) {
-        //     items = Array(total);
-        // }
-
         const totalEntries = [...items, ...entries];
 
         if (totalEntries.length < total) {
@@ -104,12 +83,39 @@ const ServerPaginatedDDList = (props) => {
         setTotal(total);
     };
 
-    /* Callback to be invoked when more rows must be loaded. It should return a Promise that is resolved once all data has finished loading. */
-    const loadNextPage = () => {
-        console.log("LOADING NEXT PAGE");
+    const makeAPICall = () => {
         setIsNextPageLoading(true);
-        setPageNo(pageNo + 1);
+        const def = dataLoader.getRequestDef({
+            requestId,
+            params: {
+                [pageNoKey]: pageNoRef.current,
+                [perPageKey]: pageSize,
+                [searchAttribute]: searchRef.current,
+                ...requestParams
+            },
+            urlParams: getUrlParams()
+        });
+
+        def.done(onDataLoaded);
+
+        return def;
+    }
+
+    /* Callback to be invoked when more rows must be loaded. 
+        It should return a Promise that is resolved once all data has finished loading.
+     */
+    const loadNextPage = () => {
+        pageNoRef.current = pageNoRef.current + 1;
+        return makeAPICall();
     };
+
+    useEffect(() => {
+        /* searh query changed -> reset page no. to 1 */
+        pageNoRef.current = 1;
+        searchRef.current = searchQuery;
+        setItems([]);
+        makeAPICall();
+    }, [searchQuery]);
 
 
     // If there are more items to be loaded then add an extra row to hold a loading indicator.
@@ -131,8 +137,7 @@ const ServerPaginatedDDList = (props) => {
         isItemLoaded 
     };
 
-    return <DataLoader requests={requests} onDataLoaded={onDataLoaded}>
-        <InfiniteLoader
+    return (<InfiniteLoader
             // Function responsible for tracking the loaded state of each item.
             isItemLoaded={isItemLoaded}
             // Number of rows in list; can be arbitrary high number if actual number is unknown.
@@ -150,9 +155,7 @@ const ServerPaginatedDDList = (props) => {
                         {DropdownItem}
                 </FixedSizeList>
             )}
-
-        </InfiniteLoader>
-    </DataLoader>
+    </InfiniteLoader>);
 };
 
 ServerPaginatedDDList.defaultProps = {
