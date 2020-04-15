@@ -280,7 +280,7 @@ Dropdown.defaultProps = {
     className: "",
     label: "",
     showLabel: true,
-    showSearch: true,
+    showSearch: false,
     searchAttribute: "search",
     multiSelect: false,
     idAttribute: "id",
