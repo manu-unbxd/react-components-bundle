@@ -34,6 +34,25 @@
         }
     }
 
+    &-dd-with-create {
+        .RCB-inline-modal-body {
+            display: flex;
+            flex-direction: column;
+
+            .RCB-list {
+                flex: 1;
+                overflow: scroll;
+            }
+        }
+
+        .RCB-dd-create-cta {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #bfbfbf;
+            cursor: pointer;
+        }
+    }
+
     &-select-arrow {
         float: right;
         font-size: 12px;

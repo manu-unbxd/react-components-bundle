@@ -96,12 +96,15 @@ const Dropdown = (props) => {
         searchAttribute,
         maxHeight,
         responseFormatter,
-        getUrlParams
+        getUrlParams,
+        showCreateCTA,
+        createCTAComponent,
+        onCreateCTAClick
     } = props;
     const [ searchQuery, setSearchQuery ] = useState("");
 
     let initialSelected = [];
-    const initialValue = typeof(onChange) === "function" ? value : defaultValue
+    const initialValue = typeof(onChange) === "function" ? value : defaultValue;
     
     if (typeof(initialValue) !== "undefined") {
         initialSelected = convertToArray(initialValue);
@@ -175,9 +178,11 @@ const Dropdown = (props) => {
         getUrlParams
     };
 
+    const inlineModalClasses = "RCB-form-el " + (showCreateCTA ? "RCB-dd-with-create" : "");
+
     return (<FormElementWrapper className={`RCB-dropdown ${className}`} appearance={appearance}>
         {showLabel && <label className="RCB-form-el-label" htmlFor={name}>{label}</label>}
-        <InlineModal className="RCB-form-el" ref={inlineModalRef} halign={halign}>
+        <InlineModal className={inlineModalClasses} ref={inlineModalRef} halign={halign}>
             <InlineModalActivator>
                 <SelectionSummary 
                     selectedItems={selectedItems}
@@ -193,6 +198,7 @@ const Dropdown = (props) => {
                     <ServerPaginatedDDList {...commonAttributes} {...serverListAttrs} /> : 
                     <NormalList {...commonAttributes} 
                         items={getFilteredOptions(options, searchQuery, nameAttribute)} />}
+                {showCreateCTA && <div className="RCB-dd-create-cta" onClick={onCreateCTAClick}>{createCTAComponent}</div>}
             </InlineModalBody>
         </InlineModal>
     </FormElementWrapper>);
@@ -239,6 +245,12 @@ Dropdown.propTypes = {
         PropTypes.instanceOf(Element),
         PropTypes.func
     ]),
+    /** Pass true to show a create CTA at the end of the dropdown */
+    showCreateCTA: PropTypes.bool,
+    /** Customize the create CTA HTML by passing a createCTAComponent */
+    createCTAComponent: PropTypes.any,
+    /** Callback that gets called when Create CTA button is clicked */
+    onCreateCTAClick: PropTypes.func,
     /** Pass this component to customise the selection summary HTML. 
      * The array of selected item objects will be sent as props
      */
@@ -294,7 +306,10 @@ Dropdown.defaultProps = {
     maxHeight: 200,
     pageSize: 10,
     getUrlParams: () => ({}),
-    SelectionSummary: DefaultSelectionSummary
+    SelectionSummary: DefaultSelectionSummary,
+    showCreateCTA: false,
+    createCTAComponent: <span>Create New</span>,
+    onCreateCTAClick: () => {}
 };
 
 export default Dropdown;
