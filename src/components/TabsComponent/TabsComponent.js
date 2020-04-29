@@ -41,12 +41,12 @@ const TabsComponent = (props) => {
     };
 
     const selecetdTabData = items.find(obj => obj.id === selected);
-    const { tabComponent } = selecetdTabData;
+    const { bodyComponent } = selecetdTabData;
 
     return (<div className={`RCB-tabs-container ${appearanceClassName} ${className}`}>
         <List items={items} ListItem={TabTitleItem} selected={selected} changeTab={changeTab} className="RCB-tabs-header" />
         <div className="RCB-tab-content">
-            {tabComponent}
+            {bodyComponent}
         </div>
     </div>)
 };
@@ -54,11 +54,11 @@ const TabsComponent = (props) => {
 TabsComponent.propTypes = {
     /** Pass any additional classNames to Tabs component */
     className: PropTypes.string,
-    /** Array of tab items. Each object in array should contain {id, label, tabComponent: <Component />, disabled} */
+    /** Array of tab items. Each object in array should contain {id, label, bodyComponent: <Component />, disabled} */
     items: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.any.isRequired,
-        tabComponent: PropTypes.instanceOf(Object),
+        bodyComponent: PropTypes.instanceOf(Object),
         disabled: PropTypes.bool
     })).isRequired,
     /** ID of the tab item to be selected */

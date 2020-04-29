@@ -18,17 +18,17 @@ let items = [
     id: "SETUP",
     label: "Setup",
     disabled: true,
-    tabComponent: <SetupTab />,
+    bodyComponent: <SetupTab />,
   },
   {
     id: "CONFIG",
     label: "Configuration",
-    tabComponent: <ConfigTab />,
+    bodyComponent: <ConfigTab />,
   },
   {
     id: "INFO",
     label: "Info",
-    tabComponent: <InfoTab />,
+    bodyComponent: <InfoTab />,
   },
 ];
 

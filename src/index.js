@@ -19,7 +19,8 @@ import {
     TabsComponent,
     NotificationComponent,
     ProgressBar,
-    Tooltip
+    Tooltip,
+    Accordian
 } from "./components";
 
 import { 
@@ -58,6 +59,7 @@ export {
     NotificationComponent,
     ProgressBar,
     Tooltip,
+    Accordian,
     dataLoader,
     utils,
     customHooks

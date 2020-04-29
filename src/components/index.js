@@ -9,6 +9,7 @@ import TabsComponent from "./TabsComponent";
 import NotificationComponent from "./NotificationComponent";
 import ProgressBar from "./ProgressBar";
 import Tooltip from "./Tooltip";
+import Accordian from "./Accordian";
 
 export {
     Button,
@@ -31,5 +32,6 @@ export {
     TabsComponent,
     NotificationComponent,
     ProgressBar,
-    Tooltip
+    Tooltip,
+    Accordian
 };
