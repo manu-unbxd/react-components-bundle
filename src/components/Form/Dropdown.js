@@ -79,6 +79,7 @@ const Dropdown = (props) => {
         value, 
         defaultValue,
         onChange, 
+        disabled,
         options, 
         showSearch,
         idAttribute,
@@ -180,7 +181,7 @@ const Dropdown = (props) => {
 
     const inlineModalClasses = "RCB-form-el " + (showCreateCTA ? "RCB-dd-with-create" : "");
 
-    return (<FormElementWrapper className={`RCB-dropdown ${className}`} appearance={appearance}>
+    return (<FormElementWrapper className={`RCB-dropdown ${disabled ? "RCB-disabled" : ""} ${className}`} appearance={appearance}>
         {showLabel && <label className="RCB-form-el-label" htmlFor={name}>{label}</label>}
         <InlineModal className={inlineModalClasses} ref={inlineModalRef} halign={halign}>
             <InlineModalActivator>
@@ -232,6 +233,8 @@ Dropdown.propTypes = {
     /** array of default selected item objects */
     defaultValue: PropTypes.any,
     onChange: PropTypes.func,
+    /** pass true if dropdown has to be disabled */
+    disabled: PropTypes.bool,
     /* set to true if you want search ability for dropdown items */
     showSearch: PropTypes.bool,
     /** Is dropdown multi select or single select */

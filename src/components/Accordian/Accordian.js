@@ -15,7 +15,7 @@ const AccordianItem = (props) => {
         setIsOpen(open);
     }, [open]);
 
-    return <div className="RCB-accordian-item">
+    return <div className={`RCB-accordian-item ${isOpen ? "RCB-accordian-open" : "RCB-accordian-close"}`}>
         <div className="RCB-accordian-title" onClick={onItemClick}>{titleComponent}</div>
         {isOpen && <div className="RCB-accordian-body">{bodyComponent}</div>}
     </div>
