@@ -1,8 +1,9 @@
-import React, { useContext, useState, forwardRef, useEffect } from "react";
+import React, { useContext, useState, forwardRef, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
 import VALIDATORS from "./Validators";
+import utils from "../../core/utils";
 
 let Input = (props, ref) => {
     const [ error, setError ] = useState();
@@ -17,9 +18,11 @@ let Input = (props, ref) => {
         appearance, 
         onChange,
         validations,
+        debounceTime,
         ...restProps
     } = props;
     const { onValueChange } = useContext(FormContext);
+    // const debouncedFn = useRef();
 
     const postFormValueChange = (value) => {
         typeof(onValueChange) === "function" && onValueChange(name, value);
@@ -52,7 +55,23 @@ let Input = (props, ref) => {
         }
 
         postFormValueChange(value);
-    }
+    };
+
+    const getDebouncedChange = (event) => {
+        event.persist();
+        // const value = event.target.value;
+
+        // if (!debouncedFn.current) {
+        //     debouncedFn.current = utils.debounce(() => {
+        //         onInputChange(event)
+        //     }, debounceTime);
+        // }
+
+        // return debouncedFn.current();
+        (utils.debounce(() => {
+            onInputChange(event);
+        }, debounceTime))();
+    };
 
     useEffect(() => {
         /* set the initial form element value in the form context */
@@ -68,7 +87,7 @@ let Input = (props, ref) => {
         defaultValue,
         placeholder,
         className: "RCB-form-el",
-        onChange: onInputChange,
+        onChange: debounceTime ? getDebouncedChange : onInputChange,
         ref,
         ...restProps
     };
@@ -110,7 +129,9 @@ Input.propTypes = {
     /** Define the appearance of the form element. Accepted values are either "inline" or "block" */
     appearance: PropTypes.oneOf(["inline", "block"]),
     /** Becomes a controlled component if onChange function is given */
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    /** debounce time in milliseconds */
+    debounceTime: PropTypes.number
 };
 
 Input.defaultProps = {

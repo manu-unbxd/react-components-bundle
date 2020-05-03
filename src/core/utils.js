@@ -49,6 +49,19 @@ const utils = {
     },
     isObjectEmpty: function(obj) {
         return Object.keys(obj).length ? false : true;
+    },
+    debounce: function(func, debounceTime) {
+        let timeout;
+
+        return function() {
+            const context = this, 
+                args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                timeout = null;
+                func.apply(context, args);
+            }, debounceTime);
+        };
     }
 }
 
