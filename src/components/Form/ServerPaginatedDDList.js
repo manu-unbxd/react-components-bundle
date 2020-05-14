@@ -54,11 +54,12 @@ const ServerPaginatedDDList = (props) => {
         getUrlParams
     } = props;
     const [ items, setItems ] = useState([]);
+    const [ itemsResetCounter, setItemsResetCounter ] = useState(0);
     const [ total, setTotal ] = useState(0);
     const [ hasNextPage, setHasNextPage ] = useState(false);
     const [ isNextPageLoading, setIsNextPageLoading ] = useState(true);
     const pageNoRef = useRef(1);
-    const searchRef = useRef("");
+    const searchRef = useRef(searchQuery);
         
     const onDataLoaded = (response) => {
         let apiResponse = response;
@@ -110,11 +111,16 @@ const ServerPaginatedDDList = (props) => {
     };
 
     useEffect(() => {
+        makeAPICall();
+    }, [itemsResetCounter]);
+
+    useEffect(() => {
         /* searh query changed -> reset page no. to 1 */
         pageNoRef.current = 1;
         searchRef.current = searchQuery;
+        setIsNextPageLoading(true);
         setItems([]);
-        makeAPICall();
+        setItemsResetCounter(itemsResetCounter + 1);
     }, [searchQuery]);
 
 

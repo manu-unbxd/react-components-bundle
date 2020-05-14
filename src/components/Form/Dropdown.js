@@ -5,6 +5,7 @@ import List from "../List";
 import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
 import ServerPaginatedDDList from "./ServerPaginatedDDList";
+import utils from "../../core/utils";
 
 const convertToArray = (value) => {
     if (!value) {
@@ -103,6 +104,7 @@ const Dropdown = (props) => {
         onCreateCTAClick
     } = props;
     const [ searchQuery, setSearchQuery ] = useState("");
+    const debouncedFn = useRef();
 
     let initialSelected = [];
     const initialValue = typeof(onChange) === "function" ? value : defaultValue;
@@ -157,9 +159,25 @@ const Dropdown = (props) => {
         
     }, [value, defaultValue]);
 
+    const debouncedSearchChange = (value) => {
+        setSearchQuery(value);
+    };
+
     const onSearchChange = (event) => {
-        // TODO : add a debounce
-        setSearchQuery(event.target.value);
+        event.persist();
+
+        if (!debouncedFn.current) {
+            debouncedFn.current = utils.debounce(debouncedSearchChange, 300);
+        }
+
+        return debouncedFn.current(event.target.value);
+    };
+
+    const onModalStateChange = (isModalOpen) => {
+        if (!isModalOpen) {
+            /* modal is closed */
+            setSearchQuery("");
+        }
     };
 
     const commonAttributes = {
@@ -183,7 +201,7 @@ const Dropdown = (props) => {
 
     return (<FormElementWrapper className={`RCB-dropdown ${disabled ? "RCB-disabled" : ""} ${className}`} appearance={appearance}>
         {showLabel && <label className="RCB-form-el-label" htmlFor={name}>{label}</label>}
-        <InlineModal className={inlineModalClasses} ref={inlineModalRef} halign={halign}>
+        <InlineModal className={inlineModalClasses} ref={inlineModalRef} halign={halign} onModalStateChange={onModalStateChange}>
             <InlineModalActivator>
                 <SelectionSummary 
                     selectedItems={selectedItems}
