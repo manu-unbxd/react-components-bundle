@@ -1,3 +1,4 @@
+import VALIDATORS from "./Validators";
 let uniqueCounter = 1;
 
 const utils = {
@@ -62,6 +63,32 @@ const utils = {
                 func.apply(context, args);
             }, debounceTime);
         };
+    },
+    checkIfValid: function(value, validations) {
+        let isValidValue = true;
+        let errorMessage;
+    
+        for (let i = 0; i < validations.length; i++) {
+            const validationObj = validations[i];
+            const { type, message = "Invalid field value" } = validationObj;
+            isValidValue = VALIDATORS[type](value, validationObj);
+    
+            if (!isValidValue) {
+                errorMessage = message;
+                break;
+            }
+        }
+    
+        return {
+            isValid: isValidValue,
+            error: errorMessage
+        };
+    },
+    isObject: function(value) {
+        return Object.prototype.toString.call(value) === "[object Object]";
+    },
+    isArray: function(value) {
+        return Object.prototype.toString.call(value) === "[object Array]";
     }
 }
 

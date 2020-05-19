@@ -1,3 +1,5 @@
+import utils from "./utils";
+
 const VALIDATORS = {
     EMAIL: (value = "") => {
         const regEx = /^[_A-Za-z0-9-+]+(\.[_A-Za-z0-9-\\+]+)*@[_A-Za-z0-9-+]+(\.[_A-Za-z0-9-+]+)*(\.[A-Za-z]{2,})$/i;
@@ -17,7 +19,8 @@ const VALIDATORS = {
         return regEx.test(value.trim());
     },
     REQUIRED: (value) => {
-        if (value !== 0 && !value) {
+        if ((utils.isArray(value) && value.length == 0)
+            || (value !== 0 && !value)) {
             return false;
         }
         return true;

@@ -88,7 +88,8 @@ const Dropdown = (props) => {
         noSelectionLabel,
         appearance,
         multiSelect,
-        DropdownItem ,
+        DropdownItem,
+        validations,
         paginationType,
         requestId,
         requestParams,
@@ -120,7 +121,8 @@ const Dropdown = (props) => {
     const inlineModalRef = useRef();
 
     const postFormValueChange = (value) => {
-        typeof(onValueChange) === "function" && onValueChange(name, value);
+        const { error } = utils.checkIfValid(value, validations);
+        typeof(onValueChange) === "function" && onValueChange(name, value, error);
     };
 
     const selectItem = (item) => {
@@ -154,8 +156,8 @@ const Dropdown = (props) => {
             postValue = multiSelect ? arrayPostValue : postValue;
 
             setSelectedItems(arrayPostValue);
-            postFormValueChange(postValue);
         }
+        postFormValueChange(postValue);
         
     }, [value, defaultValue]);
 
@@ -278,6 +280,13 @@ Dropdown.propTypes = {
     SelectionSummary: PropTypes.func,
     /** Define the appearance of the form element. Accepted values are either "inline" or "block" */
     appearance: PropTypes.oneOf(["inline", "block"]),
+    /** Array of validations to perform on the form element value. 
+     * If the validation fails, you will get an "error" field in the form onSubmit event */
+    validations: PropTypes.arrayOf(PropTypes.shape({
+        type: PropTypes.oneOf(["REQUIRED", "CUSTOM"]).isRequired,
+        message: PropTypes.string.isRequired,
+        validator: PropTypes.func
+    })),
     /** Type of pagination for the dropdown list items. Send "SERVER" for server side pagination */
     paginationType: PropTypes.oneOf(["NONE", "SERVER"]),
     /** If paginationType is "SERVER", pass the requestId for the server request */
@@ -321,6 +330,7 @@ Dropdown.defaultProps = {
     noSelectionLabel: "Select",
     appearance: "inline",
     halign: "left",
+    validations: [],
     paginationType: "NONE",
     pageNoKey: "page",
     perPageKey: "count",

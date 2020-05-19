@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useEffect } from "react";
+import React, { Fragment, useRef } from "react";
 import Form from "../Form";
 import Input from "../Input";
 import Button, { ButtonAppearance } from "../../Button";
@@ -8,10 +8,10 @@ export const TextInput = () => {
         const { data, errors = {} } = formData;
 
         if (Object.keys(errors).length) {
-        console.log("ERRORS FOUND : ");
-        console.log(errors);
+            console.log("ERRORS FOUND : ");
+            console.log(errors);
         } else {
-        console.log("Submitted data: ", data);
+            console.log("Submitted data: ", data);
         }
     };
 

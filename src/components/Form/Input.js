@@ -1,8 +1,8 @@
-import React, { useContext, useState, forwardRef, useEffect, useRef } from "react";
+import React, { useContext, useState, forwardRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
-import VALIDATORS from "./Validators";
+import VALIDATORS from "../../core/Validators";
 import utils from "../../core/utils";
 
 let Input = (props, ref) => {
@@ -24,37 +24,25 @@ let Input = (props, ref) => {
     const { onValueChange } = useContext(FormContext);
     // const debouncedFn = useRef();
 
-    const postFormValueChange = (value) => {
-        typeof(onValueChange) === "function" && onValueChange(name, value);
+    const postFormValueChange = (value, error) => {
+        typeof(onValueChange) === "function" && onValueChange(name, value, error);
     };
 
     const onInputChange = (event) => {
         const value = event.target.value;
-        let isValidValue = true;
-        let errorMessage;
+        const { isValid, error } = utils.checkIfValid(value, validations);
 
-        for (let i = 0; i < validations.length; i++) {
-            const validationObj = validations[i];
-            const { type, message = "Invalid field value" } = validationObj;
-            isValidValue = VALIDATORS[type](value, validationObj);
-
-            if (!isValidValue) {
-                errorMessage = message;
-                break;
-            }
-        }
-
-        if (isValidValue) {
+        if (isValid) {
             setError("");
         } else {
-            setError(errorMessage);
+            setError(error);
         }
 
         if (typeof(onChange) === "function") {
-            onChange(value, errorMessage);
+            onChange(value, error);
         }
 
-        postFormValueChange(value);
+        postFormValueChange(value, error);
     };
 
     const getDebouncedChange = (event) => {
@@ -76,7 +64,8 @@ let Input = (props, ref) => {
     useEffect(() => {
         /* set the initial form element value in the form context */
         const postValue = typeof(onChange) === "function" ? value : defaultValue;
-        postFormValueChange(postValue);
+        const { error } = utils.checkIfValid(postValue, validations);
+        postFormValueChange(postValue, error);
     }, [value, defaultValue]);
 
     let inputProps = {

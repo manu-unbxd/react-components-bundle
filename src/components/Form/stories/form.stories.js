@@ -14,10 +14,14 @@ import { FRUITS_LIST } from "../../../../public/Constants";
 
 export const FormExample = () => {
     const onSubmit = formData => {
-        const { data } = formData;
-        const { fruit } = data;
+        const { data, errors = {} } = formData;
     
-        console.log("Selected Fruit: ", fruit);
+        if (Object.keys(errors).length) {
+            console.log("ERRORS FOUND : ");
+            console.log(errors);
+        } else {
+            console.log("Submitted data: ", data);
+        }
     };
 
     return (<Form onSubmit={onSubmit}>
@@ -47,7 +51,9 @@ export const FormExample = () => {
         <Checkbox name="pineapple" label="Pineapple" value={true} onChange={()=>{}} />
         <Checkbox name="grapes" label="Grapes" />
         <br />
-        <Dropdown name="fruit" label="Select fruit" options={FRUITS_LIST} appearance="block" />
+        <Dropdown name="fruit" label="Select fruit" 
+            options={FRUITS_LIST} appearance="block"
+            validations={[{ type: "REQUIRED", message: "Please select a fruit" }]} />
         <Toggle label="Is Active?" name="isActive" appearance="block" />
         <RangeSlider
           name="price"
