@@ -76,8 +76,8 @@ class DataLoader {
             return fetchPolyfill(requestUrl, requestMetadata)
                 .then(response => {
                     const stringStatus = response.status.toString();
-                    if (stringStatus.indexOf("2") === 0) {
-                        /* Success : 2** response code */
+                    if (stringStatus.indexOf("2") === 0 || stringStatus.indexOf("400") === 0) {
+                        /* Success : 2** response code, or Bad Request */
                         return response.json();
                     } else {
                         reject(response.statusText);
