@@ -5,21 +5,23 @@ import utils from "./utils";
 class DataLoader {
     _requestsMap = {}
     _commonHeaders = {}
+    _responseParser = x => x
+    _requestParser = x => x
     _middlewares = {}
     setCommonHeaders (headers) {
         this._commonHeaders = {...this._commonHeaders, ...headers};
     }
-    setResponseParser () {
-        
+    setResponseParser (responseParser) {
+        this._responseParser = responseParser;
     }
-    setRequestParser () {
-
+    setRequestParser (requestParser) {
+        this._requestParser = requestParser;
     }
     addRequestConfig (requestId, requestConfig) {
         this._requestsMap[requestId] = requestConfig;
     }
     getRequestMiddleware (requestId) {
-        let requestMiddleware = (x, y) => y, 
+        let requestMiddleware = x => x, 
             middleware = this._middlewares[requestId];
 
         if (typeof(middleware) !== "undefined" && typeof(middleware.reqParser) === "function") {
@@ -29,7 +31,7 @@ class DataLoader {
         return requestMiddleware;
     }
     getResponseMiddleware (requestId) {
-        let responseMiddleware = (x, y) => y, 
+        let responseMiddleware = x => x, 
             middleware = this._middlewares[requestId];
 
         if (typeof(middleware) !== "undefined" && typeof(middleware.resParser) === "function") {
@@ -40,11 +42,14 @@ class DataLoader {
     }
     getRequestParams (requestId, params) {
         const requestParser = this.getRequestMiddleware(requestId);
-        return requestParser(requestId, params);
+        return requestParser(params, requestId);
     }
     parseResponseData (requestId, response) {
         const responseParser = this.getResponseMiddleware(requestId);
-        return responseParser(requestId, response);
+        const commonParser = this._responseParser;
+        /* parse through common parser */
+        response = typeof(commonParser) === "function" ? commonParser(response, requestId) : response;
+        return responseParser(response, requestId);
     }
     getRequestDef ({ requestId, urlParams = {}, params = {}, headers = {} }) {
         const requestConfig = this._requestsMap[requestId];
@@ -76,8 +81,8 @@ class DataLoader {
             return fetchPolyfill(requestUrl, requestMetadata)
                 .then(response => {
                     const stringStatus = response.status.toString();
-                    if (stringStatus.indexOf("2") === 0 || stringStatus.indexOf("400") === 0) {
-                        /* Success : 2** response code, or Bad Request */
+                    if (stringStatus.indexOf("2") === 0 || stringStatus.indexOf("4") === 0) {
+                        /* Success : 2** response code, or 4** response code */
                         return response.json();
                     } else {
                         reject(response.statusText);
