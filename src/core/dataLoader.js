@@ -15,13 +15,13 @@ class DataLoader {
         this._responseParser = responseParser;
     }
     setRequestParser (requestParser) {
-        this._responseParser = requestParser;
+        this._requestParser = requestParser;
     }
     addRequestConfig (requestId, requestConfig) {
         this._requestsMap[requestId] = requestConfig;
     }
     getRequestMiddleware (requestId) {
-        let requestMiddleware = (x, y) => y, 
+        let requestMiddleware = x => x, 
             middleware = this._middlewares[requestId];
 
         if (typeof(middleware) !== "undefined" && typeof(middleware.reqParser) === "function") {
@@ -31,7 +31,7 @@ class DataLoader {
         return requestMiddleware;
     }
     getResponseMiddleware (requestId) {
-        let responseMiddleware = (x, y) => y, 
+        let responseMiddleware = x => x, 
             middleware = this._middlewares[requestId];
 
         if (typeof(middleware) !== "undefined" && typeof(middleware.resParser) === "function") {
