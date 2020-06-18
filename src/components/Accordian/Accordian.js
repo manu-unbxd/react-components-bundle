@@ -3,12 +3,14 @@ import PropTypes from "prop-types";
 import List from "../List";
 
 const AccordianItem = (props) => {
-    const { itemData } = props;
+    const { itemData, index, hideBorder, clickedIndex } = props;
     const { open, titleComponent, bodyComponent } = itemData;
     const [ isOpen, setIsOpen ] = useState(open);
     
+    
     const onItemClick = () => {
         setIsOpen(!isOpen);
+        hideBorder(index);
     };
 
     useEffect(() => {
@@ -16,7 +18,7 @@ const AccordianItem = (props) => {
     }, [open]);
 
     return <div className={`RCB-accordian-item ${isOpen ? "RCB-accordian-open" : "RCB-accordian-close"}`}>
-        <div className="RCB-accordian-title" onClick={onItemClick}>{titleComponent}</div>
+        <div className={`RCB-accordian-title ${(index === (clickedIndex - 1 )) ? "RCB-prev-accordian" : ""}`} onClick={onItemClick}>{titleComponent}</div>
         {isOpen && <div className="RCB-accordian-body">{bodyComponent}</div>}
     </div>
 };
@@ -27,7 +29,10 @@ AccordianItem.propTypes = {
         bodyComponent: PropTypes.instanceOf(Object).isRequired,
         open: PropTypes.bool
     }),
-    onClick: PropTypes.func
+    index: PropTypes.number,
+    onClick: PropTypes.func,
+    hideBorder: PropTypes.func,
+    clickedIndex: PropTypes.number
 };
   
 const Accordian = (props) => {
@@ -36,8 +41,14 @@ const Accordian = (props) => {
         items
     } = props;
 
+    const [ clickedIndex, setClickedIndex ] = useState(0);
+
+    const hideBorder = (index) => {
+        setClickedIndex(index);
+    }
+
     return (<div className={`RCB-accordian ${className}`}>
-        <List items={items} ListItem={AccordianItem} />
+        <List items={items} ListItem={AccordianItem} hideBorder={hideBorder} clickedIndex={clickedIndex} />
     </div>);
 };
 
