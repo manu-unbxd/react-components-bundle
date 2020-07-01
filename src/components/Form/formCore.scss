@@ -66,6 +66,15 @@
         }
     }
 
+    &-dd-label {
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 70%;
+        vertical-align: top;
+        white-space: nowrap;
+    }
+
     &-file-input {
         cursor: pointer;
     }
