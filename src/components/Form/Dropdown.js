@@ -33,7 +33,7 @@ const DefaultSelectionSummary = ({selectedItems = [], multiSelect, noSelectionLa
         summaryString = selectedCount ? selectedItems[0][nameAttribute] : noSelectionLabel;
     }
 
-    return (<Fragment><span>{summaryString}</span><span className="RCB-select-arrow"></span></Fragment>);
+    return (<Fragment><span className="RCB-dd-label">{summaryString}</span><span className="RCB-select-arrow"></span></Fragment>);
 };
 
 export const DefaultDropdownItem = (props) => {
