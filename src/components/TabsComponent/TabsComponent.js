@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import List from "../List";
 
 const TabTitleItem = (props) => {
-    const { itemData, selected, changeTab } = props;
+    const { itemData, selected, changeTab, disabled:allDisabled } = props;
     const { id, label, disabled } = itemData;
     const isSelected = id === selected;
-    const className = `RCB-tab-title ${isSelected ? "selected" : ""} ${disabled ? "RCB-tab-disabled" : ""}`;
+    const className = `RCB-tab-title ${isSelected ? "selected" : ""} ${(allDisabled || disabled) ? "RCB-tab-disabled" : ""}`;
 
     const triggerTabChange = () => {
         changeTab(id);
@@ -24,14 +24,20 @@ TabTitleItem.propTypes = {
         disabled: PropTypes.bool
     }).isRequired,
     selected: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    changeTab: PropTypes.func.isRequired
+    changeTab: PropTypes.func.isRequired,
+    disabled: PropTypes.bool
 };
 
 const TabsComponent = (props) => {
-    const { className, items, selectedTab, onTabChanged, appearance } = props;
+    const { className, items, selectedTab, onTabChanged, appearance, disabled, staticTabContent } = props;
+    const getSelected = () => disabled ? "" : defaultSelected;
     const defaultSelected = selectedTab || (items[0] ? items[0].id : "");
-    const [ selected, setSelected ] = useState(defaultSelected);
+    const [ selected, setSelected ] = useState(getSelected());
     const appearanceClassName = `RCB-tabs-${appearance.toLowerCase()}`;
+
+    useEffect(() => {
+        setSelected(getSelected());
+    }, [disabled]);
 
     const changeTab = (id) => {
         setSelected(id);
@@ -41,12 +47,12 @@ const TabsComponent = (props) => {
     };
 
     const selecetdTabData = items.find(obj => obj.id === selected);
-    const { bodyComponent } = selecetdTabData;
+    const { bodyComponent } = selecetdTabData || {};
 
     return (<div className={`RCB-tabs-container ${appearanceClassName} ${className}`}>
-        <List items={items} ListItem={TabTitleItem} selected={selected} changeTab={changeTab} className="RCB-tabs-header" />
+        <List items={items} ListItem={TabTitleItem} selected={selected} disabled={disabled} changeTab={changeTab} className="RCB-tabs-header" />
         <div className="RCB-tab-content">
-            {bodyComponent}
+            {staticTabContent || bodyComponent}
         </div>
     </div>)
 };
@@ -65,12 +71,17 @@ TabsComponent.propTypes = {
     selectedTab: PropTypes.string,
     /** Horizontal or vertical tabs */
     appearance: PropTypes.oneOf(["HORIZONTAL", "VERTICAL"]),
-    onTabChanged: PropTypes.func
+    onTabChanged: PropTypes.func,
+    /** disable all tabs */
+    disabled: PropTypes.bool,
+    /** if you want to show a static tab content in disabled state (i.e. "disabled=true"), pass it in this prop */
+    staticTabContent: PropTypes.bool
 };
 
 TabsComponent.defaultProps = {
     className: "",
-    appearance: "HORIZONTAL"
+    appearance: "HORIZONTAL",
+    disabled: false
 };
 
 export default TabsComponent;
