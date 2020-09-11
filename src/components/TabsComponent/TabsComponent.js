@@ -29,7 +29,7 @@ TabTitleItem.propTypes = {
 };
 
 const TabsComponent = (props) => {
-    const { className, items, selectedTab, onTabChanged, appearance, disabled, staticTabContent } = props;
+    const { className, items, selectedTab, onTabChange, onTabChanged, appearance, disabled, staticTabContent } = props;
     const getSelected = () => disabled ? "" : defaultSelected;
     const defaultSelected = selectedTab || (items[0] ? items[0].id : "");
     const [ selected, setSelected ] = useState(getSelected());
@@ -40,9 +40,13 @@ const TabsComponent = (props) => {
     }, [disabled]);
 
     const changeTab = (id) => {
-        setSelected(id);
-        if (typeof(onTabChanged) === "function") {
-            onTabChanged(id);
+        const changeTab = onTabChange(id);
+
+        if (changeTab) {
+            setSelected(id);
+            if (typeof(onTabChanged) === "function") {
+                onTabChanged(id);
+            }
         }
     };
 
@@ -71,6 +75,10 @@ TabsComponent.propTypes = {
     selectedTab: PropTypes.string,
     /** Horizontal or vertical tabs */
     appearance: PropTypes.oneOf(["HORIZONTAL", "VERTICAL"]),
+    /**  Function called when a tab change has been triggerd by the user, 
+     * return false if you want to stop the tab change action */
+    onTabChange: PropTypes.func,
+    /**  Function called when a tab change action has been completed */
     onTabChanged: PropTypes.func,
     /** disable all tabs */
     disabled: PropTypes.bool,
@@ -81,7 +89,8 @@ TabsComponent.propTypes = {
 TabsComponent.defaultProps = {
     className: "",
     appearance: "HORIZONTAL",
-    disabled: false
+    disabled: false,
+    onTabChange: () => true
 };
 
 export default TabsComponent;
