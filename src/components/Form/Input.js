@@ -19,6 +19,7 @@ let Input = (props, ref) => {
         onChange,
         validations,
         debounceTime,
+        autocomplete,
         ...restProps
     } = props;
     const { onValueChange } = useContext(FormContext);
@@ -75,6 +76,7 @@ let Input = (props, ref) => {
         id: name,
         defaultValue,
         placeholder,
+        autocomplete,
         className: "RCB-form-el",
         onChange: debounceTime ? getDebouncedChange : onInputChange,
         ref,
@@ -120,13 +122,16 @@ Input.propTypes = {
     /** Becomes a controlled component if onChange function is given */
     onChange: PropTypes.func,
     /** debounce time in milliseconds */
-    debounceTime: PropTypes.number
+    debounceTime: PropTypes.number,
+    /* HTML 5 autocomplete attribute */
+    autocomplete: PropTypes.string
 };
 
 Input.defaultProps = {
     className: "",
     appearance: "inline",
-    validations: []
+    validations: [],
+    autocomplete: "off"
 };
 
 export default Input;
