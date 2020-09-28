@@ -75,6 +75,7 @@ class DataLoader {
                 formData.append(key, finalRequestParams[key]);
             }
             requestMetadata.body = formData;
+            delete requestMetadata.headers['Content-Type'];
         }
 
         return new Promise((resolve, reject) => {
