@@ -78,7 +78,7 @@ const Table = (props) => {
         isExpandableTable,
         ExpandedRowComponent,
         responseFormatter,
-        NoDataComponent,
+        noDataComponent,
         omitProps,
         getUrlParams,
         ...restProps
@@ -172,7 +172,7 @@ const Table = (props) => {
                         getPageRecords(filteredRecords, pageConfig);
 
     let wrappedComponent =  (<BaseTable records={finalRecords} columnConfigs={columnConfigs} 
-                                    idAttribute={idAttribute} NoDataComponent={NoDataComponent}
+                                    idAttribute={idAttribute} noDataComponent={noDataComponent}
                                     sortByConfig={sortByConfig} onSort={onSort}
                                     isExpandableTable={isExpandableTable} ExpandedRowComponent={ExpandedRowComponent} />);
     
