@@ -71,6 +71,7 @@ const Table = (props) => {
         getRequestKeys,
         paginationPosition,
         paginationType,
+        paginationBar,
         requestId,
         pageNoKey,
         perPageKey,
@@ -162,11 +163,19 @@ const Table = (props) => {
         });
     };
 
+
     const filteredRecords = getFilteredRecords({records, searchBy, searchByKey, sortByConfig});
     const totalRecords = paginationType === "SERVER" ? serverTotal : filteredRecords.length;
-    const paginationComponent = <PaginationComponent pageSizeList={pageSizeList} 
-                            onPageConfigChanged={setPageConfig} 
-                            pageConfig={{...pageConfig, total: totalRecords}} />
+    const paginationProps = {
+        pageSizeList: pageSizeList,
+        onPageConfigChanged: setPageConfig,
+        pageConfig: {...pageConfig, total: totalRecords}
+    };
+
+    const paginationComponent = (<div className="RCB-paginate-bar">
+                                    {paginationBar ? React.cloneElement(paginationBar, paginationProps) 
+                                    : <PaginationComponent  {...paginationProps}/>}
+                                </div>);
 
     let finalRecords = paginationType === "SERVER" ? serverRecords :
                         getPageRecords(filteredRecords, pageConfig);
@@ -200,6 +209,11 @@ Table.propTypes = {
     paginationPosition: PropTypes.oneOf(["TOP", "BOTTOM"]),
     /** CLIENT side pagination or SERVER side pagination */
     paginationType: PropTypes.oneOf(["CLIENT", "SERVER"]),
+    /** You can provide a custom component for the pagination bar 
+     * if you want to add more content to the pagination bar other than the pagination widget.
+     * Make sure to include <PagniationComponent /> and pass on all the props sent to tgis custom component
+      */
+    paginationBar: PropTypes.any,
     /** [SERVER side pagination] the ID of the request to call */
     requestId: PropTypes.string,
     /** [SERVER side pagination] key to send the page number value in, to the API */

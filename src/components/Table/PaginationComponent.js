@@ -15,10 +15,12 @@ const PaginationComponent = (props) => {
     const SelectionSummary = () => {
         const pagIndex = utils.getPagIndex(pageConfig);
         const { start, end } = pagIndex;
-        const summaryString = `${start + 1}-${end}`;
+        const startVal = start + 1;
+        const endVal = total < end ? total : end;
+        const summaryString = `${startVal}-${endVal}`;
     
         return (<div>{summaryString}<span className="RCB-select-arrow"></span></div>);
-    }
+    };
 
     const onPerPageChanged = (perPageObj) => {
         const perPage = +(perPageObj.id);
@@ -55,7 +57,7 @@ const PaginationComponent = (props) => {
                 {">"}
             </a>
         </div>
-    </div>)
+    </div>);
 };
 
 PaginationComponent.propTypes = {
