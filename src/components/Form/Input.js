@@ -18,12 +18,10 @@ let Input = (props, ref) => {
         appearance, 
         onChange,
         validations,
-        debounceTime,
-        autocomplete,
+        autoComplete,
         ...restProps
     } = props;
     const { onValueChange } = useContext(FormContext);
-    // const debouncedFn = useRef();
 
     const postFormValueChange = (value, error) => {
         typeof(onValueChange) === "function" && onValueChange(name, value, error);
@@ -46,22 +44,6 @@ let Input = (props, ref) => {
         postFormValueChange(value, error);
     };
 
-    const getDebouncedChange = (event) => {
-        event.persist();
-        // const value = event.target.value;
-
-        // if (!debouncedFn.current) {
-        //     debouncedFn.current = utils.debounce(() => {
-        //         onInputChange(event)
-        //     }, debounceTime);
-        // }
-
-        // return debouncedFn.current();
-        (utils.debounce(() => {
-            onInputChange(event);
-        }, debounceTime))();
-    };
-
     useEffect(() => {
         /* set the initial form element value in the form context */
         const postValue = typeof(onChange) === "function" ? value : defaultValue;
@@ -76,9 +58,9 @@ let Input = (props, ref) => {
         id: name,
         defaultValue,
         placeholder,
-        autocomplete,
+        autoComplete,
         className: "RCB-form-el",
-        onChange: debounceTime ? getDebouncedChange : onInputChange,
+        onChange: onInputChange,
         ref,
         ...restProps
     };
@@ -121,17 +103,15 @@ Input.propTypes = {
     appearance: PropTypes.oneOf(["inline", "block"]),
     /** Becomes a controlled component if onChange function is given */
     onChange: PropTypes.func,
-    /** debounce time in milliseconds */
-    debounceTime: PropTypes.number,
     /* HTML 5 autocomplete attribute */
-    autocomplete: PropTypes.string
+    autoComplete: PropTypes.string
 };
 
 Input.defaultProps = {
     className: "",
     appearance: "inline",
     validations: [],
-    autocomplete: "off"
+    autoComplete: "off"
 };
 
 export default Input;
