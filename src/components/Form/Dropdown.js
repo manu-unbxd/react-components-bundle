@@ -217,7 +217,7 @@ const Dropdown = (props) => {
                     <input type="text" className="RCB-dd-search-ip" placeholder="Search" onChange={onSearchChange} />
                 </div>}
                 {paginationType === "SERVER" ? 
-                    <ServerPaginatedDDList {...commonAttributes} {...serverListAttrs} /> : 
+                    <ServerPaginatedDDList {...commonAttributes} {...serverListAttrs} {...restProps} /> : 
                     <NormalList {...commonAttributes} {...restProps}
                         items={getFilteredOptions(options, searchQuery, nameAttribute)} />}
                 {showCreateCTA && <div className="RCB-dd-create-cta" onClick={onCreateCTAClick}>{createCTAComponent}</div>}
