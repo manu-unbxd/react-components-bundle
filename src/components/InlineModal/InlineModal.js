@@ -22,7 +22,8 @@ let InlineModal = (props, ref) => {
         setIsModalOpen(newState);
     }
 
-    const onActivatorClick = () => {
+    const onActivatorClick = (e) => {
+        e.stopPropagation();
         changeModalState(!isModalOpen);
     }
 

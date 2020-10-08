@@ -1,32 +1,71 @@
-import React, { Fragment } from "react";
-import PropType from "prop-types";
+import React, { Fragment, useState } from "react";
+import PropTypes from "prop-types";
 
+/* eslint-disable react/prop-types */
 const DefaultTooltipActivator = () => {
     return (<Fragment>i</Fragment>);
 };
   
 const Tooltip = (props) => {
     const {
-        tooltipActivator,
-        children
+        TooltipActivator,
+        activatorAction,
+        direction,
+        children,
+        ...restProps
     } = props;
 
+    const [actionClassName, setActionClassName] = useState("");
+    const [isOpen,setIsOpen] = useState(false);
+
+    let dirClassName = "RCB-tooltip-right";
+    if (direction === "bottom") {
+        dirClassName = "RCB-tooltip-bottom"
+    }
+
+    const showToolTipClick = (e) => {
+        e.stopPropagation();
+        setIsOpen(!isOpen);
+        setActionClassName("RCB-tooltip-click");
+    }
+
+    const showToolTipHover = () => {
+        setActionClassName("RCB-tooltip-hover");
+    }
+
+    const hideToolTip = () => {
+        setActionClassName("");
+    }
+    
     return (<div className="RCB-tooltip">
-        <div className="RCB-tooltip-btn">
-            {tooltipActivator}
-        </div>
-        <div className="RCB-tooltip-body">
+        { activatorAction === "click" ? 
+            (
+                <div className="RCB-tooltip-btn" onClick={showToolTipClick}>
+                    <TooltipActivator {...restProps}></TooltipActivator>
+                </div>
+            ) : 
+            (
+                <div className="RCB-tooltip-btn" onMouseEnter={showToolTipHover} onMouseLeave={hideToolTip}>
+                    <TooltipActivator {...restProps}></TooltipActivator>
+                </div>
+            )
+        }
+        {isOpen && <div className={`RCB-tooltip-body ${dirClassName} ${actionClassName}`}>
             {children}
-        </div>
+        </div>}
     </div>);
 };
 
 Tooltip.propTypes = {
-    tooltipActivator: PropType.element
+    TooltipActivator: PropTypes.func,
+    activatorAction: PropTypes.oneOf(["click", "hover"]),
+    direction: PropTypes.oneOf(["right", "bottom"])
 };
 
 Tooltip.defaultProps = {
-    tooltipActivator: <DefaultTooltipActivator />
+    TooltipActivator: DefaultTooltipActivator,
+    activatorAction: "hover",
+    direction: "right"
 };
 
 export default Tooltip;
