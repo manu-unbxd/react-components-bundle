@@ -209,7 +209,7 @@ const Dropdown = (props) => {
                 <SelectionSummary 
                     selectedItems={selectedItems}
                     noSelectionLabel={noSelectionLabel}
-                    multiSelect={multiSelect} nameAttribute={nameAttribute} />
+                    multiSelect={multiSelect} nameAttribute={nameAttribute} {...restProps} />
             </InlineModalActivator>
             <InlineModalBody>
                 {showSearch && <div className="RCB-dd-search">

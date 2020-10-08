@@ -31,10 +31,11 @@ const Tooltip = (props) => {
 
     const showToolTipHover = () => {
         setActionClassName("RCB-tooltip-hover");
+        setIsOpen(true);
     }
 
     const hideToolTip = () => {
-        setActionClassName("");
+        setIsOpen(false);
     }
     
     return (<div className="RCB-tooltip">
