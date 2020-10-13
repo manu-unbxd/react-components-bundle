@@ -108,6 +108,11 @@
                 background-color: #FFF;
             }
         }
+
+        &-disable {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
     }
 
     &-toggle-knob {

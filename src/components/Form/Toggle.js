@@ -5,7 +5,7 @@ import FormElementWrapper from "./FormElementWrapper";
 import PropTypes from "prop-types";
   
 const Toggle = (props) => {
-    const { name, label, value, defaultValue, className, appearance, toggleElWidth, toggleKnobSize, onChange } = props;
+    const { name, label, value, defaultValue, className, appearance, toggleElWidth, toggleKnobSize, onChange, disabled } = props;
     const initialValue = typeof(onChange) === "function" ? value : defaultValue;
     const [ isActive, setIsActive ] = useState(initialValue);
     const { onValueChange } = useContext(FormContext);
@@ -47,10 +47,14 @@ const Toggle = (props) => {
         toggleKnobCSS.transform = `translateX(${toggleElWidth - toggleKnobSize}px)`;
     }
 
+    const toggleClasses = `RCB-form-el RCB-toggle ${isActive ? "active" : ""} ${disabled ? "RCB-toggle-disable" : ""}`
+    
+
     return (<FormElementWrapper className={className} appearance={appearance}>
         <label className="RCB-form-el-label" htmlFor={name}>{label}</label>
-        <div className={`RCB-form-el RCB-toggle ${isActive ? "active" : ""}`} 
-            onClick={toggleActive} style={toggleElCSS}>
+        <div className={toggleClasses} 
+            onClick={disabled ? () => {} : toggleActive} 
+            style={toggleElCSS}>
             <div className="RCB-toggle-knob" style={toggleKnobCSS}></div>
         </div>
     </FormElementWrapper>);
@@ -66,6 +70,8 @@ Toggle.propTypes = {
     /** Will be used only with onChange function, or else ignored */
     value: PropTypes.bool,
     defaultValue: PropTypes.bool,
+    /** Set this to true to disable the toggle component */
+    disabled: PropTypes.bool,
     /** Define the appearance of the form element. Accepted values are either "inline" or "block" */
     appearance: PropTypes.oneOf(["inline", "block"]),
     /** Becomes a controlled component if onChange function is given */
@@ -78,6 +84,7 @@ Toggle.propTypes = {
 
 Toggle.defaultProps = {
     className: "",
+    disabled: false,
     appearance: "inline",
     toggleElWidth: 40,
     toggleKnobSize: 13
