@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 const DefaultTooltipActivator = () => {
     return (<Fragment>i</Fragment>);
 };
-  
+
 const Tooltip = (props) => {
     const {
         TooltipActivator,
@@ -16,7 +16,7 @@ const Tooltip = (props) => {
     } = props;
 
     const [actionClassName, setActionClassName] = useState("");
-    const [isOpen,setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
     let dirClassName = "RCB-tooltip-right";
     if (direction === "bottom") {
@@ -37,20 +37,13 @@ const Tooltip = (props) => {
     const hideToolTip = () => {
         setIsOpen(false);
     }
-    
+
+    const eventProps = (activatorAction === "click") ? { onClick: showToolTipClick } : { onMouseEnter: showToolTipHover, onMouseLeave: hideToolTip };
+
     return (<div className="RCB-tooltip">
-        { activatorAction === "click" ? 
-            (
-                <div className="RCB-tooltip-btn" onClick={showToolTipClick}>
-                    <TooltipActivator {...restProps}></TooltipActivator>
-                </div>
-            ) : 
-            (
-                <div className="RCB-tooltip-btn" onMouseEnter={showToolTipHover} onMouseLeave={hideToolTip}>
-                    <TooltipActivator {...restProps}></TooltipActivator>
-                </div>
-            )
-        }
+        <div className="RCB-tooltip-btn" {...eventProps}>
+            <TooltipActivator {...restProps}></TooltipActivator>
+        </div>
         {isOpen && <div className={`RCB-tooltip-body ${dirClassName} ${actionClassName}`}>
             {children}
         </div>}
