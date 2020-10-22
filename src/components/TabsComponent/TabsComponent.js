@@ -83,7 +83,7 @@ TabsComponent.propTypes = {
     /** disable all tabs */
     disabled: PropTypes.bool,
     /** if you want to show a static tab content in disabled state (i.e. "disabled=true"), pass it in this prop */
-    staticTabContent: PropTypes.bool
+    staticTabContent: PropTypes.any
 };
 
 TabsComponent.defaultProps = {
