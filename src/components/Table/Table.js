@@ -82,6 +82,7 @@ const Table = (props) => {
         noDataComponent,
         omitProps,
         getUrlParams,
+        getRequestParams,
         ...restProps
     } = props;
     /* variables for server data */
@@ -111,6 +112,7 @@ const Table = (props) => {
 
     let extraParams = utils.omit(restProps, omitParams);
     let requestParams = {
+        ...getRequestParams(),
         ...extraParams,
         [pageNoKey]: pageNo,
         [perPageKey]: perPageCount,
@@ -235,7 +237,9 @@ Table.propTypes = {
      */
     getRequestKeys: PropTypes.func,
     /** If paginationType is "SERVER", function that is expected to return the URL Params object */
-    getUrlParams: PropTypes.func
+    getUrlParams: PropTypes.func,
+    /** If paginationType is "SERVER", function that is expected to return the Request Params object */
+    getRequestParams: PropTypes.func
 }
 
 Table.defaultProps = {
@@ -259,7 +263,8 @@ Table.defaultProps = {
     perPageKey: "count",
     omitProps: "",
     getRequestKeys: () => ({}),
-    getUrlParams: () => ({})
+    getUrlParams: () => ({}),
+    getRequestParams: () => ({})
 };
 
 export default Table;

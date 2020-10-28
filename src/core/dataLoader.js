@@ -64,7 +64,6 @@ class DataLoader {
             headers: {...this._commonHeaders, ...headers}
         };
 
-
         if (reqMethod === "get") {
             requestUrl = `${requestUrl}?${utils.getQueryParams(finalRequestParams)}`;
         } else  if (["post", "delete", "put", "patch"].indexOf(reqMethod) > -1) {
@@ -75,7 +74,7 @@ class DataLoader {
                 formData.append(key, finalRequestParams[key]);
             }
             requestMetadata.body = formData;
-            delete requestMetadata.headers['Content-Type'];
+            delete requestMetadata.headers["Content-Type"];
         }
 
         return new Promise((resolve, reject) => {
