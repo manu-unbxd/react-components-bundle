@@ -31,7 +31,8 @@ const PaginationComponent = (props) => {
         });
     };
 
-    const changePage = (moveUnit) => {
+    const changePage = (moveUnit,evnt) => {
+        evnt.preventDefault();
         onPageConfigChanged({
             ...pageConfig,
             pageNo: pageNo + moveUnit
@@ -49,11 +50,11 @@ const PaginationComponent = (props) => {
             SelectionSummary={SelectionSummary} />{`of ${total}`}
         <div className="RCB-paginate-nav">
             <a href="javacsript:void(0)" className={`RCB-page-nav ${isLeftNavDisbaled ? "disabled" : ""}`}
-                onClick={() => changePage(-1)}>
+                onClick={(event) => changePage(-1,event)}>
                 {"<"}
             </a>
             <a href="javacsript:void(0)" className={`RCB-page-nav ${isRightNavDisbaled ? "disabled" : ""}`}
-                onClick={() => changePage(1)}>
+                onClick={(event) => changePage(1,event)}>
                 {">"}
             </a>
         </div>
