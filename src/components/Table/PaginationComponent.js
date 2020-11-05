@@ -31,8 +31,8 @@ const PaginationComponent = (props) => {
         });
     };
 
-    const changePage = (moveUnit,evnt) => {
-        evnt.preventDefault();
+    const changePage = (moveUnit, event) => {
+        event.preventDefault();
         onPageConfigChanged({
             ...pageConfig,
             pageNo: pageNo + moveUnit
