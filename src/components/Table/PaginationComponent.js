@@ -19,7 +19,7 @@ const PaginationComponent = (props) => {
         const endVal = total < end ? total : end;
         const summaryString = `${startVal}-${endVal}`;
     
-        return (<div>{summaryString}<span className="RCB-select-arrow"></span></div>);
+        return (<div className="RCB-select-summary">{summaryString}<span className="RCB-select-arrow"></span></div>);
     };
 
     const onPerPageChanged = (perPageObj) => {
