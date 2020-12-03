@@ -30,9 +30,12 @@ const Toggle = (props) => {
 
     useEffect(() => {
         /* set the initial form element value in the form context */
-        const postValue = typeof(onChange) === "function" ? value : defaultValue;
-        postFormValueChange(postValue);
-    }, [value, defaultValue]);
+        postFormValueChange(defaultValue);
+    }, [defaultValue]);
+
+    useEffect(() => {
+        setIsActive(value);
+    }, [value]);
 
     let toggleElCSS = {
         width: `${toggleElWidth}px`
