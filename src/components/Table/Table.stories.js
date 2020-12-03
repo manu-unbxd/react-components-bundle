@@ -144,6 +144,17 @@ export const TableWithSearch = () => {
     </Fragment>);
 };
 
+export const TableWithoutPaginationBar = () => {
+
+    return (<Fragment>
+        <Table
+            records={TODOS} 
+            showPaginateBar={false}
+            columnConfigs={getTodosColumnConfigs()}
+        />
+    </Fragment>);
+};
+
 export const ServerSideTable = () => {
     const [ searchBy, setSearchBy ] = useState("");
 

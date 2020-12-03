@@ -69,6 +69,7 @@ const Table = (props) => {
         idAttribute,
         searchBy,
         getRequestKeys,
+        showPaginateBar,
         paginationPosition,
         paginationType,
         paginationBar,
@@ -180,7 +181,7 @@ const Table = (props) => {
                                 </div>);
 
     let finalRecords = paginationType === "SERVER" ? serverRecords :
-                        getPageRecords(filteredRecords, pageConfig);
+                        (showPaginateBar ? getPageRecords(filteredRecords, pageConfig) : filteredRecords);
 
     let wrappedComponent =  (<BaseTable records={finalRecords} columnConfigs={columnConfigs} 
                                     idAttribute={idAttribute} noDataComponent={noDataComponent}
@@ -194,9 +195,9 @@ const Table = (props) => {
     }
 
     return (<div className={className}>
-        {paginationPosition === "TOP" && totalRecords > 0 && paginationComponent}
+        {showPaginateBar && paginationPosition === "TOP" && totalRecords > 0 && paginationComponent}
         {wrappedComponent}
-        {paginationPosition === "BOTTOM" && totalRecords > 0 && paginationComponent}
+        {showPaginateBar && paginationPosition === "BOTTOM" && totalRecords > 0 && paginationComponent}
     </div>);
 };
 
@@ -207,6 +208,8 @@ Table.propTypes = {
     searchBy: PropTypes.string,
     /** list of supported page sizes  */
     pageSizeList: PropTypes.array,
+    /** set to false to disable pagination bar */
+    showPaginateBar: PropTypes.bool,
     /** location where the pagination component must be displayed */
     paginationPosition: PropTypes.oneOf(["TOP", "BOTTOM"]),
     /** CLIENT side pagination or SERVER side pagination */
@@ -257,6 +260,7 @@ Table.defaultProps = {
         id: "100",
         name: "100"
     }],
+    showPaginateBar: true,
     paginationPosition: "TOP",
     paginationType: "CLIENT",
     pageNoKey: "page",
