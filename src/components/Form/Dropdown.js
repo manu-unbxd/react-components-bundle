@@ -109,6 +109,7 @@ const Dropdown = (props) => {
         createCTAComponent,
         onCreateCTAClick,
         showClear,
+        onClear,
         ...restProps
     } = props;
     const [ searchQuery, setSearchQuery ] = useState("");
@@ -192,6 +193,8 @@ const Dropdown = (props) => {
     const clearSelectedItems = (evnt) => {
         evnt.stopPropagation();
         setSelectedItems([]); 
+        typeof(onClear) === "function" && onClear();
+        typeof(onChange) === "function" && onChange(null);
         /** Close modal after reset */
         inlineModalRef.current.hideModal();
     }
@@ -333,7 +336,9 @@ Dropdown.propTypes = {
     getUrlParams: PropTypes.func,
 
     /** Show the optional clear button for resetting selections */
-    showClear: PropTypes.bool
+    showClear: PropTypes.bool,
+    /** Custom on clear function */
+    onClear: PropTypes.func
 };
 
 Dropdown.defaultProps = {
@@ -359,7 +364,8 @@ Dropdown.defaultProps = {
     showCreateCTA: false,
     createCTAComponent: <span>Create New</span>,
     onCreateCTAClick: () => {},
-    showClear: false
+    showClear: false,
+    onClear: () => {}
 };
 
 export default Dropdown;
