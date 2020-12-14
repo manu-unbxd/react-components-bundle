@@ -23,7 +23,7 @@ const getFilteredOptions = (options = [], searchQuery = "", nameAttribute) => {
 };
 
 /* eslint-disable react/prop-types */
-const DefaultSelectionSummary = ({selectedItems = [], multiSelect, noSelectionLabel, nameAttribute}) => {
+const DefaultSelectionSummary = ({selectedItems = [], multiSelect, noSelectionLabel, nameAttribute, showClear, clearSelectedItems}) => {
     let summaryString = "";
     const selectedCount = selectedItems.length;
 
@@ -33,7 +33,12 @@ const DefaultSelectionSummary = ({selectedItems = [], multiSelect, noSelectionLa
         summaryString = selectedCount ? selectedItems[0][nameAttribute] : noSelectionLabel;
     }
 
-    return (<Fragment><span className="RCB-dd-label">{summaryString}</span><span className="RCB-select-arrow"></span></Fragment>);
+    return (<Fragment><span className="RCB-dd-label">{summaryString}</span>
+                <span className="RCB-selection-wrapper">
+                    { showClear && <span className="RCB-clear-selected" onClick={clearSelectedItems}>Clear</span> }
+                    <span className="RCB-select-arrow"></span>
+                </span>
+            </Fragment>);
 };
 
 export const DefaultDropdownItem = (props) => {
@@ -103,6 +108,7 @@ const Dropdown = (props) => {
         showCreateCTA,
         createCTAComponent,
         onCreateCTAClick,
+        showClear,
         ...restProps
     } = props;
     const [ searchQuery, setSearchQuery ] = useState("");
@@ -183,6 +189,13 @@ const Dropdown = (props) => {
         }
     };
 
+    const clearSelectedItems = (evnt) => {
+        evnt.stopPropagation();
+        setSelectedItems([]); 
+        /** Close modal after reset */
+        inlineModalRef.current.hideModal();
+    }
+
     const commonAttributes = {
         selectedItems, selectItem, idAttribute, nameAttribute, DropdownItem
     };
@@ -209,7 +222,8 @@ const Dropdown = (props) => {
                 <SelectionSummary 
                     selectedItems={selectedItems}
                     noSelectionLabel={noSelectionLabel}
-                    multiSelect={multiSelect} nameAttribute={nameAttribute} {...restProps} />
+                    multiSelect={multiSelect} nameAttribute={nameAttribute} {...restProps}
+                    showClear={showClear} clearSelectedItems={clearSelectedItems} />
             </InlineModalActivator>
             <InlineModalBody>
                 {showSearch && <div className="RCB-dd-search">
@@ -316,7 +330,10 @@ Dropdown.propTypes = {
      *   */
     responseFormatter: PropTypes.func,
     /** If paginationType is "SERVER", function that is expected to return the URL Params object */
-    getUrlParams: PropTypes.func
+    getUrlParams: PropTypes.func,
+
+    /** Show the optional clear button for resetting selections */
+    showClear: PropTypes.bool
 };
 
 Dropdown.defaultProps = {
@@ -341,7 +358,8 @@ Dropdown.defaultProps = {
     SelectionSummary: DefaultSelectionSummary,
     showCreateCTA: false,
     createCTAComponent: <span>Create New</span>,
-    onCreateCTAClick: () => {}
+    onCreateCTAClick: () => {},
+    showClear: false
 };
 
 export default Dropdown;

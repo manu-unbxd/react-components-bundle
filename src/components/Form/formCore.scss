@@ -57,6 +57,22 @@
         }
     }
 
+    &-clear-selected {
+        background: #f2f0f0;
+        padding: 3px 6px;
+        font-size: 11px;
+        border-radius: 15px;
+        border: 1px solid #ccc;
+    }
+
+    &-selection-wrapper {
+        float: right;
+
+        .RCB-select-arrow {
+            float: unset;
+        }
+    }
+
     &-select-arrow {
         float: right;
         font-size: 12px;
