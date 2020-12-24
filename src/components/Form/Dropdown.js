@@ -114,6 +114,7 @@ const Dropdown = (props) => {
     } = props;
     const [ searchQuery, setSearchQuery ] = useState("");
     const debouncedFn = useRef();
+    const searchIpRef = useRef();
 
     let initialSelected = [];
     const initialValue = typeof(onChange) === "function" ? value : defaultValue;
@@ -184,7 +185,9 @@ const Dropdown = (props) => {
     };
 
     const onModalStateChange = (isModalOpen) => {
-        if (!isModalOpen) {
+        if (isModalOpen) {
+            searchIpRef.current.focus();
+        } else {
             /* modal is closed */
             setSearchQuery("");
         }
@@ -231,7 +234,7 @@ const Dropdown = (props) => {
             <InlineModalBody>
                 {showSearch && <div className="RCB-dd-search">
                     <span className="RCB-dd-search-icon"></span>
-                    <input type="text" className="RCB-dd-search-ip" placeholder="Search" onChange={onSearchChange} />
+                    <input type="text" className="RCB-dd-search-ip" placeholder="Search" onChange={onSearchChange} ref={searchIpRef} />
                 </div>}
                 {paginationType === "SERVER" ? 
                     <ServerPaginatedDDList {...commonAttributes} {...serverListAttrs} {...restProps} /> : 
