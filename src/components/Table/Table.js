@@ -137,6 +137,14 @@ const Table = (props) => {
 
         let { entries, total }  = apiResponse; 
 
+        if (pageNo > 1 && entries.length === 0) {
+            /* current page does not have records, so fetch previous page */
+            setPageConfig({
+                ...pageConfig,
+                pageNo: pageNo - 1
+            });
+        }
+
         setServerRecords(entries);
         setServerTotal(total);
     };
@@ -165,7 +173,6 @@ const Table = (props) => {
             columnConfig
         });
     };
-
 
     const filteredRecords = getFilteredRecords({records, searchBy, searchByKey, sortByConfig});
     const totalRecords = paginationType === "SERVER" ? serverTotal : filteredRecords.length;

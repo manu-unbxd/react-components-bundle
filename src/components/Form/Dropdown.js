@@ -185,8 +185,8 @@ const Dropdown = (props) => {
     };
 
     const onModalStateChange = (isModalOpen) => {
-        if (isModalOpen) {
-            searchIpRef.current.focus();
+        if (isModalOpen && showSearch) {
+            searchIpRef.current && searchIpRef.current.focus();
         } else {
             /* modal is closed */
             setSearchQuery("");
