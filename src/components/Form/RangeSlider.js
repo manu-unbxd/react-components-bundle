@@ -4,7 +4,7 @@ import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
 
 const RangeSlider = (props) => {
-    const { label, name, min, max, className, value, defaultValue, appearance, onChange, disabled, ...restProps } = props;
+    const { label, name, min, max, className, value, defaultValue, appearance, onChange, disabled, bubble, inputStyle = {}, ...restProps } = props;
     const { onValueChange } = useContext(FormContext);
     const [ val, setVal ] = useState(defaultValue);
     
@@ -22,8 +22,8 @@ const RangeSlider = (props) => {
         return {left: `calc(${percent}% - 10px)`};
     }
 
-    const [ inputStyle, setInputStyle ] = useState({background: `linear-gradient(to right, #D2DDE4 0%, #D2DDE4 ${getPercent(defaultValue)}%, #E9EEF2 ${getPercent(defaultValue)}%, #E9EEF2 100%)`});
-    const [ bubbleStyle, setBubbleStyle ] = useState(getBubbleStyle(defaultValue));
+    // const [ inputStyle, setInputStyle ] = useState({background: `linear-gradient(to right, #D2DDE4 0%, #D2DDE4 ${getPercent(defaultValue)}%, #E9EEF2 ${getPercent(defaultValue)}%, #E9EEF2 100%)`});
+    const [ bubbleStyle, setBubbleStyle ] = useState(getBubbleStyle((value || defaultValue)));
 
     const onInputChange = (event) => {
         const value = event.target.value;
@@ -36,8 +36,7 @@ const RangeSlider = (props) => {
 
         postFormValueChange(value);
         setVal(value);
-        setBubbleStyle(getBubbleStyle(value));
-        setInputStyle({background: `linear-gradient(to right, #D2DDE4 0%, #D2DDE4 ${getPercent(value)}%, #E9EEF2 ${getPercent(value)}%, #E9EEF2 100%)`});
+        bubble ? setBubbleStyle(getBubbleStyle(value)) : "";
     }
 
     useEffect(() => {
@@ -57,7 +56,8 @@ const RangeSlider = (props) => {
         disabled,
         className: `RCB-form-el RCB-input-range ${className}`,
         onChange: onInputChange,
-        ...restProps
+        ...restProps,
+        bubble
     };
 
     if (typeof(onChange) === "function") {
@@ -69,7 +69,7 @@ const RangeSlider = (props) => {
     return (<FormElementWrapper className={className} appearance={appearance}>
         <label className="RCB-form-el-label" htmlFor={name}>{label}</label>
         <div className="RCB-range-wrapper">
-            <div className="RCB-range-value" style={bubbleStyle}><span>{val}</span></div>
+            { bubble && <div className="RCB-range-value" style={bubbleStyle}><span>{val}</span></div>}
             <input {...inputProps} style={inputStyle} disabled={disabled}/>
         </div>
     </FormElementWrapper>);
@@ -92,7 +92,11 @@ RangeSlider.propTypes = {
     /** Define the appearance of the form element. Accepted values are either "inline" or "block" */
     appearance: PropTypes.oneOf(["inline", "block"]),
     /** Becomes a controlled component if onChange function is given */
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    /** Custom Style changes of slider track */
+    inputStyle: PropTypes.object,
+    /** Show bubble with values */
+    bubble: PropTypes.bool
 };
 
 RangeSlider.defaultProps = {
