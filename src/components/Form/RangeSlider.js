@@ -6,7 +6,7 @@ import FormElementWrapper from "./FormElementWrapper";
 const RangeSlider = (props) => {
     const { label, name, min, max, className, value, defaultValue, appearance, onChange, disabled, bubble, inputStyle = {}, ...restProps } = props;
     const { onValueChange } = useContext(FormContext);
-    const [ val, setVal ] = useState(defaultValue);
+    const [ val, setVal ] = useState(value || defaultValue);
     
     const postFormValueChange = (value) => {
         typeof(onValueChange) === "function" && onValueChange(name, value);
@@ -22,7 +22,6 @@ const RangeSlider = (props) => {
         return {left: `calc(${percent}% - 10px)`};
     }
 
-    // const [ inputStyle, setInputStyle ] = useState({background: `linear-gradient(to right, #D2DDE4 0%, #D2DDE4 ${getPercent(defaultValue)}%, #E9EEF2 ${getPercent(defaultValue)}%, #E9EEF2 100%)`});
     const [ bubbleStyle, setBubbleStyle ] = useState(getBubbleStyle((value || defaultValue)));
 
     const onInputChange = (event) => {

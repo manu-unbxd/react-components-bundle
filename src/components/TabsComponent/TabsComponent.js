@@ -37,7 +37,7 @@ const TabsComponent = (props) => {
 
     useEffect(() => {
         setSelected(getSelected());
-    }, [disabled]);
+    }, [disabled, selectedTab]);
 
     const changeTab = (id) => {
         const changeTab = onTabChange(id);
