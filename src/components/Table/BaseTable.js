@@ -8,12 +8,12 @@ const DefaultNoDataComponent = () => {
 
 /* eslint-disable react/prop-types */
 
-const getTDValue = ({ columnValue, rowData = {}, columnConfig = {}, tdProps = {}, index}) => {
+const getTDValue = ({ columnValue, rowData = {}, columnConfig = {}, tdProps = {}}) => {
     const { key, valueFormatter, ColumnComponent, componentProps = {} } = columnConfig;
     let tdValue = columnValue;
 
     if (typeof(valueFormatter) === "function") {
-        tdValue = valueFormatter({value: columnValue, record: rowData, index: index});
+        tdValue = valueFormatter({value: columnValue, record: rowData});
     } else if (ColumnComponent) {
         tdValue = <ColumnComponent record={rowData} {...componentProps} />
     }
@@ -22,7 +22,7 @@ const getTDValue = ({ columnValue, rowData = {}, columnConfig = {}, tdProps = {}
 }
 
 const ExpandableTR = (props) => {
-    const { isEven, rowData, columnConfigs, ExpandedRowComponent, index } = props;
+    const { isEven, rowData, columnConfigs, ExpandedRowComponent } = props;
     const [ isExpanded, setIsExpanded ] = useState(false);
 
     const toggleExpanded = () => {
@@ -42,8 +42,7 @@ const ExpandableTR = (props) => {
                 tdProps: {
                     onClick: toggleExpanded,
                     className: isExpanded ? "expand-open" : "expand-close"
-                },
-                index
+                }
             })}
             {columnConfigs.map(configObj => {
                 const { key } = configObj;
@@ -53,8 +52,7 @@ const ExpandableTR = (props) => {
                     columnConfig: configObj,
                     tdProps: {
                         onClick: toggleExpanded
-                    },
-                    index
+                    }
                 });
             })}
         </tr>
@@ -72,13 +70,13 @@ ExpandableTR.propTypes = {
 };
 
 const TR = (props) => {
-    const { rowData, columnConfigs, isEven, index } = props;
+    const { rowData, columnConfigs, isEven } = props;
     const className = "RCB-tr " + (isEven ? "RCB-even-tr" : "RCB-odd-tr");
 
     return (<tr className={className}>
         {columnConfigs.map(configObj => {
             const { key } = configObj;
-            return getTDValue({columnValue: rowData[key], rowData, columnConfig: configObj, index});
+            return getTDValue({columnValue: rowData[key], rowData, columnConfig: configObj});
         })}
     </tr>);
 };
@@ -134,7 +132,6 @@ const BaseTable = (props) => {
             <tbody>
                 {records.map((rowData, index)=> {
                     return <RowComponent key={rowData[idAttribute]} 
-                                        index={index}
                                         isEven={utils.isEven(index)}
                                         rowData={rowData} 
                                         columnConfigs={columnConfigs} 
