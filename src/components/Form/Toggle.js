@@ -26,10 +26,6 @@ const Toggle = (props) => {
     useDidUpdateEffect(() => {
         /* runs only when isActive changes, hence call the onChange function then */
         const value = isActive;
-        if (typeof(onChange) === "function") {
-            onChange(value);
-        }
-
         postFormValueChange(value);
     }, [isActive]);
 
