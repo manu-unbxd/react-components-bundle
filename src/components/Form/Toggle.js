@@ -11,7 +11,12 @@ const Toggle = (props) => {
     const { onValueChange } = useContext(FormContext);
 
     const toggleActive = () => {
-        setIsActive(!isActive);       
+        // setIsActive(!isActive);   
+        if (typeof(onChange) === "function") {
+            onChange(!isActive);
+        } else {
+            setIsActive(!isActive);
+        }   
     };
 
     const postFormValueChange = (value) => {
