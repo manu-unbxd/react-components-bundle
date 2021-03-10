@@ -85,7 +85,9 @@ RangeSlider.propTypes = {
     /** Custom Style changes of value bubble */
     bubbleStyle: PropTypes.object,
     /** Show bubble with values */
-    showBubble: PropTypes.bool
+    showBubble: PropTypes.bool,
+    /** Indicates if the slider is disabled or enabled */
+    disabled: PropTypes.bool
 };
 
 RangeSlider.defaultProps = {

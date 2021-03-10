@@ -38,6 +38,42 @@ _RangeSlider.story = {
     },
 };
 
+export const BubbleRangeSlider = () => {
+    const onSubmit = formData => {
+      const { data } = formData;
+      const { price } = data;
+  
+      console.log("Selected price: ", price);
+    };
+  
+    return (
+      <Form onSubmit={onSubmit}>
+        <RangeSlider
+          name="price"
+          label="Select price range"
+          min="10"
+          max="100"
+          appearance="block"
+          defaultValue="10"
+          showBubble={true}
+        />
+        <Button appearance={ButtonAppearance.PRIMARY} className="full-width-btn">
+          Submit
+        </Button>
+      </Form>
+    );
+};
+  
+BubbleRangeSlider.story = {
+    name: "Range Slider with Bubble",
+  
+    parameters: {
+        info: {
+            propTables: [RangeSlider]
+        }
+    },
+};
+
 export default {
     title: "Form|RangeSlider",
     parameters: {
