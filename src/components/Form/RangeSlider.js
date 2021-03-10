@@ -4,25 +4,13 @@ import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
 
 const RangeSlider = (props) => {
-    const { label, name, min, max, className, value, defaultValue, appearance, onChange, disabled, showBubble, inputStyle = {}, ...restProps } = props;
+    const { label, name, min, max, className, value, defaultValue, appearance, onChange, disabled, showBubble, inputStyle = {}, bubbleStyle = {}, ...restProps } = props;
     const { onValueChange } = useContext(FormContext);
     const [ val, setVal ] = useState(value || defaultValue);
     
     const postFormValueChange = (value) => {
         typeof(onValueChange) === "function" && onValueChange(name, value);
     };
-
-    const getPercent = (value) => {
-        const percent = (value/max)*100;
-        return percent;
-    }
-
-    const getBubbleStyle = (value) => {
-        const percent = getPercent(value);
-        return {left: `calc(${percent}% - 10px)`};
-    }
-
-    const [ bubbleStyle, setBubbleStyle ] = useState(getBubbleStyle((value || defaultValue)));
 
     const onInputChange = (event) => {
         const value = event.target.value;
@@ -35,7 +23,7 @@ const RangeSlider = (props) => {
 
         postFormValueChange(value);
         setVal(value);
-        showBubble ? setBubbleStyle(getBubbleStyle(value)) : "";
+        
     }
 
     useEffect(() => {
@@ -94,6 +82,8 @@ RangeSlider.propTypes = {
     onChange: PropTypes.func,
     /** Custom Style changes of slider track */
     inputStyle: PropTypes.object,
+    /** Custom Style changes of value bubble */
+    bubbleStyle: PropTypes.object,
     /** Show bubble with values */
     showBubble: PropTypes.bool
 };
