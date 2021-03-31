@@ -10,8 +10,7 @@ const Toggle = (props) => {
     const [ isActive, setIsActive ] = useState(initialValue);
     const { onValueChange } = useContext(FormContext);
 
-    const toggleActive = () => {
-        // setIsActive(!isActive);   
+    const toggleActive = () => { 
         if (typeof(onChange) === "function") {
             onChange(!isActive);
         } else {
@@ -35,8 +34,8 @@ const Toggle = (props) => {
     }, [defaultValue]);
 
     useEffect(() => {
-        setIsActive(value);
-    }, [value]);
+        setIsActive(initialValue);
+    }, [initialValue]);
 
     let toggleElCSS = {
         width: `${toggleElWidth}px`
