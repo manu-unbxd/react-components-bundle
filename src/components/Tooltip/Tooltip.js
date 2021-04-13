@@ -20,7 +20,7 @@ const Tooltip = (props) => {
 
     let dirClassName = "RCB-tooltip-right";
     switch(direction) {
-        case "botton":
+        case "bottom":
             dirClassName = "RCB-tooltip-bottom";
             break;
         
