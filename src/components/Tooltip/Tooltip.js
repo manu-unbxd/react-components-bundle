@@ -19,10 +19,24 @@ const Tooltip = (props) => {
     const [isOpen, setIsOpen] = useState(false);
 
     let dirClassName = "RCB-tooltip-right";
-    if (direction === "bottom") {
-        dirClassName = "RCB-tooltip-bottom"
+    switch(direction) {
+        case "bottom":
+            dirClassName = "RCB-tooltip-bottom";
+            break;
+        
+        case "left":
+            dirClassName = "RCB-tooltip-left";
+            break;
+        
+        case "top":
+            dirClassName = "RCB-tooltip-top";
+            break;
+        
+        default:
+            dirClassName = "RCB-tooltip-right";
+            break;
     }
-
+    
     const showToolTipClick = (e) => {
         e.stopPropagation();
         setIsOpen(!isOpen);
