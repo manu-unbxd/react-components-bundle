@@ -2,11 +2,15 @@ import { Promise } from "bluebird";
 import { fetch as fetchPolyfill } from "whatwg-fetch";
 import utils from "./utils";
 
+const UNAUTHORIZED = 401,
+    NOT_FOUND = 404;
+
 class DataLoader {
     _requestsMap = {}
     _commonHeaders = {}
     _responseParser = x => x
     _requestParser = x => x
+    _exceptionHandler = x => x
     _middlewares = {}
     setCommonHeaders (headers) {
         this._commonHeaders = {...this._commonHeaders, ...headers};
@@ -16,6 +20,9 @@ class DataLoader {
     }
     setRequestParser (requestParser) {
         this._requestParser = requestParser;
+    }
+    setExceptionHandler (exceptionHandler) {
+        this._exceptionHandler = exceptionHandler;
     }
     addRequestConfig (requestId, requestConfig) {
         this._requestsMap[requestId] = requestConfig;
@@ -80,12 +87,20 @@ class DataLoader {
         return new Promise((resolve, reject) => {
             return fetchPolyfill(requestUrl, requestMetadata)
                 .then(response => {
-                    const stringStatus = response.status.toString();
-                    if (stringStatus.indexOf("2") === 0 || stringStatus.indexOf("4") === 0) {
-                        /* Success : 2** response code, or 4** response code */
-                        return response.json();
+                    const { status, statusText } = response;
+
+                    if (status === UNAUTHORIZED || status === NOT_FOUND) {
+                        this._exceptionHandler(response);
+                        reject(response);
                     } else {
-                        reject(response.statusText);
+                        const stringStatus = status.toString();
+                        if (stringStatus.indexOf("2") === 0 || stringStatus.indexOf("4") === 0) {
+                            /* Success : 2** response code, or 4** response code */
+                            return response.json();
+                        } else {
+                            this._exceptionHandler(statusText);
+                            reject(statusText);
+                        }
                     }
                 })
                 .then(json => {
@@ -93,6 +108,7 @@ class DataLoader {
                     resolve(parsedResponse);
                 })
                 .catch(exception => {
+                    this._exceptionHandler(exception);
                     reject(exception);
                 });
         });

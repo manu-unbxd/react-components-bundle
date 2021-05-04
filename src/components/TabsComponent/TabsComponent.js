@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import List from "../List";
 
-const TabTitleItem = (props) => {
+const DefaultTabTitleItem = (props) => {
     const { itemData, selected, changeTab, disabled:allDisabled } = props;
     const { id, label, disabled } = itemData;
     const isSelected = id === selected;
@@ -17,7 +17,7 @@ const TabTitleItem = (props) => {
     </li>);
 };
 
-TabTitleItem.propTypes = {
+DefaultTabTitleItem.propTypes = {
     itemData: PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.any.isRequired,
@@ -29,7 +29,7 @@ TabTitleItem.propTypes = {
 };
 
 const TabsComponent = (props) => {
-    const { className, items, selectedTab, onTabChange, onTabChanged, appearance, disabled, staticTabContent } = props;
+    const { className, items, selectedTab, onTabChange, onTabChanged, appearance, disabled, staticTabContent, TabTitleItem } = props;
     const getSelected = () => disabled ? "" : defaultSelected;
     const defaultSelected = selectedTab || (items[0] ? items[0].id : "");
     const [ selected, setSelected ] = useState(getSelected());
@@ -62,6 +62,8 @@ const TabsComponent = (props) => {
 };
 
 TabsComponent.propTypes = {
+    /* custom tab title component */
+    TabTitleItem: PropTypes.any,
     /** Pass any additional classNames to Tabs component */
     className: PropTypes.string,
     /** Array of tab items. Each object in array should contain {id, label, bodyComponent: <Component />, disabled} */
@@ -87,6 +89,7 @@ TabsComponent.propTypes = {
 };
 
 TabsComponent.defaultProps = {
+    TabTitleItem: DefaultTabTitleItem,
     className: "",
     appearance: "HORIZONTAL",
     disabled: false,

@@ -1,6 +1,6 @@
 {
   "name": "react-components-bundle",
-  "version": "0.2.62",
+  "version": "0.2.63",
   "description": "React components library",
   "keywords": [
     "react components",
@@ -31,7 +31,7 @@
     "lint": "eslint src",
     "copypackage": "cp -rf package.json Readme.md lib",
     "copyscss": "cp -rf src/components/core.scss src/components/theme.scss lib/components",
-    "link": "npm run publish-css && npm run copypackage && npm run copyscss && cd lib && npm link",
+    "link": "npm run publish-css && npm run build && npm run copypackage && npm run copyscss && cd lib && npm link",
     "publish": "npm run publish-css && npm run build && npm run copypackage && npm run copyscss && cd lib && npm publish"
   },
   "dependencies": {
