@@ -102,7 +102,8 @@ const Dropdown = (props) => {
         getUrlParams,
         showCreateCTA,
         createCTAComponent,
-        onCreateCTAClick
+        onCreateCTAClick,
+        serverListClassName
     } = props;
     const [ searchQuery, setSearchQuery ] = useState("");
     const debouncedFn = useRef();
@@ -196,7 +197,8 @@ const Dropdown = (props) => {
         searchQuery,
         searchAttribute,
         responseFormatter,
-        getUrlParams
+        getUrlParams,
+        serverListClassName
     };
 
     const inlineModalClasses = "RCB-form-el " + (showCreateCTA ? "RCB-dd-with-create" : "");
@@ -233,6 +235,8 @@ const Dropdown = (props) => {
 Dropdown.propTypes = {
     /** Pass any additional classNames to Dropdown component */
     className: PropTypes.string,
+    /** Pass infinite fixed list classname to Dropdown component */
+    serverListClassName: PropTypes.string,
     /** Horizontal alignment of the dropdown body */
     halign: PropTypes.oneOf(["left", "right"]),
     /** Label for the dropdown element */
@@ -339,6 +343,7 @@ Dropdown.defaultProps = {
     getUrlParams: () => ({}),
     SelectionSummary: DefaultSelectionSummary,
     showCreateCTA: false,
+    serverListClassName: "",
     createCTAComponent: <span>Create New</span>,
     onCreateCTAClick: () => {}
 };
