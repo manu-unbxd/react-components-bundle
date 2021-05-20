@@ -52,7 +52,8 @@ const ServerPaginatedDDList = (props) => {
         searchAttribute,
         searchQuery,
         getUrlParams,
-        serverListClassName
+        serverListClassName,
+        ...restProps
     } = props;
     const [ items, setItems ] = useState([]);
     const [ itemsResetCounter, setItemsResetCounter ] = useState(0);
@@ -141,7 +142,8 @@ const ServerPaginatedDDList = (props) => {
         idAttribute, 
         nameAttribute,
         items,
-        isItemLoaded 
+        isItemLoaded,
+        ...restProps 
     };
 
     return (<InfiniteLoader

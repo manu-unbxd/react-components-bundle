@@ -23,7 +23,7 @@ const getFilteredOptions = (options = [], searchQuery = "", nameAttribute) => {
 };
 
 /* eslint-disable react/prop-types */
-const DefaultSelectionSummary = ({selectedItems = [], multiSelect, noSelectionLabel, nameAttribute}) => {
+const DefaultSelectionSummary = ({selectedItems = [], multiSelect, noSelectionLabel, nameAttribute, showClear, clearSelectedItems}) => {
     let summaryString = "";
     const selectedCount = selectedItems.length;
 
@@ -33,7 +33,12 @@ const DefaultSelectionSummary = ({selectedItems = [], multiSelect, noSelectionLa
         summaryString = selectedCount ? selectedItems[0][nameAttribute] : noSelectionLabel;
     }
 
-    return (<Fragment><span>{summaryString}</span><span className="RCB-select-arrow"></span></Fragment>);
+    return (<Fragment><span className="RCB-dd-label">{summaryString}</span>
+                <span className="RCB-selection-wrapper">
+                    { showClear && <span className="RCB-clear-selected" onClick={clearSelectedItems}>Clear</span> }
+                    <span className="RCB-select-arrow"></span>
+                </span>
+            </Fragment>);
 };
 
 export const DefaultDropdownItem = (props) => {
@@ -57,8 +62,8 @@ DefaultDropdownItem.propTypes = {
     nameAttribute: PropTypes.string
 };
 
-const NormalList = ({ items, selectedItems, selectItem, idAttribute, nameAttribute, DropdownItem }) => {
-    return <List items={items} 
+const NormalList = ({ items, selectedItems, selectItem, idAttribute, nameAttribute, DropdownItem, ...restProps }) => {
+    return <List items={items} {...restProps}
         ListItem={DropdownItem} selectedItems={selectedItems} selectItem={selectItem} 
         idAttribute={idAttribute} nameAttribute={nameAttribute} />;
 };
@@ -103,10 +108,14 @@ const Dropdown = (props) => {
         showCreateCTA,
         createCTAComponent,
         onCreateCTAClick,
-        serverListClassName
+        serverListClassName,
+        showClear,
+        onClear,
+        ...restProps
     } = props;
     const [ searchQuery, setSearchQuery ] = useState("");
     const debouncedFn = useRef();
+    const searchIpRef = useRef();
 
     let initialSelected = [];
     const initialValue = typeof(onChange) === "function" ? value : defaultValue;
@@ -177,11 +186,22 @@ const Dropdown = (props) => {
     };
 
     const onModalStateChange = (isModalOpen) => {
-        if (!isModalOpen) {
+        if (isModalOpen && showSearch) {
+            searchIpRef.current && searchIpRef.current.focus();
+        } else {
             /* modal is closed */
             setSearchQuery("");
         }
     };
+
+    const clearSelectedItems = (evnt) => {
+        evnt.stopPropagation();
+        setSelectedItems([]); 
+        typeof(onClear) === "function" && onClear();
+        typeof(onChange) === "function" && onChange(null);
+        /** Close modal after reset */
+        inlineModalRef.current.hideModal();
+    }
 
     const commonAttributes = {
         selectedItems, selectItem, idAttribute, nameAttribute, DropdownItem
@@ -210,16 +230,17 @@ const Dropdown = (props) => {
                 <SelectionSummary 
                     selectedItems={selectedItems}
                     noSelectionLabel={noSelectionLabel}
-                    multiSelect={multiSelect} nameAttribute={nameAttribute} />
+                    multiSelect={multiSelect} nameAttribute={nameAttribute} {...restProps}
+                    showClear={showClear} clearSelectedItems={clearSelectedItems} />
             </InlineModalActivator>
             <InlineModalBody>
                 {showSearch && <div className="RCB-dd-search">
                     <span className="RCB-dd-search-icon"></span>
-                    <input type="text" className="RCB-dd-search-ip" placeholder="Search" onChange={onSearchChange} />
+                    <input type="text" className="RCB-dd-search-ip" placeholder="Search" onChange={onSearchChange} ref={searchIpRef} />
                 </div>}
                 {paginationType === "SERVER" ? 
-                    <ServerPaginatedDDList {...commonAttributes} {...serverListAttrs} /> : 
-                    <NormalList {...commonAttributes} 
+                    <ServerPaginatedDDList {...commonAttributes} {...serverListAttrs} {...restProps} /> : 
+                    <NormalList {...commonAttributes} {...restProps}
                         items={getFilteredOptions(options, searchQuery, nameAttribute)} />}
                 {showCreateCTA && <div className="RCB-dd-create-cta" onClick={onCreateCTAClick}>{createCTAComponent}</div>}
             </InlineModalBody>
@@ -319,7 +340,12 @@ Dropdown.propTypes = {
      *   */
     responseFormatter: PropTypes.func,
     /** If paginationType is "SERVER", function that is expected to return the URL Params object */
-    getUrlParams: PropTypes.func
+    getUrlParams: PropTypes.func,
+
+    /** Show the optional clear button for resetting selections */
+    showClear: PropTypes.bool,
+    /** Custom on clear function */
+    onClear: PropTypes.func
 };
 
 Dropdown.defaultProps = {
@@ -345,7 +371,9 @@ Dropdown.defaultProps = {
     showCreateCTA: false,
     serverListClassName: "",
     createCTAComponent: <span>Create New</span>,
-    onCreateCTAClick: () => {}
+    onCreateCTAClick: () => {},
+    showClear: false,
+    onClear: () => {}
 };
 
 export default Dropdown;

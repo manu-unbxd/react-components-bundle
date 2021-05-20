@@ -69,8 +69,10 @@ const Table = (props) => {
         idAttribute,
         searchBy,
         getRequestKeys,
+        showPaginateBar,
         paginationPosition,
         paginationType,
+        paginationBar,
         requestId,
         pageNoKey,
         perPageKey,
@@ -78,9 +80,10 @@ const Table = (props) => {
         isExpandableTable,
         ExpandedRowComponent,
         responseFormatter,
-        NoDataComponent,
+        noDataComponent,
         omitProps,
         getUrlParams,
+        getRequestParams,
         ...restProps
     } = props;
     /* variables for server data */
@@ -110,6 +113,7 @@ const Table = (props) => {
 
     let extraParams = utils.omit(restProps, omitParams);
     let requestParams = {
+        ...getRequestParams(),
         ...extraParams,
         [pageNoKey]: pageNo,
         [perPageKey]: perPageCount,
@@ -132,6 +136,14 @@ const Table = (props) => {
         }
 
         let { entries, total }  = apiResponse; 
+
+        if (pageNo > 1 && entries.length === 0) {
+            /* current page does not have records, so fetch previous page */
+            setPageConfig({
+                ...pageConfig,
+                pageNo: pageNo - 1
+            });
+        }
 
         setServerRecords(entries);
         setServerTotal(total);
@@ -164,15 +176,22 @@ const Table = (props) => {
 
     const filteredRecords = getFilteredRecords({records, searchBy, searchByKey, sortByConfig});
     const totalRecords = paginationType === "SERVER" ? serverTotal : filteredRecords.length;
-    const paginationComponent = <PaginationComponent pageSizeList={pageSizeList} 
-                            onPageConfigChanged={setPageConfig} 
-                            pageConfig={{...pageConfig, total: totalRecords}} />
+    const paginationProps = {
+        pageSizeList: pageSizeList,
+        onPageConfigChanged: setPageConfig,
+        pageConfig: {...pageConfig, total: totalRecords}
+    };
+
+    const paginationComponent = (<div className="RCB-paginate-bar">
+                                    {paginationBar ? React.cloneElement(paginationBar, paginationProps) 
+                                    : <PaginationComponent  {...paginationProps}/>}
+                                </div>);
 
     let finalRecords = paginationType === "SERVER" ? serverRecords :
-                        getPageRecords(filteredRecords, pageConfig);
+                        (showPaginateBar ? getPageRecords(filteredRecords, pageConfig) : filteredRecords);
 
     let wrappedComponent =  (<BaseTable records={finalRecords} columnConfigs={columnConfigs} 
-                                    idAttribute={idAttribute} NoDataComponent={NoDataComponent}
+                                    idAttribute={idAttribute} noDataComponent={noDataComponent}
                                     sortByConfig={sortByConfig} onSort={onSort}
                                     isExpandableTable={isExpandableTable} ExpandedRowComponent={ExpandedRowComponent} />);
     
@@ -183,9 +202,9 @@ const Table = (props) => {
     }
 
     return (<div className={className}>
-        {paginationPosition === "TOP" && totalRecords > 0 && paginationComponent}
+        {showPaginateBar && paginationPosition === "TOP" && totalRecords > 0 && paginationComponent}
         {wrappedComponent}
-        {paginationPosition === "BOTTOM" && totalRecords > 0 && paginationComponent}
+        {showPaginateBar && paginationPosition === "BOTTOM" && totalRecords > 0 && paginationComponent}
     </div>);
 };
 
@@ -196,10 +215,17 @@ Table.propTypes = {
     searchBy: PropTypes.string,
     /** list of supported page sizes  */
     pageSizeList: PropTypes.array,
+    /** set to false to disable pagination bar */
+    showPaginateBar: PropTypes.bool,
     /** location where the pagination component must be displayed */
     paginationPosition: PropTypes.oneOf(["TOP", "BOTTOM"]),
     /** CLIENT side pagination or SERVER side pagination */
     paginationType: PropTypes.oneOf(["CLIENT", "SERVER"]),
+    /** You can provide a custom component for the pagination bar 
+     * if you want to add more content to the pagination bar other than the pagination widget.
+     * Make sure to include <PagniationComponent /> and pass on all the props sent to tgis custom component
+      */
+    paginationBar: PropTypes.any,
     /** [SERVER side pagination] the ID of the request to call */
     requestId: PropTypes.string,
     /** [SERVER side pagination] key to send the page number value in, to the API */
@@ -221,7 +247,9 @@ Table.propTypes = {
      */
     getRequestKeys: PropTypes.func,
     /** If paginationType is "SERVER", function that is expected to return the URL Params object */
-    getUrlParams: PropTypes.func
+    getUrlParams: PropTypes.func,
+    /** If paginationType is "SERVER", function that is expected to return the Request Params object */
+    getRequestParams: PropTypes.func
 }
 
 Table.defaultProps = {
@@ -239,13 +267,15 @@ Table.defaultProps = {
         id: "100",
         name: "100"
     }],
+    showPaginateBar: true,
     paginationPosition: "TOP",
     paginationType: "CLIENT",
     pageNoKey: "page",
     perPageKey: "count",
     omitProps: "",
     getRequestKeys: () => ({}),
-    getUrlParams: () => ({})
+    getUrlParams: () => ({}),
+    getRequestParams: () => ({})
 };
 
 export default Table;

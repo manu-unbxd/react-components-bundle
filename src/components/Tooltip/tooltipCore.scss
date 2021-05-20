@@ -3,8 +3,12 @@
         display: inline-block;
         position: relative;
 
-        &:hover {
-            .RCB-tooltip-body {
+        .RCB-tooltip-body {
+            &.RCB-tooltip-hover {
+                display: inline-block;
+            }
+        
+            &.RCB-tooltip-click {
                 display: inline-block;
             }
         }

@@ -1,12 +1,13 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { FormContext } from "./Form";
 import FormElementWrapper from "./FormElementWrapper";
 
 const RangeSlider = (props) => {
-    const { label, name, min, max, className, value, defaultValue, appearance, onChange, ...restProps } = props;
+    const { label, name, min, max, className, value, defaultValue, appearance, onChange, disabled, showBubble, inputStyle = {}, bubbleStyle = {}, ...restProps } = props;
     const { onValueChange } = useContext(FormContext);
-
+    const [ val, setVal ] = useState(value || defaultValue);
+    
     const postFormValueChange = (value) => {
         typeof(onValueChange) === "function" && onValueChange(name, value);
     };
@@ -21,6 +22,8 @@ const RangeSlider = (props) => {
         }
 
         postFormValueChange(value);
+        setVal(value);
+        
     }
 
     useEffect(() => {
@@ -37,9 +40,11 @@ const RangeSlider = (props) => {
         name,
         id: name,
         defaultValue,
-        className: "RCB-form-el",
+        disabled,
+        className: `RCB-form-el RCB-input-range ${className}`,
         onChange: onInputChange,
-        ...restProps
+        ...restProps,
+        showBubble
     };
 
     if (typeof(onChange) === "function") {
@@ -47,9 +52,13 @@ const RangeSlider = (props) => {
         inputProps.value = value;
     }
 
+
     return (<FormElementWrapper className={className} appearance={appearance}>
         <label className="RCB-form-el-label" htmlFor={name}>{label}</label>
-        <input {...inputProps} />
+        <div className="RCB-range-wrapper">
+            { showBubble && <div className="RCB-range-value" style={bubbleStyle}><span>{val}</span></div>}
+            <input {...inputProps} style={inputStyle} disabled={disabled}/>
+        </div>
     </FormElementWrapper>);
 };
 
@@ -70,7 +79,15 @@ RangeSlider.propTypes = {
     /** Define the appearance of the form element. Accepted values are either "inline" or "block" */
     appearance: PropTypes.oneOf(["inline", "block"]),
     /** Becomes a controlled component if onChange function is given */
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    /** Custom Style changes of slider track */
+    inputStyle: PropTypes.object,
+    /** Custom Style changes of value bubble */
+    bubbleStyle: PropTypes.object,
+    /** Show bubble with values */
+    showBubble: PropTypes.bool,
+    /** Indicates if the slider is disabled or enabled */
+    disabled: PropTypes.bool
 };
 
 RangeSlider.defaultProps = {

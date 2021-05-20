@@ -20,10 +20,10 @@ export const ButtonSize = {
  * Displays a Button component 
  */
 const Button = (props) => {
-    const { children, className, loading, disabled, appearance, size, onClick } = props;
+    const { children, className, loading, disabled, appearance, size, onClick, ...restProps } = props;
     const btnClassName = `RCB-btn RCB-btn-${appearance} RCB-btn-${size} ${className}` + (loading ? " RCB-btn-loading" : "");
 
-    return (<button className={btnClassName} disabled={disabled} onClick={onClick}>
+    return (<button className={btnClassName} disabled={disabled} onClick={onClick} {...restProps}>
         {children}
     </button>);
 };

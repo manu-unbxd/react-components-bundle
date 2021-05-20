@@ -25,7 +25,11 @@ const List = (props) => {
     } = props;
 
     return (<ul className={`RCB-list ${className}`}>
-        {items.map(itemData => <ListItem itemData={itemData} key={itemData[idAttribute]} idAttribute={idAttribute} {...restProps} />)}
+        {items.map((itemData, index) => {
+            return (
+                <ListItem itemData={itemData} index={index} key={itemData[idAttribute]} idAttribute={idAttribute} {...restProps} />
+            )
+        })}
     </ul>);
 }
 

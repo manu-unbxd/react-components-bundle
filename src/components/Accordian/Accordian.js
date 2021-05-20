@@ -5,8 +5,8 @@ import List from "../List";
 const AccordianItem = (props) => {
     const { itemData } = props;
     const { open, titleComponent, bodyComponent } = itemData;
-    const [ isOpen, setIsOpen ] = useState(open);
-    
+    const [isOpen, setIsOpen] = useState(open);
+
     const onItemClick = () => {
         setIsOpen(!isOpen);
     };
@@ -16,20 +16,21 @@ const AccordianItem = (props) => {
     }, [open]);
 
     return <div className={`RCB-accordian-item ${isOpen ? "RCB-accordian-open" : "RCB-accordian-close"}`}>
-        <div className="RCB-accordian-title" onClick={onItemClick}>{titleComponent}</div>
+        <div className="RCB-accordian-title" onClick={onItemClick}>{React.cloneElement(titleComponent, { isOpen: isOpen })}</div>        
         {isOpen && <div className="RCB-accordian-body">{bodyComponent}</div>}
     </div>
 };
 
 AccordianItem.propTypes = {
     itemData: PropTypes.shape({
+        id: PropTypes.string.isRequired,
         titleComponent: PropTypes.instanceOf(Object).isRequired,
         bodyComponent: PropTypes.instanceOf(Object).isRequired,
         open: PropTypes.bool
     }),
     onClick: PropTypes.func
 };
-  
+
 const Accordian = (props) => {
     const {
         className,
@@ -37,7 +38,7 @@ const Accordian = (props) => {
     } = props;
 
     return (<div className={`RCB-accordian ${className}`}>
-        <List items={items} ListItem={AccordianItem} />
+        <List items={items} ListItem={AccordianItem} />    
     </div>);
 };
 

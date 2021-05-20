@@ -89,7 +89,7 @@ const BaseTable = (props) => {
         idAttribute,
         isExpandableTable,
         ExpandedRowComponent,
-        NoDataComponent,
+        noDataComponent,
         sortByConfig
     } = props;
     const { sortBy, sortOrder } = sortByConfig;
@@ -97,7 +97,7 @@ const BaseTable = (props) => {
     const RowComponent = isExpandableTable ? ExpandableTR : TR;
     
     if (records.length === 0) {
-        return (<NoDataComponent />);
+        return noDataComponent;
     } else {
         return (<table className={`RCB-table ${className}`}>
             <thead>
@@ -171,10 +171,7 @@ BaseTable.propTypes = {
         PropTypes.func
     ]),
     /** Component to be rendered if the table has no data */
-    NoDataComponent: PropTypes.oneOfType([
-        PropTypes.instanceOf(Element),
-        PropTypes.func
-    ]),
+    noDataComponent: PropTypes.any
 }
 
 BaseTable.defaultProps = {
@@ -182,7 +179,7 @@ BaseTable.defaultProps = {
     records: [],
     idAttribute: "id",
     isExpandableTable: false,
-    NoDataComponent: DefaultNoDataComponent
+    noDataComponent: <DefaultNoDataComponent />
 };
 
 export default BaseTable;
