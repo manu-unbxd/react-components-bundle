@@ -52,6 +52,7 @@ const ServerPaginatedDDList = (props) => {
         searchAttribute,
         searchQuery,
         getUrlParams,
+        serverListClassName,
         ...restProps
     } = props;
     const [ items, setItems ] = useState([]);
@@ -159,6 +160,7 @@ const ServerPaginatedDDList = (props) => {
                 <FixedSizeList
                     itemCount={itemCount} itemSize={30}
                     onItemsRendered={onItemsRendered}
+                    className={serverListClassName}
                     ref={ref} height={maxHeight} itemData={listProps}>
                         {DropdownItem}
                 </FixedSizeList>
