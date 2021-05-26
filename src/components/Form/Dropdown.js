@@ -328,6 +328,8 @@ Dropdown.propTypes = {
     perPageKey: PropTypes.string,
     /** If paginationType is "SERVER", max height of the dropdown container */
     maxHeight: PropTypes.number,
+    /** If paginationType is "SERVER", height of each dropdown item */
+    ddItemHeight: PropTypes.number,
     /** If paginationType is "SERVER", max number of items to show for one page in the dropdown container */
     pageSize: PropTypes.number,
     /** If paginationType is "SERVER" & showSearch is true, pass the search attribute to be sent to the server request */

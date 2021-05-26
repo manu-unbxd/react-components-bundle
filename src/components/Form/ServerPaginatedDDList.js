@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import PropTypes from "prop-types";
 import { FixedSizeList } from "react-window";
 import InfiniteLoader from "react-window-infinite-loader";
 import dataLoader from "../../core/dataLoader";
@@ -17,7 +18,7 @@ export const DefaultDropdownItem = (props) => {
         selectItem, 
         selectedItems = [], 
         idAttribute, 
-        nameAttribute 
+        nameAttribute
     } = data;
 
     const itemData = items[index] || {};
@@ -53,6 +54,7 @@ const ServerPaginatedDDList = (props) => {
         searchQuery,
         getUrlParams,
         serverListClassName,
+        ddItemHeight,
         ...restProps
     } = props;
     const [ items, setItems ] = useState([]);
@@ -158,7 +160,7 @@ const ServerPaginatedDDList = (props) => {
             threshold={pageSize}>
             {({ onItemsRendered, ref }) => (
                 <FixedSizeList
-                    itemCount={itemCount} itemSize={30}
+                    itemCount={itemCount} itemSize={ddItemHeight}
                     onItemsRendered={onItemsRendered}
                     className={serverListClassName}
                     ref={ref} height={maxHeight} itemData={listProps}>
@@ -168,8 +170,13 @@ const ServerPaginatedDDList = (props) => {
     </InfiniteLoader>);
 };
 
+ServerPaginatedDDList.propTypes = {
+    ddItemHeight: PropTypes.number
+};
+
 ServerPaginatedDDList.defaultProps = {
-    DropdownItem: DefaultDropdownItem
+    DropdownItem: DefaultDropdownItem,
+    ddItemHeight: 30
 };
 
 /* eslint-enable react/prop-types */
