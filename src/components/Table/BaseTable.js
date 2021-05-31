@@ -1,6 +1,12 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState, useImperativeHandle, forwardRef } from "react";
 import PropTypes from "prop-types";
 import utils from "../../core/utils";
+import Checkbox from "../Form/Checkbox";
+
+const DEFAULT_CHECKBOX_CONFIG = {
+    enabled: false, 
+    showInHeader: true
+};
 
 const DefaultNoDataComponent = () => {
     return (<div className="RCB-no-data">No data found</div>)
@@ -22,8 +28,28 @@ const getTDValue = ({ columnValue, rowData = {}, columnConfig = {}, tdProps = {}
 }
 
 const ExpandableTR = (props) => {
-    const { isEven, rowData, columnConfigs, ExpandedRowComponent } = props;
+    const { 
+        rowIndex, 
+        rowData, 
+        columnConfigs, 
+        isEven, 
+        ExpandedRowComponent, 
+        showCheckbox,
+        checkboxChangeCounter,
+        checkboxValue,
+        onSelectionChange
+    } = props;
+    const [ selected, setSelected ] = useState(checkboxValue || false);
     const [ isExpanded, setIsExpanded ] = useState(false);
+
+    const onChange = (value) => {
+        setSelected(value);
+        onSelectionChange(rowData, value);
+    };
+
+    useEffect(() => {
+        setSelected(checkboxValue);
+    }, [checkboxChangeCounter, checkboxValue]);
 
     const toggleExpanded = () => {
         setIsExpanded(!isExpanded);
@@ -44,6 +70,9 @@ const ExpandableTR = (props) => {
                     className: isExpanded ? "expand-open" : "expand-close"
                 }
             })}
+            {showCheckbox && <td key={`checkbox-colum-${rowIndex}`}>
+                <Checkbox name={`checkbox${rowIndex}`} type="checkbox" className="table-checkbox" onChange={onChange} value={selected} />
+            </td>}
             {columnConfigs.map(configObj => {
                 const { key } = configObj;
                 return getTDValue({
@@ -70,10 +99,31 @@ ExpandableTR.propTypes = {
 };
 
 const TR = (props) => {
-    const { rowData, columnConfigs, isEven } = props;
+    const { 
+        rowIndex, 
+        rowData, 
+        columnConfigs, 
+        isEven, 
+        showCheckbox,
+        checkboxChangeCounter,
+        checkboxValue,
+        onSelectionChange } = props;
+    const [ selected, setSelected ] = useState(checkboxValue || false);
     const className = "RCB-tr " + (isEven ? "RCB-even-tr" : "RCB-odd-tr");
 
+    const onChange = (value) => {
+        setSelected(value);
+        onSelectionChange(rowData, value);
+    };
+
+    useEffect(() => {
+        setSelected(checkboxValue);
+    }, [checkboxChangeCounter, checkboxValue]);
+    
     return (<tr className={className}>
+        {showCheckbox && <td key={`checkbox-colum-${rowIndex}`}>
+            <Checkbox name={`checkbox${rowIndex}`} type="checkbox" className="table-checkbox" onChange={onChange} value={selected} />
+        </td>}
         {columnConfigs.map(configObj => {
             const { key } = configObj;
             return getTDValue({columnValue: rowData[key], rowData, columnConfig: configObj});
@@ -81,21 +131,71 @@ const TR = (props) => {
     </tr>);
 };
 
-const BaseTable = (props) => {
+let BaseTable = (props, ref) => {
     const {
         className,
         records,
         columnConfigs,
         idAttribute,
+        checkboxConfig,
         isExpandableTable,
         ExpandedRowComponent,
         noDataComponent,
         sortByConfig
     } = props;
+    const { enabled:showCheckbox, showInHeader } = {...DEFAULT_CHECKBOX_CONFIG, ...(checkboxConfig || {})};
     const { sortBy, sortOrder } = sortByConfig;
 
+    const [ checkboxValue, setCheckboxValue ] = useState(false);
+    const [ checkboxChangeCounter, setChangeCounter ] = useState(0);
+    const [ selected, setSelected ] = useState([]);
+
     const RowComponent = isExpandableTable ? ExpandableTR : TR;
+
+    const onSelectionChange = (record, checked) => {
+        if (checked) {
+            /* add to selected array */
+            setSelected([...selected, record]);
+        } else {
+            /* remove from selected array */
+            const newSelected = selected.filter(obj => {
+                return obj[idAttribute] !== record[idAttribute];
+            });
+
+            setSelected(newSelected);
+        }
+    };
+
+    const getSelectedRows = () => {
+        return selected;
+    };
     
+    const updateCheckboxValue = (newValue) => {
+        setCheckboxValue(newValue);
+        setChangeCounter(checkboxChangeCounter + 1);
+    };
+
+    const resetSelected = () => {
+        updateCheckboxValue(false);
+        setSelected([]);
+    };
+
+    const toggleSelectAll = () => {
+        const checked = !checkboxValue;
+        updateCheckboxValue(checked);
+        
+        if (checked) {
+            setSelected(records);
+        } else {
+            setSelected([]);
+        }
+    };
+    
+    useImperativeHandle(ref, () => ({
+        getSelectedRows,
+        resetSelected
+    }));
+
     if (records.length === 0) {
         return noDataComponent;
     } else {
@@ -104,6 +204,10 @@ const BaseTable = (props) => {
                 <tr>
                     {/* add empty column for expand icon */}
                     {isExpandableTable && <th key="expandIcon" className="RCB-th RCB-expand-column"></th>}
+                    {showCheckbox && (showInHeader ? <th key="headerCheckbox">
+                        <Checkbox name="headerCheckbox" type="checkbox" className="table-checkbox" 
+                            value={checkboxValue} onChange={toggleSelectAll} />
+                    </th> : <th/>)}
                     {columnConfigs.map(columnObj => {
                         const { key, label, sortable } = columnObj;
                         let className = "RCB-th";
@@ -132,15 +236,19 @@ const BaseTable = (props) => {
             <tbody>
                 {records.map((rowData, index)=> {
                     return <RowComponent key={rowData[idAttribute]} 
-                                        isEven={utils.isEven(index)}
+                                        isEven={utils.isEven(index)} rowIndex={index}
                                         rowData={rowData} 
                                         columnConfigs={columnConfigs} 
-                                        ExpandedRowComponent={ExpandedRowComponent} />
+                                        ExpandedRowComponent={ExpandedRowComponent}
+                                        showCheckbox={showCheckbox} checkboxValue={checkboxValue} checkboxChangeCounter={checkboxChangeCounter}
+                                        onSelectionChange={onSelectionChange} />
                 })}
             </tbody>
         </table>)
     }
 };
+
+BaseTable = forwardRef(BaseTable);
 
 /* eslint-enable react/prop-types */
 
@@ -163,6 +271,13 @@ BaseTable.propTypes = {
     columnConfigs: PropTypes.array.isRequired,
     /** ID attribute key to use when rendering the dropdown items */
     idAttribute: PropTypes.string,
+    /* Config to display checkbox in the first column of the table
+     *  { 
+         enabled: false, // turn this on to display checkbox in first column of the table
+         showInHeader: true // turn this off to not display the checkbox in the table header
+        }
+     */
+    checkboxConfig: PropTypes.object,
     /** set to "true" if table rows are expandable */
     isExpandableTable: PropTypes.bool,
     /** Component to be rendered on expanding a row */

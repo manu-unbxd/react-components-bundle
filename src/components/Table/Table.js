@@ -4,6 +4,7 @@ import BaseTable from "./BaseTable";
 import DataLoader from "../DataLoader";
 import PaginationComponent from "./PaginationComponent";
 import utils from "../../core/utils";
+import { forwardRef } from "react";
 
 const getPageRecords = (records = [], pageConfig = {}) => {
     const pagIndex = utils.getPagIndex(pageConfig);
@@ -61,7 +62,7 @@ export const REQUEST_KEYS = {
     sortDSC: "DSC"
 };
 
-const Table = (props) => {
+let Table = (props, ref) => {
     const {
         className,
         records,
@@ -84,6 +85,7 @@ const Table = (props) => {
         omitProps,
         getUrlParams,
         getRequestParams,
+        checkboxConfig,
         ...restProps
     } = props;
     /* variables for server data */
@@ -190,7 +192,7 @@ const Table = (props) => {
     let finalRecords = paginationType === "SERVER" ? serverRecords :
                         (showPaginateBar ? getPageRecords(filteredRecords, pageConfig) : filteredRecords);
 
-    let wrappedComponent =  (<BaseTable records={finalRecords} columnConfigs={columnConfigs} 
+    let wrappedComponent =  (<BaseTable ref={ref} records={finalRecords} columnConfigs={columnConfigs} checkboxConfig={checkboxConfig}
                                     idAttribute={idAttribute} noDataComponent={noDataComponent}
                                     sortByConfig={sortByConfig} onSort={onSort}
                                     isExpandableTable={isExpandableTable} ExpandedRowComponent={ExpandedRowComponent} />);
@@ -208,6 +210,8 @@ const Table = (props) => {
     </div>);
 };
 
+Table = forwardRef(Table);
+
 Table.propTypes = {
     /** Extends Table properties */
     ...BaseTable.propTypes,
@@ -223,7 +227,7 @@ Table.propTypes = {
     paginationType: PropTypes.oneOf(["CLIENT", "SERVER"]),
     /** You can provide a custom component for the pagination bar 
      * if you want to add more content to the pagination bar other than the pagination widget.
-     * Make sure to include <PagniationComponent /> and pass on all the props sent to tgis custom component
+     * Make sure to include <PagniationComponent /> and pass on all the props sent to this custom component
       */
     paginationBar: PropTypes.any,
     /** [SERVER side pagination] the ID of the request to call */

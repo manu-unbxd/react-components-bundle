@@ -12,7 +12,7 @@ ListItem.propTypes = {
     itemData: PropTypes.shape({
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired
-    }).isRequired,
+    }).isRequired
 };
 
 const List = (props) => {

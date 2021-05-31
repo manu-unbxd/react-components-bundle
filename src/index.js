@@ -1,5 +1,6 @@
 import {
     Button,
+    DropdownButton,
     List,
     Modal,
     InlineModal,
@@ -37,6 +38,7 @@ export {
     Button,
     ButtonAppearance,
     ButtonSize,
+    DropdownButton,
     List,
     Modal,
     InlineModal,

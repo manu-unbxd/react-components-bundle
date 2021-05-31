@@ -1,4 +1,4 @@
-import Button from "./Button";
+import Button, { DropdownButton } from "./Button";
 import List from "./List";
 import Modal from "./Modal";
 import InlineModal from "./InlineModal";
@@ -13,6 +13,7 @@ import Accordian from "./Accordian";
 
 export {
     Button,
+    DropdownButton,
     List,
     Modal,
     InlineModal,
