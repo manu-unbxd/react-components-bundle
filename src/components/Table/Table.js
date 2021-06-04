@@ -138,6 +138,7 @@ let Table = (props, ref) => {
         }
 
         let { entries, total }  = apiResponse; 
+        entries = entries || [];
 
         if (pageNo > 1 && entries.length === 0) {
             /* current page does not have records, so fetch previous page */
