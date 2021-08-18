@@ -51,12 +51,12 @@ class DataLoader {
         const requestParser = this.getRequestMiddleware(requestId);
         return requestParser(params, requestId);
     }
-    parseResponseData (requestId, response) {
+    parseResponseData (requestId, response, headers) {
         const responseParser = this.getResponseMiddleware(requestId);
         const commonParser = this._responseParser;
         /* parse through common parser */
-        response = typeof(commonParser) === "function" ? commonParser(response, requestId) : response;
-        return responseParser(response, requestId);
+        response = typeof(commonParser) === "function" ? commonParser(response, requestId, headers) : response;
+        return responseParser(response, requestId, headers);
     }
     getRequestDef ({ requestId, urlParams = {}, params = {}, headers = {} }) {
         const requestConfig = this._requestsMap[requestId];
@@ -87,7 +87,7 @@ class DataLoader {
         return new Promise((resolve, reject) => {
             return fetchPolyfill(requestUrl, requestMetadata)
                 .then(response => {
-                    const { status, statusText } = response;
+                    const { status, statusText, headers } = response;
 
                     if (status === UNAUTHORIZED || status === NOT_FOUND) {
                         this._exceptionHandler(response);
@@ -96,15 +96,18 @@ class DataLoader {
                         const stringStatus = status.toString();
                         if (stringStatus.indexOf("2") === 0 || stringStatus.indexOf("4") === 0) {
                             /* Success : 2** response code, or 4** response code */
-                            return response.json();
+                            return {
+                                headers,
+                                json: response.json()
+                            };
                         } else {
                             this._exceptionHandler(statusText);
                             reject(statusText);
                         }
                     }
                 })
-                .then(json => {
-                    const parsedResponse = this.parseResponseData(requestId, json);
+                .then(({headers, json}) => {
+                    const parsedResponse = this.parseResponseData(requestId, json, headers);
                     resolve(parsedResponse);
                 })
                 .catch(exception => {
