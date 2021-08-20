@@ -96,10 +96,12 @@ class DataLoader {
                         const stringStatus = status.toString();
                         if (stringStatus.indexOf("2") === 0 || stringStatus.indexOf("4") === 0) {
                             /* Success : 2** response code, or 4** response code */
-                            return {
-                                headers,
-                                json: response.json()
-                            };
+                            return response.json().then((data) => {
+                                return {
+                                  headers: headers,
+                                  json: data
+                                }
+                            })
                         } else {
                             this._exceptionHandler(statusText);
                             reject(statusText);
