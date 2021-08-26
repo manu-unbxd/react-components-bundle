@@ -71,6 +71,15 @@ class DataLoader {
             headers: {...this._commonHeaders, ...headers}
         };
 
+        const requestHeaders = requestMetadata.headers;
+
+        for (let header in requestHeaders) {
+            if (requestHeaders[header] === null) {
+                /* if header is set as null, delete it from the headers list */
+                delete requestHeaders[header];
+            }
+        }
+
         if (reqMethod === "get") {
             requestUrl = `${requestUrl}?${utils.getQueryParams(finalRequestParams)}`;
         } else  if (["post", "delete", "put", "patch"].indexOf(reqMethod) > -1) {
@@ -81,7 +90,7 @@ class DataLoader {
                 formData.append(key, finalRequestParams[key]);
             }
             requestMetadata.body = formData;
-            delete requestMetadata.headers["Content-Type"];
+            delete requestHeaders["Content-Type"];
         }
 
         return new Promise((resolve, reject) => {
