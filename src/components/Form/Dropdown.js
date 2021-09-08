@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, Fragment, useEffect } from "react";
+import React, { useState, useContext, useRef, Fragment, useEffect, forwardRef, useImperativeHandle } from "react";
 import PropTypes from "prop-types";
 import InlineModal, { InlineModalActivator, InlineModalBody } from "../InlineModal";
 import List from "../List";
@@ -74,7 +74,7 @@ NormalList.defaultProps = {
 
 /* eslint-enable react/prop-types */
 
-const Dropdown = (props) => {
+let Dropdown = (props, ref) => {
     const { 
         halign,
         label,
@@ -130,6 +130,10 @@ const Dropdown = (props) => {
     const { onValueChange } = useContext(FormContext);
     const inlineModalRef = useRef();
 
+    const hideModal = () => {
+        inlineModalRef.current.hideModal();
+    };
+
     const postFormValueChange = (value) => {
         const { error } = utils.checkIfValid(value, validations);
         typeof(onValueChange) === "function" && onValueChange(name, value, error);
@@ -150,7 +154,7 @@ const Dropdown = (props) => {
             postFormValueChange(item);
             typeof(onChange) === "function" && onChange(item);
             /* close the dropdown */
-            inlineModalRef.current.hideModal();
+            hideModal();
         }
 
         setSelectedItems(selectedItems);
@@ -200,12 +204,16 @@ const Dropdown = (props) => {
         typeof(onClear) === "function" && onClear();
         typeof(onChange) === "function" && onChange(null);
         /** Close modal after reset */
-        inlineModalRef.current.hideModal();
+        hideModal();
     }
 
     const commonAttributes = {
         selectedItems, selectItem, idAttribute, nameAttribute, DropdownItem
     };
+
+    useImperativeHandle(ref, () => ({
+        closeDropdown: hideModal
+    }));
 
     const serverListAttrs = {
         requestId,
@@ -252,6 +260,8 @@ const Dropdown = (props) => {
 //     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 //     name: PropTypes.string
 // });
+
+Dropdown = forwardRef(Dropdown);
 
 Dropdown.propTypes = {
     /** Pass any additional classNames to Dropdown component */

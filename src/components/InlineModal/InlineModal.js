@@ -28,13 +28,27 @@ let InlineModal = (props, ref) => {
     }
 
     const onBodyClick = (e) => {
-        if (inlineModalRef.current.contains(e.target)) {
-            /* inside modal click */
-            return;
+        const eventTarget = e.target;
+        const inlineModalNode = inlineModalRef.current;
+        let eventPathNodes = e.composedPath();
+        let isWithinModal = false;
+
+        if (inlineModalNode.contains(eventTarget)) {
+            isWithinModal = true;
+        } else {
+            for (let i = 0; i < eventPathNodes.length; i++) {
+                const node = eventPathNodes[i];
+                if (node!== window && inlineModalNode.contains(node)) {
+                    isWithinModal = true;
+                    break;
+                }
+            }
         }
 
-        /* outside click -> close modal */
-        changeModalState(false);
+        if (!isWithinModal) {
+            /* outside click -> close modal */
+            changeModalState(false);
+        }
     }
     
     useEffect(() => {
