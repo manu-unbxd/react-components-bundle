@@ -12,6 +12,7 @@ const Tooltip = (props) => {
         activatorAction,
         direction,
         children,
+        className,
         ...restProps
     } = props;
 
@@ -54,7 +55,7 @@ const Tooltip = (props) => {
 
     const eventProps = (activatorAction === "click") ? { onClick: showToolTipClick } : { onMouseEnter: showToolTipHover, onMouseLeave: hideToolTip };
 
-    return (<div className="RCB-tooltip">
+    return (<div className={`RCB-tooltip ${className}`}>
         <div className="RCB-tooltip-btn" {...eventProps}>
             <TooltipActivator {...restProps}></TooltipActivator>
         </div>
