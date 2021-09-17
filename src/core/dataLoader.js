@@ -51,12 +51,12 @@ class DataLoader {
         const requestParser = this.getRequestMiddleware(requestId);
         return requestParser(params, requestId);
     }
-    parseResponseData (requestId, response, headers) {
+    parseResponseData (requestId, response, headers, status) {
         const responseParser = this.getResponseMiddleware(requestId);
         const commonParser = this._responseParser;
         /* parse through common parser */
-        response = typeof(commonParser) === "function" ? commonParser(response, requestId, headers) : response;
-        return responseParser(response, requestId, headers);
+        response = typeof(commonParser) === "function" ? commonParser(response, requestId, headers, status) : response;
+        return responseParser(response, requestId, headers, status);
     }
     getRequestDef ({ requestId, urlParams = {}, params = {}, headers = {} }) {
         const requestConfig = this._requestsMap[requestId];
@@ -108,6 +108,7 @@ class DataLoader {
                             return response.json().then((data) => {
                                 return {
                                   headers: headers,
+                                  status: status,
                                   json: data
                                 }
                             })
@@ -117,8 +118,8 @@ class DataLoader {
                         }
                     }
                 })
-                .then(({headers, json}) => {
-                    const parsedResponse = this.parseResponseData(requestId, json, headers);
+                .then(({headers, json, status}) => {
+                    const parsedResponse = this.parseResponseData(requestId, json, headers, status);
                     resolve(parsedResponse);
                 })
                 .catch(exception => {
