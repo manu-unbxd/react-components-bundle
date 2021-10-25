@@ -95,7 +95,7 @@ const ServerPaginatedDDList = (props) => {
             params: {
                 [pageNoKey]: pageNoRef.current,
                 [perPageKey]: pageSize,
-                [searchAttribute]: searchRef.current,
+                ...(searchRef.current && { [searchAttribute] : searchRef.current}),
                 ...requestParams
             },
             urlParams: getUrlParams()
