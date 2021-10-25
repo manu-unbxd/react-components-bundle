@@ -19,6 +19,7 @@ let Input = (props, ref) => {
         onChange,
         validations,
         autoComplete,
+        showLabel,
         ...restProps
     } = props;
     const { onValueChange } = useContext(FormContext);
@@ -71,7 +72,7 @@ let Input = (props, ref) => {
     }
 
     return (<FormElementWrapper className={className} appearance={appearance}>
-        {label && <label className="RCB-form-el-label" htmlFor={name}>{label}</label>}
+        {(showLabel && label) && <label className="RCB-form-el-label" htmlFor={name}>{label}</label>}
         <input {...inputProps} />
         {error && <div className="RCB-form-error">{error}</div>}
     </FormElementWrapper>);
@@ -84,6 +85,8 @@ Input.propTypes = {
     className: PropTypes.string,
     /** Use it to render different input types like text, password etc. */
     type: PropTypes.string,
+    /** indicates whether to show or hide label */
+    showLabel: PropTypes.bool,
     /** Label for the input element */
     label: PropTypes.string,
     /** Unique ID for the input element */
@@ -109,6 +112,7 @@ Input.propTypes = {
 
 Input.defaultProps = {
     className: "",
+    showLabel: true,
     appearance: "inline",
     validations: [],
     autoComplete: "off"
