@@ -88,6 +88,7 @@ let Dropdown = (props, ref) => {
         disabled,
         options, 
         showSearch,
+        searchPlaceholder,
         idAttribute,
         nameAttribute,
         noSelectionLabel,
@@ -244,7 +245,7 @@ let Dropdown = (props, ref) => {
             <InlineModalBody>
                 {showSearch && <div className="RCB-dd-search">
                     <span className="RCB-dd-search-icon"></span>
-                    <input type="text" className="RCB-dd-search-ip" placeholder="Search" onChange={onSearchChange} ref={searchIpRef} />
+                    <input type="text" className="RCB-dd-search-ip" placeholder={searchPlaceholder} onChange={onSearchChange} ref={searchIpRef} />
                 </div>}
                 {paginationType === "SERVER" ? 
                     <ServerPaginatedDDList {...commonAttributes} {...serverListAttrs} {...restProps} /> : 
@@ -292,6 +293,8 @@ Dropdown.propTypes = {
     disabled: PropTypes.bool,
     /* set to true if you want search ability for dropdown items */
     showSearch: PropTypes.bool,
+    /* placeholder to show in the search box */
+    searchPlaceholder: PropTypes.string,
     /** Is dropdown multi select or single select */
     multiSelect: PropTypes.bool,
     /** ID attribute key to use when rendering the dropdown items, if the ID attribute is other than "id" */
@@ -365,6 +368,7 @@ Dropdown.defaultProps = {
     label: "",
     showLabel: true,
     showSearch: false,
+    searchPlaceholder: "Search",
     searchAttribute: "search",
     multiSelect: false,
     idAttribute: "id",

@@ -55,7 +55,7 @@ Checkbox.propTypes = {
     /** Label for the input element */
     label: PropTypes.string,
     /** Unique ID for the input element */
-    name: PropTypes.string.isRequired,
+    name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     /** Will be used only with onChange function, or else ignored */
     value: PropTypes.bool,
     defaultValue: PropTypes.bool,

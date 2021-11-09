@@ -38,7 +38,7 @@ List.propTypes = {
     className: PropTypes.string,
     items: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-        name: PropTypes.string
+        name: PropTypes.any
     })).isRequired,
     idAttribute: PropTypes.string,
     /** Pass a custom ListItem component */
