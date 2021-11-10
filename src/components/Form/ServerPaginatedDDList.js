@@ -55,6 +55,7 @@ const ServerPaginatedDDList = (props) => {
         getUrlParams,
         serverListClassName,
         ddItemHeight,
+        minPageNo,
         ...restProps
     } = props;
     const [ items, setItems ] = useState([]);
@@ -62,7 +63,11 @@ const ServerPaginatedDDList = (props) => {
     const [ total, setTotal ] = useState(0);
     const [ hasNextPage, setHasNextPage ] = useState(false);
     const [ isNextPageLoading, setIsNextPageLoading ] = useState(true);
-    const pageNoRef = useRef(1);
+
+    const getDefaultPageNo = () => {
+        return minPageNo ?? 1
+    }
+    const pageNoRef = useRef(getDefaultPageNo());
     const searchRef = useRef(searchQuery);
         
     const onDataLoaded = (response) => {
@@ -120,7 +125,7 @@ const ServerPaginatedDDList = (props) => {
 
     useEffect(() => {
         /* searh query changed -> reset page no. to 1 */
-        pageNoRef.current = 1;
+        pageNoRef.current = getDefaultPageNo();
         searchRef.current = searchQuery;
         setIsNextPageLoading(true);
         setItems([]);

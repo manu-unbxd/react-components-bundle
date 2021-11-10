@@ -112,6 +112,7 @@ let Dropdown = (props, ref) => {
         serverListClassName,
         showClear,
         onClear,
+        minPageNo,
         ...restProps
     } = props;
     const [ searchQuery, setSearchQuery ] = useState("");
@@ -227,7 +228,8 @@ let Dropdown = (props, ref) => {
         searchAttribute,
         responseFormatter,
         getUrlParams,
-        serverListClassName
+        serverListClassName,
+        minPageNo
     };
 
     const inlineModalClasses = "RCB-form-el " + (showCreateCTA ? "RCB-dd-with-create" : "");
