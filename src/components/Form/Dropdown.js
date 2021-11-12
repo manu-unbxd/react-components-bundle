@@ -113,7 +113,7 @@ let Dropdown = (props, ref) => {
         showClear,
         onClear,
         minPageNo,
-        searchCallback,
+        onSearchChange: propSearchChange,
         ...restProps
     } = props;
     const [ searchQuery, setSearchQuery ] = useState("");
@@ -180,8 +180,8 @@ let Dropdown = (props, ref) => {
 
     const debouncedSearchChange = (value) => {
         setSearchQuery(value);
-        if (typeof searchCallback === "function") {
-            searchCallback(value);
+        if (typeof propSearchChange === "function") {
+            propSearchChange(value);
         }
     };
 
@@ -368,7 +368,7 @@ Dropdown.propTypes = {
     /** Custom on clear function */
     onClear: PropTypes.func,
     /** Callback on query search in dropdown */
-    searchCallback: PropTypes.func
+    onSearchChange: PropTypes.func
 };
 
 Dropdown.defaultProps = {
