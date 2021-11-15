@@ -351,6 +351,8 @@ Dropdown.propTypes = {
     ddItemHeight: PropTypes.number,
     /** If paginationType is "SERVER", max number of items to show for one page in the dropdown container */
     pageSize: PropTypes.number,
+    /** Default page number to use for server paginated list */
+    minPageNo: PropTypes.number,
     /** If paginationType is "SERVER" & showSearch is true, pass the search attribute to be sent to the server request */
     searchAttribute: PropTypes.string,
     /** If paginationType is "SERVER", 
