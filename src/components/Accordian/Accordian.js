@@ -8,7 +8,10 @@ const AccordianItem = (props) => {
     const [isOpen, setIsOpen] = useState(open);
 
     const onItemClick = () => {
-        setIsOpen(!isOpen);
+        if (typeof open === "undefined") {
+            setIsOpen(!isOpen);
+        }
+        /** Else open and close is controlled by specific elements from the parent Accordian, based on the 'open' prop */
     };
 
     useEffect(() => {
