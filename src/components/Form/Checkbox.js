@@ -53,7 +53,7 @@ Checkbox.propTypes = {
     /** Pass any additional classNames to Input component */
     className: PropTypes.string,
     /** Label for the input element */
-    label: PropTypes.string,
+    label: PropTypes.any,
     /** Unique ID for the input element */
     name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     /** Will be used only with onChange function, or else ignored */
