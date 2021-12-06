@@ -81,6 +81,10 @@ const ServerPaginatedDDList = (props) => {
 
         let { entries, total = 0 }  = apiResponse;
         
+        if (entries === null) {
+            entries = [];
+        }
+        
         const totalEntries = [...items, ...entries];
 
         if (totalEntries.length < total) {
