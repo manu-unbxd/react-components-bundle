@@ -209,7 +209,7 @@ let BaseTable = (props, ref) => {
                             value={checkboxValue} onChange={toggleSelectAll} />
                     </th> : <th/>)}
                     {columnConfigs.map(columnObj => {
-                        const { key, label, sortable } = columnObj;
+                        const { key, label, sortable, headerClassName } = columnObj;
                         let className = "RCB-th";
                         let thAttrs = {};
 
@@ -227,6 +227,10 @@ let BaseTable = (props, ref) => {
                                     props.onSort(columnObj);
                                 }
                             }
+                        }
+
+                        if (headerClassName) {
+                            className += ` ${headerClassName}`;
                         }
 
                         return (<th className={className} key={key} {...thAttrs}>{label}</th>);
