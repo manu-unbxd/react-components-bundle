@@ -5,6 +5,7 @@ import DataLoader from "../DataLoader";
 import PaginationComponent from "./PaginationComponent";
 import utils from "../../core/utils";
 import { forwardRef } from "react";
+import { Fragment } from "react";
 
 const getPageRecords = (records = [], pageConfig = {}) => {
     const pagIndex = utils.getPagIndex(pageConfig);
@@ -86,6 +87,7 @@ let Table = (props, ref) => {
         getUrlParams,
         getRequestParams,
         checkboxConfig,
+        paginationBarOutsideWrapper,
         ...restProps
     } = props;
     /* variables for server data */
@@ -204,11 +206,22 @@ let Table = (props, ref) => {
         </DataLoader>)
     }
 
-    return (<div className={className}>
-        {showPaginateBar && paginationPosition === "TOP" && totalRecords > 0 && paginationComponent}
-        {wrappedComponent}
-        {showPaginateBar && paginationPosition === "BOTTOM" && totalRecords > 0 && paginationComponent}
-    </div>);
+    if (paginationBarOutsideWrapper) {
+        return (
+            <Fragment>
+                <div className={className}>
+                    {wrappedComponent}
+                </div>
+                {showPaginateBar && paginationPosition === "BOTTOM" && totalRecords > 0 && paginationComponent}
+            </Fragment>
+        )
+    } else {
+        return (<div className={className}>
+            {showPaginateBar && paginationPosition === "TOP" && totalRecords > 0 && paginationComponent}
+            {wrappedComponent}
+            {showPaginateBar && paginationPosition === "BOTTOM" && totalRecords > 0 && paginationComponent}
+        </div>);
+    }
 };
 
 Table = forwardRef(Table);
@@ -254,7 +267,9 @@ Table.propTypes = {
     /** If paginationType is "SERVER", function that is expected to return the URL Params object */
     getUrlParams: PropTypes.func,
     /** If paginationType is "SERVER", function that is expected to return the Request Params object */
-    getRequestParams: PropTypes.func
+    getRequestParams: PropTypes.func,
+    /** If paginationBar should be outside the table wrapper div */
+    paginationBarOutsideWrapper: PropTypes.bool
 }
 
 Table.defaultProps = {
@@ -278,6 +293,7 @@ Table.defaultProps = {
     pageNoKey: "page",
     perPageKey: "count",
     omitProps: "",
+    paginationBarOutsideWrapper: false,
     getRequestKeys: () => ({}),
     getUrlParams: () => ({}),
     getRequestParams: () => ({})
