@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useImperativeHandle } from "react";
 import PropTypes from "prop-types";
 import BaseTable from "./BaseTable";
 import DataLoader from "../DataLoader";
@@ -152,12 +152,16 @@ let Table = (props, ref) => {
         setServerTotal(total);
     };
 
-    useEffect(() => {
-        /* Search value changed: reset pageNo. */
+    const resetPageNo = () => {
         setPageConfig({
             ...pageConfig,
             pageNo: 1
         });
+    };
+
+    useEffect(() => {
+        /* Search value changed: reset pageNo. */
+        resetPageNo();
         setSearchQuery(searchBy);
     }, [searchBy]);
 
@@ -203,6 +207,10 @@ let Table = (props, ref) => {
             {wrappedComponent}
         </DataLoader>)
     }
+    
+    useImperativeHandle(ref, () => ({
+        resetPageNo
+    }));
 
     return (<div className={className}>
         {showPaginateBar && paginationPosition === "TOP" && totalRecords > 0 && paginationComponent}
