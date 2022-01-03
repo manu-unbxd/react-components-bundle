@@ -5,7 +5,6 @@ import DataLoader from "../DataLoader";
 import PaginationComponent from "./PaginationComponent";
 import utils from "../../core/utils";
 import { forwardRef } from "react";
-import { Fragment } from "react";
 
 const getPageRecords = (records = [], pageConfig = {}) => {
     const pagIndex = utils.getPagIndex(pageConfig);
