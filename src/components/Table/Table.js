@@ -5,6 +5,7 @@ import DataLoader from "../DataLoader";
 import PaginationComponent from "./PaginationComponent";
 import utils from "../../core/utils";
 import { forwardRef } from "react";
+import { Fragment } from "react";
 
 const getPageRecords = (records = [], pageConfig = {}) => {
     const pagIndex = utils.getPagIndex(pageConfig);
@@ -65,6 +66,7 @@ export const REQUEST_KEYS = {
 let Table = (props, ref) => {
     const {
         className,
+        wrapperClassName,
         records,
         columnConfigs,
         idAttribute,
@@ -212,11 +214,15 @@ let Table = (props, ref) => {
         resetPageNo
     }));
 
-    return (<div className={className}>
-        {showPaginateBar && paginationPosition === "TOP" && totalRecords > 0 && paginationComponent}
-        {wrappedComponent}
-        {showPaginateBar && paginationPosition === "BOTTOM" && totalRecords > 0 && paginationComponent}
-    </div>);
+    return (
+        <div className={className}>
+            {showPaginateBar && paginationPosition === "TOP" && totalRecords > 0 && paginationComponent}
+            <div className={wrapperClassName}>
+                {wrappedComponent}
+            </div>
+            {showPaginateBar && paginationPosition === "BOTTOM" && totalRecords > 0 && paginationComponent}
+        </div>
+    )
 };
 
 Table = forwardRef(Table);
