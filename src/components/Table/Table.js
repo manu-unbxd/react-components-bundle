@@ -66,6 +66,7 @@ export const REQUEST_KEYS = {
 let Table = (props, ref) => {
     const {
         className,
+        wrapperClassName,
         records,
         columnConfigs,
         idAttribute,
@@ -87,7 +88,6 @@ let Table = (props, ref) => {
         getUrlParams,
         getRequestParams,
         checkboxConfig,
-        paginationBarOutsideWrapper,
         ...restProps
     } = props;
     /* variables for server data */
@@ -206,22 +206,15 @@ let Table = (props, ref) => {
         </DataLoader>)
     }
 
-    if (paginationBarOutsideWrapper) {
-        return (
-            <Fragment>
-                <div className={className}>
-                    {wrappedComponent}
-                </div>
-                {showPaginateBar && paginationPosition === "BOTTOM" && totalRecords > 0 && paginationComponent}
-            </Fragment>
-        )
-    } else {
-        return (<div className={className}>
+    return (
+        <div className={className}>
             {showPaginateBar && paginationPosition === "TOP" && totalRecords > 0 && paginationComponent}
-            {wrappedComponent}
+            <div className={wrapperClassName}>
+                {wrappedComponent}
+            </div>
             {showPaginateBar && paginationPosition === "BOTTOM" && totalRecords > 0 && paginationComponent}
-        </div>);
-    }
+        </div>
+    )
 };
 
 Table = forwardRef(Table);
@@ -267,9 +260,7 @@ Table.propTypes = {
     /** If paginationType is "SERVER", function that is expected to return the URL Params object */
     getUrlParams: PropTypes.func,
     /** If paginationType is "SERVER", function that is expected to return the Request Params object */
-    getRequestParams: PropTypes.func,
-    /** If paginationBar should be outside the table wrapper div */
-    paginationBarOutsideWrapper: PropTypes.bool
+    getRequestParams: PropTypes.func
 }
 
 Table.defaultProps = {
@@ -293,7 +284,6 @@ Table.defaultProps = {
     pageNoKey: "page",
     perPageKey: "count",
     omitProps: "",
-    paginationBarOutsideWrapper: false,
     getRequestKeys: () => ({}),
     getUrlParams: () => ({}),
     getRequestParams: () => ({})
