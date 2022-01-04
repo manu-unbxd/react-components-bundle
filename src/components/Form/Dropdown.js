@@ -62,10 +62,15 @@ DefaultDropdownItem.propTypes = {
     nameAttribute: PropTypes.string
 };
 
-const NormalList = ({ items, selectedItems, selectItem, idAttribute, nameAttribute, DropdownItem, ...restProps }) => {
-    return <List items={items} {...restProps}
-        ListItem={DropdownItem} selectedItems={selectedItems} selectItem={selectItem} 
-        idAttribute={idAttribute} nameAttribute={nameAttribute} />;
+const NormalList = ({ items, selectedItems, selectItem, idAttribute, nameAttribute, DropdownItem, ListHeaderItem, ...restProps }) => {
+    return (
+        <Fragment>
+            {ListHeaderItem}
+            <List items={items} {...restProps}
+                ListItem={DropdownItem} selectedItems={selectedItems} selectItem={selectItem} 
+                idAttribute={idAttribute} nameAttribute={nameAttribute} />
+        </Fragment>
+    )
 };
 
 NormalList.defaultProps = {
@@ -113,6 +118,7 @@ let Dropdown = (props, ref) => {
         showClear,
         onClear,
         minPageNo,
+        ListHeaderItem,
         onSearchChange: propSearchChange,
         ...restProps
     } = props;
@@ -214,7 +220,7 @@ let Dropdown = (props, ref) => {
     }
 
     const commonAttributes = {
-        selectedItems, selectItem, idAttribute, nameAttribute, DropdownItem
+        selectedItems, selectItem, idAttribute, nameAttribute, DropdownItem, ListHeaderItem
     };
 
     useImperativeHandle(ref, () => ({
@@ -370,7 +376,9 @@ Dropdown.propTypes = {
     /** Custom on clear function */
     onClear: PropTypes.func,
     /** Callback on query search in dropdown */
-    onSearchChange: PropTypes.func
+    onSearchChange: PropTypes.func,
+    /** List header Component */
+    ListHeaderItem: PropTypes.string
 };
 
 Dropdown.defaultProps = {
@@ -399,6 +407,7 @@ Dropdown.defaultProps = {
     createCTAComponent: <span>Create New</span>,
     onCreateCTAClick: () => {},
     showClear: false,
+    ListHeaderItem: "",
     onClear: () => {}
 };
 
