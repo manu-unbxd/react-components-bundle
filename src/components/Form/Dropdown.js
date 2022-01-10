@@ -62,10 +62,10 @@ DefaultDropdownItem.propTypes = {
     nameAttribute: PropTypes.string
 };
 
-const NormalList = ({ items, selectedItems, selectItem, idAttribute, nameAttribute, DropdownItem, ListHeaderItem, ...restProps }) => {
+const NormalList = ({ items = [], selectedItems, selectItem, idAttribute, nameAttribute, DropdownItem, ListHeaderItem, ...restProps }) => {
     return (
         <Fragment>
-            {ListHeaderItem}
+            {items.length ? ListHeaderItem : ""}
             <List items={items} {...restProps}
                 ListItem={DropdownItem} selectedItems={selectedItems} selectItem={selectItem} 
                 idAttribute={idAttribute} nameAttribute={nameAttribute} />
