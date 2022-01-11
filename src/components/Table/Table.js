@@ -200,7 +200,7 @@ let Table = (props, ref) => {
 
     let wrappedComponent =  (<BaseTable ref={ref} records={finalRecords} columnConfigs={columnConfigs} checkboxConfig={checkboxConfig}
                                     idAttribute={idAttribute} noDataComponent={noDataComponent}
-                                    sortByConfig={sortByConfig} onSort={onSort}
+                                    sortByConfig={sortByConfig} onSort={onSort} resetPageNo={resetPageNo}
                                     isExpandableTable={isExpandableTable} ExpandedRowComponent={ExpandedRowComponent} />);
     
     if (paginationType === "SERVER") {
@@ -209,10 +209,6 @@ let Table = (props, ref) => {
         </DataLoader>)
     }
     
-    useImperativeHandle(ref, () => ({
-        resetPageNo
-    }));
-
     return (
         <div className={className}>
             {showPaginateBar && paginationPosition === "TOP" && totalRecords > 0 && paginationComponent}

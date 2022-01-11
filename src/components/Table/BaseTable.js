@@ -141,7 +141,8 @@ let BaseTable = (props, ref) => {
         isExpandableTable,
         ExpandedRowComponent,
         noDataComponent,
-        sortByConfig
+        sortByConfig,
+        resetPageNo
     } = props;
     const { enabled:showCheckbox, showInHeader } = {...DEFAULT_CHECKBOX_CONFIG, ...(checkboxConfig || {})};
     const { sortBy, sortOrder } = sortByConfig;
@@ -193,7 +194,8 @@ let BaseTable = (props, ref) => {
     
     useImperativeHandle(ref, () => ({
         getSelectedRows,
-        resetSelected
+        resetSelected,
+        resetPageNo
     }));
 
     if (records.length === 0) {
