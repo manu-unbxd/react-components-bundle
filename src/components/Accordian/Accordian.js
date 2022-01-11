@@ -1,67 +1,89 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import List from "../List";
 
+const ALL = "ALL";
+
+const getDefaultOpenedItems = (items = [], defaultOpen) =>{
+    let arr = [];
+    if(items.length > 0) {
+        items.forEach((item) => {
+            const {
+                id
+            } = item;
+            if(id === defaultOpen || defaultOpen === ALL ) {
+                arr.push(id)
+            }
+        })
+    }
+    return arr;
+}
+
 const AccordianItem = (props) => {
-    const { itemData } = props;
-    const { open, titleComponent, bodyComponent } = itemData;
-    const [isOpen, setIsOpen] = useState(open);
-
+    const {
+        itemData,
+        allowOneOpen,
+        openedItems,
+        setOpenedItems
+    } = props;    
+    const { titleComponent, bodyComponent, id } = itemData;
+    const isOpen = openedItems.find(item => item === id) ? true: false;
     const onItemClick = () => {
-        if (typeof open === "undefined") {
-            setIsOpen(!isOpen);
+        let newList = [id];
+        if(!allowOneOpen) {
+            newList = isOpen ? openedItems.filter(item => item !== id) : [...openedItems, id]
         }
-        /** Else open and close is controlled by specific elements from the parent Accordian, based on the 'open' prop */
-    };
-
-    useEffect(() => {
-        setIsOpen(open);
-    }, [open]);
-
-    return <div className={`RCB-accordian-item ${isOpen ? "RCB-accordian-open" : "RCB-accordian-close"}`}>
-        <div className="RCB-accordian-title" onClick={onItemClick}>{React.cloneElement(titleComponent, { isOpen: isOpen })}</div>        
+        setOpenedItems(newList)
+    }
+    return <li className={`RCB-accordian-item ${isOpen ? "RCB-accordian-open" : "RCB-accordian-close"}`}>
+        <div className="RCB-accordian-title" onClick={onItemClick}>{titleComponent}</div>        
         {isOpen && <div className="RCB-accordian-body">{bodyComponent}</div>}
-    </div>
+    </li>
 };
 
 AccordianItem.propTypes = {
     itemData: PropTypes.shape({
         id: PropTypes.string.isRequired,
-        titleComponent: PropTypes.instanceOf(Object).isRequired,
-        bodyComponent: PropTypes.instanceOf(Object).isRequired,
-        open: PropTypes.bool
+        titleComponent: PropTypes.element.isRequired,
+        bodyComponent: PropTypes.element.isRequired,
     }),
-    onClick: PropTypes.func
+    setOpenedItems: PropTypes.func,
+    openedItems: PropTypes.array,
+    allowOneOpen: PropTypes.bool
 };
 
-const Accordian = (props) => {
-    const {
-        className,
-        items
-    } = props;
 
-    return (<div className={`RCB-accordian ${className}`}>
-        <List items={items} ListItem={AccordianItem} />    
+const Accordian = ({defaultOpen, items, allowOneOpen}) => {
+    const defaultOpened = getDefaultOpenedItems(items, defaultOpen);
+    const [openedItems, setOpenedItems] = useState(defaultOpened);
+    return (<div className={`RCB-accordian`}>
+        {
+            <List 
+                items={items}
+                openedItems={openedItems}
+                defaultOpen={defaultOpen}
+                allowOneOpen={allowOneOpen}
+                setOpenedItems={setOpenedItems}
+                ListItem={AccordianItem} /> 
+        }
     </div>);
 };
 
 Accordian.propTypes = {
-    /** Pass any additional classNames to Accordian */
-    className: PropTypes.string,
-    /** Array of accordian items. Each object in array should contain {id, titleComponent: <Component />, bodyComponent: <Component />} */
+    defaultOpen: PropTypes.string,
     items: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
-        titleComponent: PropTypes.instanceOf(Object).isRequired,
-        bodyComponent: PropTypes.instanceOf(Object).isRequired,
-        open: PropTypes.bool
+        titleComponent: PropTypes.element.isRequired,
+        bodyComponent: PropTypes.element.isRequired,
     })).isRequired,
     // /* set to false if you want more than one accordian item to be open at a time */
-    // allowOneOpen: PropTypes.bool,
+    allowOneOpen: PropTypes.bool
 };
 
 Accordian.defaultProps = {
-    className: "",
-    // allowOneOpen: true
+    allowOneOpen: false,
+    defaultOpen:"",//"ALL","ID","",
+    items:[]
 };
 
 export default Accordian;

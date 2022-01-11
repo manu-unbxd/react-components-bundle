@@ -1,28 +1,111 @@
-import React from "react";
+import React, { Fragment, useState } from "react";
 import Accordian from "./Accordian";
 
+const AccordianBody = () => {
+    const [count, setRandomNumber] = useState(1);
+    const onSetRandom = ()=>{
+        setRandomNumber(Math.round(Math.random()*10))
+    }
+    return <div style={{padding:'20px'}}>
+        <h3>This is accordian body</h3>
+        <button onClick={onSetRandom}> changed to {count}</button>
+    </div>
+}
+const AccordianTitle = ({id}) => {
+    return <div>
+        {`Title ${id}`}
+    </div>
+}  
 export const SimpleUsage = () => {
     const items = [{
-        id: 1,
-        titleComponent: <div>Title 1</div>,
-        bodyComponent: <div>This is accordian 1 body</div>
+        id: "41",
+        titleComponent: <AccordianTitle id={'41'}/>,
+        bodyComponent: <AccordianBody/>,
     }, {
-        id: 2,
-        titleComponent: <div>Title 2</div>,
-        bodyComponent: <div>This is accordian 2 body</div>
+        id: "42",
+        titleComponent: <AccordianTitle id={'42'}/>,
+        bodyComponent: <AccordianBody/>
     }, {
-        id: 3,
-        titleComponent: <div>Title 3</div>,
-        bodyComponent: <div>This is accordian 3 body</div>
+        id: "43",
+        titleComponent: <AccordianTitle id={'43'}/>,
+        bodyComponent: <AccordianBody/>
     }, {
-        id: 4,
-        titleComponent: <div>Title 4</div>,
-        bodyComponent: <div>This is accordian 4 body</div>
+        id: "44",
+        titleComponent: <AccordianTitle id={'44'}/>,
+        bodyComponent: <AccordianBody/>
     }];
+    return <div>
+        <Accordian items={items}  />
+    </div>
+};
 
-    return <Accordian items={items} />;
+SimpleUsage.story = {
+    parameters: {
+        docs: {
+            storyDescription: "Depicts a simple usage of the Accrodian",
+        },
+    },
+};
+
+export const OpenOneItemByDefault = () => {
+    const items = [{
+        id: "414",
+        titleComponent: <AccordianTitle id={'414'}/>,
+        bodyComponent: <AccordianBody/>,
+    }, {
+        id: "424",
+        titleComponent: <div>Title 424 </div>,
+        bodyComponent: <AccordianBody/>
+    }, {
+        id: "434",
+        titleComponent: <AccordianTitle id={'434'}/>,
+        bodyComponent: <AccordianBody/>
+    }, {
+        id: "444",
+        titleComponent: <AccordianTitle id={'444'}/>,
+        bodyComponent: <AccordianBody/>
+    }];
+    return <Accordian items={items} defaultOpen={"414"} />
+};
+
+OpenOneItemByDefault.story = {
+    parameters: {
+        docs: {
+            storyDescription: "Open an item by default",
+        },
+    },
+};
+
+
+export const OpenAllByDefault = () => {
+    const items = [{
+        id: "14",
+        titleComponent: <AccordianTitle id={'14'}/>,
+        bodyComponent: <AccordianBody/>,
+    }, {
+        id: "24",
+        titleComponent: <div>Title 24 </div>,
+        bodyComponent: <AccordianBody/>
+    }, {
+        id: "34",
+        titleComponent: <AccordianTitle id={'34'}/>,
+        bodyComponent: <AccordianBody/>
+    }, {
+        id: "44",
+        titleComponent: <AccordianTitle id={'44'}/>,
+        bodyComponent: <AccordianBody/>
+    }];
+    return <Accordian items={items} defaultOpen={"ALL"} />
+};
+
+OpenAllByDefault.story = {
+    parameters: {
+        docs: {
+            storyDescription: "Open an item by default",
+        },
+    },
 };
 
 export default {
-    title: "Accordian"
+    title: 'Accordian'
 };
