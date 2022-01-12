@@ -67,6 +67,7 @@ const NormalList = ({ items = [], selectedItems, selectItem, idAttribute, nameAt
         <Fragment>
             {items.length ? ListHeaderItem : ""}
             <List items={items} {...restProps}
+                showNoDataMsg={true}
                 ListItem={DropdownItem} selectedItems={selectedItems} selectItem={selectItem} 
                 idAttribute={idAttribute} nameAttribute={nameAttribute} />
         </Fragment>
@@ -378,9 +379,7 @@ Dropdown.propTypes = {
     /** Callback on query search in dropdown */
     onSearchChange: PropTypes.func,
     /** List header Component */
-    ListHeaderItem: PropTypes.string,
-    /** No data prop */
-    showNoDataMsg: PropTypes.bool
+    ListHeaderItem: PropTypes.string   
 };
 
 Dropdown.defaultProps = {
@@ -410,8 +409,7 @@ Dropdown.defaultProps = {
     onCreateCTAClick: () => {},
     showClear: false,
     ListHeaderItem: "",
-    onClear: () => {},
-    showNoDataMsg: false
+    onClear: () => {}
 };
 
 export default Dropdown;

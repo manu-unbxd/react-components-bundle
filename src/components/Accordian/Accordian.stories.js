@@ -1,28 +1,92 @@
-import React from "react";
+import React, { Fragment, useState } from "react";
 import Accordian from "./Accordian";
 
-export const SimpleUsage = () => {
-    const items = [{
-        id: 1,
-        titleComponent: <div>Title 1</div>,
-        bodyComponent: <div>This is accordian 1 body</div>
-    }, {
-        id: 2,
-        titleComponent: <div>Title 2</div>,
-        bodyComponent: <div>This is accordian 2 body</div>
-    }, {
-        id: 3,
-        titleComponent: <div>Title 3</div>,
-        bodyComponent: <div>This is accordian 3 body</div>
-    }, {
-        id: 4,
-        titleComponent: <div>Title 4</div>,
-        bodyComponent: <div>This is accordian 4 body</div>
-    }];
-
-    return <Accordian items={items} />;
-};
 
 export default {
-    title: "Accordian"
+    title: 'Accordian',
+    component: Accordian,
 };
+
+const AccordianBody = () => {
+    const [count, setRandomNumber] = useState(1);
+    const onSetRandom = ()=>{
+        setRandomNumber(Math.round(Math.random()*10))
+    }
+    return <div style={{padding:'20px'}}>
+        <h3>This is accordian body</h3>
+        <button onClick={onSetRandom}> changed to {count}</button>
+    </div>
+}
+const AccordianTitle = ({id}) => {
+    return <div>
+        {`Title ${id}`}
+    </div>
+}  
+const Template = (args) => <Accordian {...args} />;
+
+export const Default = Template.bind();
+Default.args = {
+    items: [{
+        id: "41",
+        titleComponent: <AccordianTitle id={'41'}/>,
+        bodyComponent: <AccordianBody/>,
+    }, {
+        id: "42",
+        titleComponent: <AccordianTitle id={'42'}/>,
+        bodyComponent: <AccordianBody/>
+    }, {
+        id: "43",
+        titleComponent: <AccordianTitle id={'43'}/>,
+        bodyComponent: <AccordianBody/>
+    }, {
+        id: "44",
+        titleComponent: <AccordianTitle id={'44'}/>,
+        bodyComponent: <AccordianBody/>
+    }],
+    defaultOpen:""
+};
+
+export const DefaultOpen = Template.bind();
+DefaultOpen.args = {
+    items: [{
+        id: "41",
+        titleComponent: <AccordianTitle id={'41'}/>,
+        bodyComponent: <AccordianBody/>,
+    }, {
+        id: "42",
+        titleComponent: <AccordianTitle id={'42'}/>,
+        bodyComponent: <AccordianBody/>
+    }, {
+        id: "43",
+        titleComponent: <AccordianTitle id={'43'}/>,
+        bodyComponent: <AccordianBody/>
+    }, {
+        id: "44",
+        titleComponent: <AccordianTitle id={'44'}/>,
+        bodyComponent: <AccordianBody/>
+    }],
+    defaultOpen:"42"
+}
+
+export const OpenAtLeastOneAlways = Template.bind();
+OpenAtLeastOneAlways.args = {
+    items: [{
+        id: "411",
+        titleComponent: <AccordianTitle id={'41'}/>,
+        bodyComponent: <AccordianBody/>,
+    }, {
+        id: "421",
+        titleComponent: <AccordianTitle id={'42'}/>,
+        bodyComponent: <AccordianBody/>
+    }, {
+        id: "431",
+        titleComponent: <AccordianTitle id={'43'}/>,
+        bodyComponent: <AccordianBody/>
+    }, {
+        id: "441",
+        titleComponent: <AccordianTitle id={'44'}/>,
+        bodyComponent: <AccordianBody/>
+    }],
+    defaultOpen:"421",
+    allowOneOpen:true
+}
