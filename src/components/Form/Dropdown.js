@@ -378,7 +378,9 @@ Dropdown.propTypes = {
     /** Callback on query search in dropdown */
     onSearchChange: PropTypes.func,
     /** List header Component */
-    ListHeaderItem: PropTypes.string
+    ListHeaderItem: PropTypes.string,
+    /** No data prop */
+    showNoDataMsg: PropTypes.bool
 };
 
 Dropdown.defaultProps = {
@@ -408,7 +410,8 @@ Dropdown.defaultProps = {
     onCreateCTAClick: () => {},
     showClear: false,
     ListHeaderItem: "",
-    onClear: () => {}
+    onClear: () => {},
+    showNoDataMsg: false
 };
 
 export default Dropdown;

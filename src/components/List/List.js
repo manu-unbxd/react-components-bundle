@@ -21,10 +21,11 @@ const List = (props) => {
         items,
         idAttribute,
         ListItem,
+        showNoDataMsg,
         ...restProps
     } = props;
 
-    if (!items.length) {
+    if (!items.length && showNoDataMsg) {
         return (<div className="RCB-no-data">No data found</div>);
     }
 
