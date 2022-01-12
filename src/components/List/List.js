@@ -24,6 +24,10 @@ const List = (props) => {
         ...restProps
     } = props;
 
+    if (!items.length) {
+        return (<div className="RCB-no-data">No data found</div>);
+    }
+
     return (<ul className={`RCB-list ${className}`}>
         {items.map((itemData, index) => {
             return (
