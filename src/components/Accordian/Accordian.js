@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, cloneElement } from "react";
 import PropTypes from "prop-types";
 import List from "../List";
 
@@ -36,7 +36,7 @@ const AccordianItem = (props) => {
         setOpenedItems(newList)
     }
     return <li className={`RCB-accordian-item ${isOpen ? "RCB-accordian-open" : "RCB-accordian-close"}`}>
-        <div className="RCB-accordian-title" onClick={onItemClick}>{titleComponent}</div>        
+        <div className="RCB-accordian-title" onClick={onItemClick}>{cloneElement(titleComponent, { isOpen: isOpen })}</div>        
         {isOpen && <div className="RCB-accordian-body">{bodyComponent}</div>}
     </li>
 };
