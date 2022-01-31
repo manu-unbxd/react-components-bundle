@@ -379,7 +379,7 @@ Dropdown.propTypes = {
     /** Callback on query search in dropdown */
     onSearchChange: PropTypes.func,
     /** List header Component */
-    ListHeaderItem: PropTypes.string   
+    ListHeaderItem: PropTypes.string
 };
 
 Dropdown.defaultProps = {
