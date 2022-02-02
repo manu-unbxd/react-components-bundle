@@ -67,6 +67,7 @@ const NormalList = ({ items = [], selectedItems, selectItem, idAttribute, nameAt
         <Fragment>
             {items.length ? ListHeaderItem : ""}
             <List items={items} {...restProps}
+                showNoDataMsg={true}
                 ListItem={DropdownItem} selectedItems={selectedItems} selectItem={selectItem} 
                 idAttribute={idAttribute} nameAttribute={nameAttribute} />
         </Fragment>

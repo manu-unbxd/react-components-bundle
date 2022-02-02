@@ -21,11 +21,13 @@ const List = (props) => {
         items,
         idAttribute,
         ListItem,
+        showNoDataMsg,
+        noDataComponent,
         ...restProps
     } = props;
 
-    if (!items.length) {
-        return (<div className="RCB-no-data">No data found</div>);
+    if (!items.length && showNoDataMsg) {
+        return noDataComponent;
     }
 
     return (<ul className={`RCB-list ${className}`}>
@@ -35,6 +37,12 @@ const List = (props) => {
             )
         })}
     </ul>);
+}
+
+const DefaultNoDataComponent = () => {
+    return (
+        <div className="RCB-no-data">No data found</div>
+    )
 }
 
 List.propTypes = {
@@ -49,14 +57,16 @@ List.propTypes = {
     ListItem: PropTypes.oneOfType([
         PropTypes.instanceOf(Element),
         PropTypes.func
-    ])
+    ]),
+    noDataComponent: PropTypes.any
 }
 
 List.defaultProps = {
     className: "",
     items: [],
     idAttribute: "id",
-    ListItem
+    ListItem,
+    noDataComponent: <DefaultNoDataComponent />
 }
 
 export default List;
