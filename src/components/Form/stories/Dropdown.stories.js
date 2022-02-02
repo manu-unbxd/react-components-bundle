@@ -78,3 +78,47 @@ PaginatedDropdown.story = {
       },
     },
 };
+
+
+
+
+export const SearchEnbaledDropdown = () => {
+    const onChange = selected => {
+        console.log("Selected User: ", selected);
+    };
+
+    const responseFormatter = (response) => {
+        return {
+            ...response,
+            entries: response.data
+        };
+    };
+  
+    return (
+      <Dropdown
+        paginationType="SERVER"
+        requestId="getPaginatedUsers"
+        pageSize={3}
+        maxHeight={50}
+        name="user"
+        label="Select user"
+        appearance="block"
+        nameAttribute="first_name"
+        onChange={onChange}
+        noSelectionLabel="Select"
+        showSearch={true}
+        perPageKey={"per_page"}
+        responseFormatter={responseFormatter}
+      />
+    );
+  };
+
+PaginatedDropdown.story = {
+    name: "Dropdown with server side search and pagination",
+  
+    parameters: {
+      info: {
+        propTables: [Dropdown],
+      },
+    },
+};
