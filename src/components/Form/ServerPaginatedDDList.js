@@ -57,10 +57,11 @@ const ServerPaginatedDDList = (props) => {
         ddItemHeight,
         minPageNo,
         delay = 500,
+        loadImmediately = true,
         ...restProps
     } = props;
     const [ items, setItems ] = useState([]);
-    const [ itemsResetCounter, setItemsResetCounter ] = useState(0);
+    const [ itemsResetCounter, setItemsResetCounter ] = useState(loadImmediately?1:0);
     const [ total, setTotal ] = useState(null);
     const [ hasNextPage, setHasNextPage ] = useState(false);
     const [ isNextPageLoading, setIsNextPageLoading ] = useState(false);
@@ -124,7 +125,10 @@ const ServerPaginatedDDList = (props) => {
     };
 
     useEffect(() => {
-        makeAPICall();
+        if(itemsResetCounter >0) {
+            makeAPICall();   
+        }
+           
     }, [itemsResetCounter]);
 
     useEffect(() => {
@@ -165,10 +169,12 @@ const ServerPaginatedDDList = (props) => {
         isItemLoaded,
         ...restProps 
     };
-
+    if(total === null && !loadImmediately ) {
+        return []
+    }
     if (total === 0) {
         return (
-            <div className="RCB-no-data">No data found</div>
+            <div className="RCB-no-data">{`No data found`}</div>
         )
     } else {
         return (<InfiniteLoader
