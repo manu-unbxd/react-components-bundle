@@ -144,7 +144,6 @@ const ServerPaginatedDDList = (props) => {
             searchRef.current = searchQuery;
             setItems([]);
             setTotal(null);
-            setHasNextPage(true);
             setItemsResetCounter(itemsResetCounter+1);
         }, delay),
     []);
