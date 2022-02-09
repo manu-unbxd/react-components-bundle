@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import PropTypes from "prop-types";
 import { FixedSizeList } from "react-window";
 import InfiniteLoader from "react-window-infinite-loader";
 import dataLoader from "../../core/dataLoader";
+import utils from "../../core/utils";
 
 /* eslint-disable react/prop-types */
 
@@ -24,7 +25,6 @@ export const DefaultDropdownItem = (props) => {
     const itemData = items[index] || {};
     const idValue = itemData[idAttribute];
     const name = itemData[nameAttribute];
-
     const isSelected = selectedItems.find(obj => obj[idAttribute] === idValue) ? true : false;
     const className = "RCB-list-item " + (isSelected ? "selected" : "");
     let content = name;
@@ -56,14 +56,15 @@ const ServerPaginatedDDList = (props) => {
         serverListClassName,
         ddItemHeight,
         minPageNo,
+        delay = 500,
+        loadImmediately = true,
         ...restProps
     } = props;
     const [ items, setItems ] = useState([]);
-    const [ itemsResetCounter, setItemsResetCounter ] = useState(0);
+    const [ itemsResetCounter, setItemsResetCounter ] = useState(loadImmediately?1:0);
     const [ total, setTotal ] = useState(null);
     const [ hasNextPage, setHasNextPage ] = useState(false);
-    const [ isNextPageLoading, setIsNextPageLoading ] = useState(true);
-
+    const [ isNextPageLoading, setIsNextPageLoading ] = useState(false);
     const getDefaultPageNo = () => {
         return minPageNo ?? 1
     }
@@ -124,17 +125,28 @@ const ServerPaginatedDDList = (props) => {
     };
 
     useEffect(() => {
-        makeAPICall();
+        if(itemsResetCounter >0) {
+            makeAPICall();   
+        }
+           
     }, [itemsResetCounter]);
 
     useEffect(() => {
         /* searh query changed -> reset page no. to 1 */
-        pageNoRef.current = getDefaultPageNo();
-        searchRef.current = searchQuery;
-        setIsNextPageLoading(true);
-        setItems([]);
-        setItemsResetCounter(itemsResetCounter + 1);
+        if(searchQuery !== searchRef.current) {
+            setIsNextPageLoading(true);
+            startSearch(searchQuery, itemsResetCounter);
+        }
     }, [searchQuery]);
+    const startSearch = useCallback(
+        utils.debounce((searchQuery, itemsResetCounter) => {
+            pageNoRef.current = getDefaultPageNo();
+            searchRef.current = searchQuery;
+            setItems([]);
+            setTotal(null);
+            setItemsResetCounter(itemsResetCounter+1);
+        }, delay),
+    []);
 
 
     // If there are more items to be loaded then add an extra row to hold a loading indicator.
@@ -156,10 +168,12 @@ const ServerPaginatedDDList = (props) => {
         isItemLoaded,
         ...restProps 
     };
-
+    if(total === null && !loadImmediately ) {
+        return []
+    }
     if (total === 0) {
         return (
-            <div className="RCB-no-data">No data found</div>
+            <div className="RCB-no-data">{`No data found`}</div>
         )
     } else {
         return (<InfiniteLoader
