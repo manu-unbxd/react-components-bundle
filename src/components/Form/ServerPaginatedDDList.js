@@ -125,26 +125,27 @@ const ServerPaginatedDDList = (props) => {
     };
 
     useEffect(() => {
-        if(itemsResetCounter >0) {
+        /* not the first call */
+        if(itemsResetCounter > 0) {
             makeAPICall();   
         }
-           
     }, [itemsResetCounter]);
 
     useEffect(() => {
-        /* searh query changed -> reset page no. to 1 */
+        /* search query changed -> reset page no. to 1 */
         if(searchQuery !== searchRef.current) {
             setIsNextPageLoading(true);
             startSearch(searchQuery, itemsResetCounter);
         }
     }, [searchQuery]);
+
     const startSearch = useCallback(
         utils.debounce((searchQuery, itemsResetCounter) => {
             pageNoRef.current = getDefaultPageNo();
             searchRef.current = searchQuery;
             setItems([]);
             setTotal(null);
-            setItemsResetCounter(itemsResetCounter+1);
+            setItemsResetCounter(itemsResetCounter + 1);
         }, delay),
     []);
 
