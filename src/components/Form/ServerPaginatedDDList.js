@@ -131,14 +131,14 @@ const ServerPaginatedDDList = (props) => {
     };
 
     useEffect(() => {
-        if(itemsResetCounter >0) {
+        /* not the first call */
+        if(itemsResetCounter > 0) {
             makeAPICall();   
         }
-           
     }, [itemsResetCounter]);
 
     useEffect(() => {
-        /* searh query changed -> reset page no. to 1 */
+        /* search query changed -> reset page no. to 1 */
         if(searchQuery !== searchRef.current) {
             //setIsNextPageLoading(true);
             searchRef.current = searchQuery;
@@ -160,7 +160,6 @@ const ServerPaginatedDDList = (props) => {
             return prevItemsResetCounter+1
         });
     };
-
 
     // If there are more items to be loaded then add an extra row to hold a loading indicator.
     const itemCount = hasNextPage ? items.length + 1 : items.length;
