@@ -65,6 +65,7 @@ const ServerPaginatedDDList = (props) => {
     const [ total, setTotal ] = useState(null);
     const [ hasNextPage, setHasNextPage ] = useState(false);
     const [ isNextPageLoading, setIsNextPageLoading ] = useState(false);
+    const debouncedFn = useRef();
     const getDefaultPageNo = () => {
         return minPageNo ?? 1
     }
@@ -73,8 +74,12 @@ const ServerPaginatedDDList = (props) => {
         
     const onDataLoaded = (response) => {
         let apiResponse = response;
-
         setIsNextPageLoading(false);
+        if(!loadImmediately && searchRef.current === "") {
+            setItems([]);
+            setTotal(null);
+            return false;
+        }
 
         if (typeof(responseFormatter) === "function") {
             apiResponse = responseFormatter(response);
@@ -93,6 +98,7 @@ const ServerPaginatedDDList = (props) => {
         } else {
             setHasNextPage(false);
         }
+        
 
         setItems(totalEntries);
         setTotal(total);
@@ -134,19 +140,26 @@ const ServerPaginatedDDList = (props) => {
     useEffect(() => {
         /* searh query changed -> reset page no. to 1 */
         if(searchQuery !== searchRef.current) {
-            setIsNextPageLoading(true);
-            startSearch(searchQuery, itemsResetCounter);
+            //setIsNextPageLoading(true);
+            searchRef.current = searchQuery;
+            startSearch();
         }
     }, [searchQuery]);
-    const startSearch = useCallback(
-        utils.debounce((searchQuery, itemsResetCounter) => {
-            pageNoRef.current = getDefaultPageNo();
-            searchRef.current = searchQuery;
-            setItems([]);
-            setTotal(null);
-            setItemsResetCounter(itemsResetCounter+1);
-        }, delay),
-    []);
+    const startSearch = useCallback(()=>{
+        if (!debouncedFn.current) {
+            debouncedFn.current = utils.debounce(startSearchCallBack, delay);
+        }
+    
+        debouncedFn.current();
+    },[]);
+    const startSearchCallBack = () => {
+        pageNoRef.current = getDefaultPageNo();
+        setItems([]);
+        setTotal(null);
+        setItemsResetCounter((prevItemsResetCounter) =>{
+            return prevItemsResetCounter+1
+        });
+    };
 
 
     // If there are more items to be loaded then add an extra row to hold a loading indicator.
@@ -168,35 +181,34 @@ const ServerPaginatedDDList = (props) => {
         isItemLoaded,
         ...restProps 
     };
-    if(total === null && !loadImmediately ) {
+    if(total === null) {
         return []
     }
     if (total === 0) {
         return (
             <div className="RCB-no-data">{`No data found`}</div>
         )
-    } else {
-        return (<InfiniteLoader
-                // Function responsible for tracking the loaded state of each item.
-                isItemLoaded={isItemLoaded}
-                // Number of rows in list; can be arbitrary high number if actual number is unknown.
-                itemCount={total}
-                loadMoreItems={loadMoreItems}
-                // Minimum number of rows to be loaded at a time; defaults to 10. This property can be used to batch requests to reduce HTTP requests.
-                minimumBatchSize={pageSize}
-                // Threshold at which to pre-fetch data; defaults to 15. A threshold of 15 means that data will start loading when a user scrolls within 15 rows.
-                threshold={pageSize}>
-                {({ onItemsRendered, ref }) => (
-                    <FixedSizeList
-                        itemCount={itemCount} itemSize={ddItemHeight}
-                        onItemsRendered={onItemsRendered}
-                        className={serverListClassName}
-                        ref={ref} height={maxHeight} itemData={listProps}>
-                            {DropdownItem}
-                    </FixedSizeList>
-                )}
-        </InfiniteLoader>);
     }
+    return (<InfiniteLoader
+        // Function responsible for tracking the loaded state of each item.
+        isItemLoaded={isItemLoaded}
+        // Number of rows in list; can be arbitrary high number if actual number is unknown.
+        itemCount={total}
+        loadMoreItems={loadMoreItems}
+        // Minimum number of rows to be loaded at a time; defaults to 10. This property can be used to batch requests to reduce HTTP requests.
+        minimumBatchSize={pageSize}
+        // Threshold at which to pre-fetch data; defaults to 15. A threshold of 15 means that data will start loading when a user scrolls within 15 rows.
+        threshold={pageSize}>
+        {({ onItemsRendered, ref }) => (
+            <FixedSizeList
+                itemCount={itemCount} itemSize={ddItemHeight}
+                onItemsRendered={onItemsRendered}
+                className={serverListClassName}
+                ref={ref} height={maxHeight} itemData={listProps}>
+                    {DropdownItem}
+            </FixedSizeList>
+        )}
+    </InfiniteLoader>);
 };
 
 ServerPaginatedDDList.propTypes = {
